@@ -108,7 +108,7 @@
         <div class="d-flex py-4 align-items-center justify-content-between">
 
           <!-- Logo -->
-          <a href="Yaniga_Diamonds.html" class="logo">
+          <a href="index.html" class="logo">
             <!-- Uncomment the line below if you also wish to use an image logo -->
             <img class="brand-logo" src="assets/img/logo.png" alt="">
           </a>
@@ -203,7 +203,7 @@
         <div class="position-relative">
           <nav id="navmenu" class="navmenu">
             <ul>
-              <li><a href="/web/Yaniga_Diamonds.html" class="active">Home</a></li>
+              <li><a href="index.html" class="active">Home</a></li>
 
               <!-- Products Mega Menu 1 -->
               <li class="products-megamenu-1"><a href="#"><span>Jewelry</span> <i
@@ -1094,7 +1094,7 @@
         <div class="row gy-4">
           <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="footer-widget footer-about">
-              <a href="Yaniga_Diamonds.html" class="logo">
+              <a href="index.html" class="logo">
                 <span class="sitename">YANIGA DIAMONDS</span>
               </a>
               <div class="footer-contact mt-4">
@@ -1404,9 +1404,9 @@
 
     // Function to scroll to Jewelry menu and show dropdown (HOME PAGE ONLY)
     function showJewelryMenu() {
-      // Only work on home page (Yaniga_Diamonds.html)
+      // Only work on home page (index.html)
       const currentPage = window.location.pathname;
-      const isHomePage = currentPage.includes('Yaniga_Diamonds.html') || currentPage === '/' || currentPage.endsWith('/');
+      const isHomePage = currentPage.includes('index.html') || currentPage === '/' || currentPage.endsWith('/');
       
       if (!isHomePage) {
         console.log('showJewelryMenu: Not on home page, skipping dropdown');
@@ -1440,7 +1440,7 @@
     function initViewAllButtons() {
       // Only initialize on home page
       const currentPage = window.location.pathname;
-      const isHomePage = currentPage.includes('Yaniga_Diamonds.html') || currentPage === '/' || currentPage.endsWith('/');
+      const isHomePage = currentPage.includes('index.html') || currentPage === '/' || currentPage.endsWith('/');
       
       if (!isHomePage) {
         console.log('initViewAllButtons: Not on home page, skipping initialization');
