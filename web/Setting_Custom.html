@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Customize Your Setting - eStore Bootstrap Template</title>
+  <meta name="description" content="Customize your jewelry setting with metal type, ring size, and gemstone options">
+  <meta name="keywords" content="jewelry, customize, setting, ring, gemstone, metal, karat">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/drift-zoom/drift-basic.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+
+  <!-- =======================================================
+  * Template Name: eStore
+  * Template URL: https://bootstrapmade.com/estore-bootstrap-ecommerce-template/
+  * Updated: Apr 26 2025 with Bootstrap v5.3.5
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body class="product-details-page setting-custom-page">
+
+  <div id="header">
+    <script>
+      fetch("./Part/Header.html")
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("header").innerHTML = data;
+          // Initialize mobile navigation after header is loaded
+          console.log('Header loaded, initializing mobile navigation...');
+          setTimeout(() => {
+            if (typeof initMobileNavigation === 'function') {
+              initMobileNavigation();
+            } else {
+              console.error('initMobileNavigation function not found');
+            }
+          }, 100);
+        })
+        .catch(error => {
+          console.error('Error loading header:', error);
+        });
+    </script>
+  </div>
+  <main class="main">
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const nextButton = document.querySelector("#nextButton");
+        const nextLink = document.querySelector("#nextLink");
+
+        function checkSelection() {
+          let allSelected = true;
+          let missingItems = [];
+
+          // ตรวจสอบ Metal Karat
+          const karatDropdown = document.querySelector("#karat-selected");
+          if (karatDropdown && karatDropdown.textContent.includes("Select Your Metal Type")) {
+            allSelected = false;
+            missingItems.push("Metal Karat");
+          }
+
+          // ตรวจสอบ Ring Size
+          const sizeDropdown = document.querySelector("#size-selected");
+          if (sizeDropdown && sizeDropdown.textContent.includes("Select Your Ring Size")) {
+            allSelected = false;
+            missingItems.push("Ring Size");
+          }
+
+          // ตรวจสอบ Gemstone
+          const gemstoneDropdown = document.querySelector("#gemstone-selected");
+          if (gemstoneDropdown && gemstoneDropdown.textContent.includes("Select Your Gemstone")) {
+            allSelected = false;
+            missingItems.push("Gemstone");
+          }
+
+          // ตรวจสอบ Precious Metal Type (สี)
+          const hasActiveColor = document.querySelector(".color-option.active");
+          if (!hasActiveColor) {
+            allSelected = false;
+            missingItems.push("Precious Metal Type");
+          }
+
+          return { allSelected, missingItems };
+        }
+
+        nextButton.addEventListener("click", (e) => {
+          e.preventDefault(); // ป้องกันการเปลี่ยนหน้า
+          
+          const { allSelected, missingItems } = checkSelection();
+          
+          if (!allSelected) {
+            // สร้างข้อความแจ้งเตือนที่ระบุรายการที่ยังไม่ได้เลือก
+            let alertMessage = "Please complete all selections before proceeding to the next step:\n\n";
+            missingItems.forEach((item) => {
+              alertMessage += `• ${item}\n`;
+            });
+            alertMessage += "\nKindly review and select the missing options above.";
+            
+            alert(alertMessage);
+          } else {
+            // หากเลือกครบแล้วให้ไปหน้าถัดไป
+            window.location.href = "Setting_Bespoke.html";
+          }
+        });
+      });
+    </script>
+
+    <script>
+      // ตัวแปร global สำหรับราคาเริ่มต้น
+      let globalBasePrice = 0;
+
+      // ฟังก์ชันอัปเดตราคารวม (global scope)
+      function updateTotalPrice() {
+        let totalPrice = globalBasePrice || 0;
+
+        // ตรวจสอบราคา Gemstone ที่เลือกในหน้าปัจจุบัน
+        const gemstoneDropdown = document.querySelector('#gemstone .dropdown-selected');
+        if (gemstoneDropdown && !gemstoneDropdown.textContent.includes('Select')) {
+          // หาค่า data-value ของ option ที่เลือก
+          const selectedOption = Array.from(document.querySelectorAll('#gemstone .dropdown-option'))
+            .find(option => option.textContent === gemstoneDropdown.textContent);
+
+          if (selectedOption) {
+            // data-value format: "0.50 18500" (carat และ price)
+            const gemstoneData = selectedOption.dataset.value.split(' ');
+            if (gemstoneData.length >= 2) {
+              const gemstonePrice = parseInt(gemstoneData[1]);
+              totalPrice += gemstonePrice;
+            }
+          }
+        }
+
+        // แสดงราคารวม
+        const formattedPrice = totalPrice.toLocaleString('th-TH') + ' B';
+        const priceElement = document.querySelector('.current-price');
+        if (priceElement) {
+          priceElement.textContent = formattedPrice;
+        }
+
+        console.log('Base price:', globalBasePrice);
+        console.log('Current gemstone selection:', gemstoneDropdown ? gemstoneDropdown.textContent : 'None');
+        console.log('Total price:', totalPrice);
+        console.log('Formatted price:', formattedPrice);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const selected = JSON.parse(localStorage.getItem('selectedProduct'));
+        if (!selected) return;
+
+        const { name, folder } = selected;
+        // กำหนดสีเริ่มต้นเป็น Yellow ถ้าไม่มีการเลือกสี
+        let currentColor = selected.color || "Yellow";
+
+        // ตั้งชื่อสินค้า
+        document.getElementById("detail-name").textContent = name;
+
+        // แยกราคาจาก JSON format และแสดงผล
+        // ตรวจสอบหลายแหล่งข้อมูลที่อาจมีราคา
+        let basePrice = null; // ราคาเริ่มต้นของแหวน
+
+        // ลำดับความสำคัญในการหาราคา
+        if (selected.price) {
+          // ถ้ามีราคาส่งมาตรงๆ (วิธีใหม่)
+          basePrice = parseInt(selected.price);
+        } else if (selected.fullData) {
+          // format: "Cushion Cut Diamond Solitaire Ring_19000_Cushion"
+          const parts = selected.fullData.split('_');
+          if (parts.length >= 2) {
+            basePrice = parseInt(parts[parts.length - 2]); // เอาตัวที่ 2 จากหลัง
+          }
+        } else if (selected.folder) {
+          // ถ้าไม่มี price แต่มี folder ให้แยกจาก folder name
+          const parts = selected.folder.split('_');
+          if (parts.length >= 2) {
+            basePrice = parseInt(parts[parts.length - 2]); // เอาตัวที่ 2 จากหลัง
+          }
+        }
+
+        // กำหนดค่าให้ตัวแปร global
+        globalBasePrice = basePrice;
+
+        // แสดงราคาเริ่มต้น (เฉพาะราคาแหวน ไม่รวม Gemstone)
+        updateTotalPrice();
+
+        // โหลดข้อมูลที่เคยเลือกไว้จาก localStorage (ถ้ามี)
+        const savedSelections = JSON.parse(localStorage.getItem('selectedRing')) || {};
+        
+        // ตั้งค่าสี - ตรวจสอบว่าเป็นการมาจากหน้า Women_Ring หรือกลับจาก Setting_Bespoke
+        let savedColor;
+        
+        // ถ้ามีสีส่งมาจาก Women_Ring ให้ใช้สีนั้น และลบสีเก่าใน localStorage
+        if (selected.color) {
+          savedColor = selected.color;
+          console.log('Using color from Women_Ring:', savedColor);
+          
+          // ลบสีเก่าที่อาจบันทึกไว้ใน Setting_Custom เพราะต้องใช้สีใหม่จาก Women_Ring
+          if (savedSelections.color) {
+            delete savedSelections.color;
+            localStorage.setItem('selectedRing', JSON.stringify(savedSelections));
+            console.log('Cleared old color from localStorage, using Women_Ring color');
+          }
+        } else if (savedSelections.color) {
+          // ถ้าไม่มีสีจาก Women_Ring แต่มีสีที่บันทึกไว้ใน Setting_Custom ให้ใช้สีนั้น
+          savedColor = savedSelections.color;
+          console.log('Using saved color from Setting_Custom:', savedColor);
+        } else {
+          // ถ้าไม่มีทั้งสองแหล่ง ใช้ค่าเริ่มต้น
+          savedColor = "Yellow";
+          console.log('Using default color:', savedColor);
+        }
+        
+        currentColor = savedColor;
+        
+        // รีเซ็ต dropdown selections ทุกครั้งที่โหลดหน้าใหม่
+        console.log('Resetting all dropdown selections to default');
+        document.querySelectorAll('.custom-dropdown .dropdown-selected').forEach(dropdown => {
+          if (dropdown.id === 'karat-selected') {
+            dropdown.textContent = 'Select Your Metal Type';
+          } else if (dropdown.id === 'size-selected') {
+            dropdown.textContent = 'Select Your Ring Size';
+          } else if (dropdown.id === 'gemstone-selected') {
+            dropdown.textContent = 'Select Your Gemstone';
+          }
+        });
+        
+        // ล้างข้อมูลการเลือก dropdown จาก localStorage (เก็บเฉพาะสี)
+        const colorOnly = { color: currentColor };
+        localStorage.setItem('selectedRing', JSON.stringify(colorOnly));
+        console.log('Cleared dropdown data from localStorage, kept only color:', currentColor);
+
+        // Debug: แสดงข้อมูลใน console เพื่อตรวจสอบ
+        console.log('Selected product data:', selected);
+        console.log('Base price found:', basePrice);
+
+        // ตั้งภาพหลัก
+        const mainImg = document.getElementById("main-product-image");
+
+        // ฟังก์ชัน mapping ชื่อโฟลเดอร์จาก Best_Seller ไปหา Women_Ring
+        function findMatchingFolder(bestSellerFolder) {
+          // Mapping table สำหรับแปลงชื่อจาก Best_Seller ไป Women_Ring
+          const folderMapping = {
+            "Cushion Cut Diamond Solitaire Ring_19000_New": "Cushion Cut Diamond Solitaire Ring_19000_Cushion",
+            "Marquise with Pear Diamonds Trilogy Ring_29000_Pre Order": "Marquise with Pear Diamonds Trilogy Ring_29000_Marquise",
+            "Oval Cut Diamond Solitaire Ring_19000": "Oval Cut Diamond Solitaire Ring_19000_Oval",
+            "Pear Curved Solitaire Ring_19000": "Pear Curved Solitaire Ring_19000_Pear",
+            "Round Diamond Trilogy Ring_29000": "Round Diamond Trilogy Ring_29000_Round"
+          };
+          
+          // หาโฟลเดอร์ที่ตรงกัน
+          return folderMapping[bestSellerFolder] || bestSellerFolder;
+        }
+
+        // ฟังก์ชันอัปเดตรูปภาพหลัก
+        function updateMainImage(color, position = 'Top') {
+          const actualFolder = findMatchingFolder(folder);
+          mainImg.src = `assets/img/product/Jewelry/Women_s Rings/${actualFolder}/${position}_${color}.webp`;
+          mainImg.setAttribute("data-zoom", mainImg.src);
+        }
+
+        // แสดงรูปหลักด้วยสีเริ่มต้น
+        updateMainImage(currentColor, 'Top');
+
+        // อัปเดต active color option ให้ตรงกับสีที่เลือก (ใช้ currentColor ที่อัปเดตแล้ว)
+        document.querySelectorAll(".color-option").forEach(opt => opt.classList.remove("active"));
+        const activeColorOption = document.querySelector(`[data-color="${currentColor}"]`);
+        if (activeColorOption) {
+          activeColorOption.classList.add("active");
+        }
+
+        // อัปเดตข้อความแสดงสีที่เลือก (ใช้ currentColor ที่อัปเดตแล้ว)
+        document.querySelector(".product-colors .selected-option").textContent = ` ${currentColor} Gold`;
+
+        // ตั้ง thumbnails ใหม่ (ใช้โฟลเดอร์ที่แมปแล้ว)
+        const thumbnailContainer = document.querySelector(".swiper-wrapper");
+        if (thumbnailContainer) {
+          thumbnailContainer.innerHTML = ""; // ล้างเก่า
+
+          // หาโฟลเดอร์ที่ตรงกัน
+          const actualFolder = findMatchingFolder(folder);
+          
+          // สร้าง thumbnails สำหรับทุกสีและทุกมุมมอง
+          const colors = ["Yellow", "White", "Rose"];
+          const positions = ["Top", "Front"];
+
+          positions.forEach(position => {
+            colors.forEach(colorOption => {
+              const imagePath = `assets/img/product/Jewelry/Women_s Rings/${actualFolder}/${position}_${colorOption}.webp`;
+              const slide = document.createElement("div");
+              slide.className = "swiper-slide thumbnail-item";
+              slide.dataset.image = imagePath;
+              slide.dataset.color = colorOption;
+              slide.dataset.position = position;
+              slide.innerHTML = `<img src="${imagePath}" alt="${position} ${colorOption}" class="img-fluid">`;
+              thumbnailContainer.appendChild(slide);
+            });
+          });
+
+          // อัปเดตรูปเมื่อคลิก thumbnail
+          document.querySelectorAll(".thumbnail-item").forEach(item => {
+            item.addEventListener("click", function () {
+              // ลบ active จาก thumbnails อื่น
+              document.querySelectorAll(".thumbnail-item").forEach(thumb => thumb.classList.remove("active"));
+              // เพิ่ม active ให้ thumbnail ที่คลิก
+              this.classList.add("active");
+              
+              // ใช้ข้อมูล position และ color จาก dataset
+              const position = this.dataset.position || 'Top';
+              const color = this.dataset.color || currentColor;
+              updateMainImage(color, position);
+            });
+          });
+        }
+
+        // จัดการการเลือกสี
+        document.querySelectorAll(".color-option").forEach(option => {
+          option.addEventListener("click", function () {
+            // ลบ active จากทุกตัวเลือก
+            document.querySelectorAll(".color-option").forEach(opt => opt.classList.remove("active"));
+
+            // เพิ่ม active ให้ตัวที่เลือก
+            this.classList.add("active");
+
+            // อัปเดตสีปัจจุบัน
+            currentColor = this.dataset.color;
+
+            // บันทึกสีที่เลือกใน localStorage
+            let selectedRing = JSON.parse(localStorage.getItem('selectedRing')) || {};
+            selectedRing.color = currentColor;
+            localStorage.setItem('selectedRing', JSON.stringify(selectedRing));
+
+            // อัปเดตข้อความแสดงสีที่เลือก
+            document.querySelector(".product-colors .selected-option").textContent = ` ${currentColor} Gold`;
+
+            // อัปเดตรูปหลัก
+            const activeThumbnail = document.querySelector(".thumbnail-item.active");
+            const currentPosition = activeThumbnail ? activeThumbnail.dataset.position || 'Top' : 'Top';
+            updateMainImage(currentColor, currentPosition);
+            
+            console.log('Color saved to localStorage:', currentColor);
+          });
+        });
+      });
+    </script>
+
+
+    <!-- Page Title -->
+    <!--<div class="page-title">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Ring Details</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="Yaniga_Diamonds.html">Home</a></li>
+            <li class="current">Ring Details</li>
+          </ol>
+        </nav>
+      </div>
+    </div>--><!-- End Page Title -->
+         <!-- Page Title -->
+    <div class="page-title light-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Women's Rings</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="Yaniga_Diamonds.html">Home</a></li>
+            <li><a href="Jewelry/Women_Ring.html">Women's Rings</a></li>
+            <li class="current">Setting Custom</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+    <!-- Step Navigation -->
+    <section class="step-navigation-section">
+      <div class="container">
+        <div class="step-navigation">
+          <div class="step completed clickable" onclick="location.href='Jewelry/Women_Ring.html'">
+            <span>1. SELECT YOUR SETTING</span>
+          </div>
+          <div class="step active">
+            <span>2. CUSTOMISE YOUR SETTING</span>
+          </div>
+          <div class="step">
+            <span>3. BESPOKE CUSTOMISATIONS</span>
+          </div>
+          <div class="step">
+            <span>4. SUMMARY YOUR SETTING</span>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Step Navigation -->
+
+    <!-- Product Details Section -->
+    <section id="product-details" class="product-details section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row">
+          <!-- Product Images -->
+          <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="200">
+            <div class="product-images">
+              <div class="main-image-container mb-3">
+                <div class="image-zoom-container">
+                  <img id="main-product-image" class="img-fluid main-image drift-zoom" src="" alt="Product Image" />
+                </div>
+              </div>
+
+              <div class="product-thumbnails">
+                <div class="swiper product-thumbnails-slider init-swiper">
+                  <script type="application/json" class="swiper-config">
+                    {
+                      "loop": false,
+                      "speed": 400,
+                      "slidesPerView": 4,
+                      "spaceBetween": 10,
+                      "navigation": {
+                        "nextEl": ".swiper-button-next",
+                        "prevEl": ".swiper-button-prev"
+                      },
+                      "breakpoints": {
+                        "320": {
+                          "slidesPerView": 3
+                        },
+                        "576": {
+                          "slidesPerView": 4
+                        }
+                      }
+                    }
+                  </script>
+                  <div class="swiper-wrapper">
+                    <div class="swiper-slide thumbnail-item active"
+                      data-image="assets/img/product/product-details-1.webp">
+                      <img src="assets/img/product/product-details-1.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide thumbnail-item" data-image="assets/img/product/product-details-2.webp">
+                      <img src="assets/img/product/product-details-2.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide thumbnail-item" data-image="assets/img/product/product-details-3.webp">
+                      <img src="assets/img/product/product-details-3.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide thumbnail-item" data-image="assets/img/product/product-details-4.webp">
+                      <img src="assets/img/product/product-details-4.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide thumbnail-item" data-image="assets/img/product/product-details-5.webp">
+                      <img src="assets/img/product/product-details-5.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                  </div>
+                  <div class="swiper-button-next"></div>
+                  <div class="swiper-button-prev"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Info -->
+          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+            <div class="product-info">
+              <!--<div class="product-meta mb-2">
+                <span class="product-best-sellers">Headphones</span>
+                <div class="product-rating">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-half"></i>
+                  <span class="rating-count">(42)</span>
+                </div>
+              </div>-->
+
+              <h1 class="product-title" id="detail-name"></h1>
+
+              <div class=" product-price-container mb-4">
+                <span class="current-price"></span>
+              </div>
+
+              <!-- <div class="product-short-description mb-4">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue, suscipit elit
+                  nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis.</p>
+              </div>-->
+
+              <!--<div class="product-availability mb-4">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span>In Stock</span>
+                <span class="stock-count">(24 items left)</span>
+              </div>-->
+
+              <!-- Color Options -->
+              <div class="product-colors mb-4">
+                <h6 class="option-title">Precious Metal Type :<span class="selected-option"> Yellow Gold</span></h6>
+                <div class="color-options">
+                  <div class="color-option active" data-color="Yellow" style="background-color:#D5C19A;">
+                    <i class="bi bi-check"></i>
+                  </div>
+                  <div class="color-option" data-color="White"
+                    style="background-color:#e5e4e2; border: 1px solid #ddd;">
+                    <i class="bi bi-check"></i>
+                  </div>
+                  <div class="color-option" data-color="Rose" style="background-color:#E7C7AF;">
+                    <i class="bi bi-check"></i>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="option-title selector">
+                <h6>
+                  <span>Metal Karat</span>
+                  <span class="info-btn" onclick="showMetalInfo()"></span>
+                </h6>
+                <div class="custom-dropdown" id="metal">
+                  <h6 class="dropdown-selected" id="karat-selected">Select Your Metal Type</h6>
+                  <div class="dropdown-options" id="karat-selector">
+                    <div class="dropdown-option" data-value="9 K">9 K</div>
+                    <div class="dropdown-option" data-value="14 K">14 K</div>
+                    <div class="dropdown-option" data-value="18 K">18 K</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="option-title selector">
+                <h6>
+                  <span>Ring Size</span>
+                  <span class="info-btn" onclick="showRingSizeInfo()"></span>
+                </h6>
+                <div class="custom-dropdown" id="ringsize">
+                  <h6 class="dropdown-selected" id="size-selected">Select Your Ring Size</h6>
+                  <div class="dropdown-options" id="size-selector">
+                    <div class="dropdown-option" data-value="47">47</div>
+                    <div class="dropdown-option" data-value="48">48</div>
+                    <div class="dropdown-option" data-value="49">49</div>
+                    <div class="dropdown-option" data-value="50">50</div>
+                    <div class="dropdown-option" data-value="51">51</div>
+                    <div class="dropdown-option" data-value="52">52</div>
+                    <div class="dropdown-option" data-value="53">53</div>
+                    <div class="dropdown-option" data-value="54">54</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="option-title selector">
+                <h6>
+                  <span>Gemstone</span>
+                  <span class="info-btn" onclick="showGemstoneInfo()"></span>
+                  <span class="price-note">* price varies</span>
+                </h6>
+                <div class="custom-dropdown" id="gemstone">
+                  <h6 class="dropdown-selected" id="gemstone-selected">Select Your Gemstone</h6>
+                  <div class="dropdown-options" id="gemstone-selector">
+                    <div class="dropdown-option" data-value="0.50 18500">0.50 ct | 18,500.00 B</div>
+                    <div class="dropdown-option" data-value="1.00 23900">1.00 ct | 23,900.00 B</div>
+                    <div class="dropdown-option" data-value="1.25 25900">1.25 ct | 25,900.00 B</div>
+                    <div class="dropdown-option" data-value="1.50 32500">1.50 ct | 32,500.00 B</div>
+                    <div class="dropdown-option" data-value="1.80 34900">1.80 ct | 34,900.00 B</div>
+                    <div class="dropdown-option" data-value="2.00 39900">2.00 ct | 39,900.00 B</div>
+                    <div class="dropdown-option" data-value="2.50 47900">2.50 ct | 47,900.00 B</div>
+                    <div class="dropdown-option" data-value="3.00 57900">3.00 ct | 57,900.00 B</div>
+                    <div class="dropdown-option" data-value="4.00 75900">4.00 ct | 75,900.00 B</div>
+                    <div class="dropdown-option" data-value="5.00 102500">5.00 ct | 102,500.00 B</div>
+                  </div>
+                </div>
+              </div>
+
+              <script>
+                document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+                  const selected = dropdown.querySelector('.dropdown-selected');
+                  const options = dropdown.querySelector('.dropdown-options');
+                  const dropdownId = dropdown.id; // ดึง ID ของ dropdown
+
+                  // เปิด/ปิด dropdown
+                  selected.addEventListener('click', () => {
+                    document.querySelectorAll('.custom-dropdown').forEach(d => {
+                      if (d !== dropdown) d.classList.remove('open');
+                    });
+                    dropdown.classList.toggle('open');
+                  });
+
+                  // เลือก option
+                  options.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('dropdown-option')) {
+                      // ลบ class selected จาก option ทั้งหมดใน dropdown นี้
+                      options.querySelectorAll('.dropdown-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                      });
+                      
+                      // เพิ่ม class selected ให้ option ที่ถูกเลือก
+                      e.target.classList.add('selected');
+                      
+                      // เพิ่ม class has-selection ให้กับ dropdown-selected เพื่อเปลี่ยนสี
+                      selected.classList.add('has-selection');
+                      
+                      selected.textContent = e.target.textContent;
+                      dropdown.classList.remove('open');
+                      console.log(`Selected ${dropdownId}:`, e.target.dataset.value);
+
+                      // ดึงข้อมูล `selectedRing` จาก localStorage
+                      let selectedRing = JSON.parse(localStorage.getItem('selectedRing')) || {};
+
+                      // อัปเดตค่าใหม่เข้าไปใน selectedRing โดยใช้ ID เป็น key
+                      selectedRing[dropdownId] = e.target.dataset.value;
+
+                      // บันทึกค่าที่อัปเดตกลับเข้าไปใน localStorage
+                      localStorage.setItem('selectedRing', JSON.stringify(selectedRing));
+
+                      console.log("Updated selectedRing:", selectedRing);
+
+                      // ✅ อัปเดตราคารวมทันทีเมื่อเลือก Gemstone
+                      if (dropdownId === 'gemstone') {
+                        updateTotalPrice();
+                      }
+                    }
+                  });
+
+                  // ปิด dropdown เมื่อคลิกข้างนอก
+                  document.addEventListener('click', (e) => {
+                    if (!dropdown.contains(e.target)) {
+                      dropdown.classList.remove('open');
+                    }
+                  });
+                });
+
+              </script>
+
+              <!-- Action Buttons -->
+              <div class="product-actions">
+                <!--<button class="btn btn-primary add-to-cart-btn">
+                  <i class="bi bi-cart-plus"></i> Back
+                </button>-->
+                <a href="Jewelry/Women_Ring.html" class="btn btn-outline-primary buy-now-btn">
+                  <i class="bi"></i> Back
+                </a>
+                <button id="nextButton" class="btn btn-outline-primary buy-now-btn Next-Button">
+                  <i class="bi"></i> Next
+                </button>
+                <a href="Setting_Bespoke.html" id="nextLink" style="display: none;"></a>
+
+                <!--<button class="btn btn-outline-secondary wishlist-btn">
+                  <i class="bi bi-heart"></i>
+                </button>-->
+              </div>
+
+              <!-- Additional Info -->
+              <div class="additional-info mt-4">
+                <div class="info-item">
+                  <i class="bi bi-truck"></i>
+                  <span>Free shipping on orders over $50</span>
+                </div>
+                <div class="info-item">
+                  <i class="bi bi-arrow-repeat"></i>
+                  <span>30-day return policy</span>
+                </div>
+                <div class="info-item">
+                  <i class="bi bi-shield-check"></i>
+                  <span>2-year warranty</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Details Tabs -->
+        <!--<div class="row mt-5" data-aos="fade-up">
+          <div class="col-12">
+            <div class="product-details-tabs">
+              <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                    data-bs-target="#description" type="button" role="tab" aria-controls="description"
+                    aria-selected="true">Description</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" data-bs-target="#specifications"
+                    type="button" role="tab" aria-controls="specifications"
+                    aria-selected="false">Specifications</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button"
+                    role="tab" aria-controls="reviews" aria-selected="false">Reviews (42)</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="productTabsContent">
+                /* Description Tab */
+                <div class="tab-pane fade show active" id="description" role="tabpanel"
+                  aria-labelledby="description-tab">
+                  <div class="product-description">
+                    <h4>Product Overview</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue, suscipit
+                      elit nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis. Suspendisse
+                      vulputate quam diam, et consectetur augue condimentum in. Aenean dapibus urna eget nisi pharetra,
+                      in iaculis nulla blandit. Praesent at consectetur sem, sed sollicitudin nibh. Ut interdum risus ac
+                      nulla placerat aliquet.</p>
+
+                    <h4>Key Features</h4>
+                    <ul>
+                      <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit</li>
+                      <li>Vestibulum at lacus congue, suscipit elit nec, tincidunt orci</li>
+                      <li>Phasellus egestas nisi vitae lectus imperdiet venenatis</li>
+                      <li>Suspendisse vulputate quam diam, et consectetur augue condimentum in</li>
+                      <li>Aenean dapibus urna eget nisi pharetra, in iaculis nulla blandit</li>
+                    </ul>
+
+                    <h4>What's in the Box</h4>
+                    <ul>
+                      <li>Lorem Ipsum Wireless Headphones</li>
+                      <li>Carrying Case</li>
+                      <li>USB-C Charging Cable</li>
+                      <li>3.5mm Audio Cable</li>
+                      <li>User Manual</li>
+                    </ul>
+                  </div>
+                </div>
+
+                /* Specifications Tab */
+                <div class="tab-pane fade" id="specifications" role="tabpanel" aria-labelledby="specifications-tab">
+                  <div class="product-specifications">
+                    <div class="specs-group">
+                      <h4>Technical Specifications</h4>
+                      <div class="specs-table">
+                        <div class="specs-row">
+                          <div class="specs-label">Connectivity</div>
+                          <div class="specs-value">Bluetooth 5.0, 3.5mm jack</div>
+                        </div>
+                        <div class="specs-row">
+                          <div class="specs-label">Battery Life</div>
+                          <div class="specs-value">Up to 30 hours</div>
+                        </div>
+                        <div class="specs-row">
+                          <div class="specs-label">Charging Time</div>
+                          <div class="specs-value">3 hours</div>
+                        </div>
+                        <div class="specs-row">
+                          <div class="specs-label">Driver Size</div>
+                          <div class="specs-value">40mm</div>
+                        </div>
+                        <div class="specs-row">
+                          <div class="specs-label">Frequency Response</div>
+                          <div class="specs-value">20Hz - 20kHz</div>
+                        </div>
+                        <div class="specs-row">
+                          <div class="specs-label">Impedance</div>
+                          <div class="specs-value">32 Ohm</div>
+                        </div>
+                        <div class="specs-row">
+                          <div class="specs-label">Weight</div>
+                          <div class="specs-value">250g</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="specs-group">
+                      <h4>Features</h4>
+                      <div class="specs-table">
+                        <div class="specs-row">
+                          <div class="specs-label">Noise Cancellation</div>
+                          <div class="specs-value">Active Noise Cancellation (ANC)</div>
+                        </div>
+                        <div class="specs-row">
+                          <div class="specs-label">Controls</div>
+                          <div class="specs-value">Touch controls, Voice assistant</div>
+                        </div>
+                        <div class="specs-row">
+                          <div class="specs-label">Microphone</div>
+                          <div class="specs-value">Dual beamforming microphones</div>
+                        </div>
+                        <div class="specs-row">
+                          <div class="specs-label">Water Resistance</div>
+                          <div class="specs-value">IPX4 (splash resistant)</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                /* Reviews Tab */
+                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                  <div class="product-reviews">
+                    <div class="reviews-summary">
+                      <div class="overall-rating">
+                        <div class="rating-number">4.5</div>
+                        <div class="rating-stars">
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-half"></i>
+                        </div>
+                        <div class="rating-count">Based on 42 reviews</div>
+                      </div>
+
+                      <div class="rating-breakdown">
+                        <div class="rating-bar">
+                          <div class="rating-label">5 stars</div>
+                          <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="65"
+                              aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="rating-count">27</div>
+                        </div>
+                        <div class="rating-bar">
+                          <div class="rating-label">4 stars</div>
+                          <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25"
+                              aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="rating-count">10</div>
+                        </div>
+                        <div class="rating-bar">
+                          <div class="rating-label">3 stars</div>
+                          <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 8%;" aria-valuenow="8"
+                              aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="rating-count">3</div>
+                        </div>
+                        <div class="rating-bar">
+                          <div class="rating-label">2 stars</div>
+                          <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 2%;" aria-valuenow="2"
+                              aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="rating-count">1</div>
+                        </div>
+                        <div class="rating-bar">
+                          <div class="rating-label">1 star</div>
+                          <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 2%;" aria-valuenow="2"
+                              aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="rating-count">1</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="review-form-container">
+                      <h4>Write a Review</h4>
+                      <form class="review-form">
+                        <div class="rating-select mb-4">
+                          <label class="form-label">Your Rating</label>
+                          <div class="star-rating">
+                            <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 stars"><i
+                                class="bi bi-star-fill"></i></label>
+                            <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars"><i
+                                class="bi bi-star-fill"></i></label>
+                            <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars"><i
+                                class="bi bi-star-fill"></i></label>
+                            <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars"><i
+                                class="bi bi-star-fill"></i></label>
+                            <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star"><i
+                                class="bi bi-star-fill"></i></label>
+                          </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                          <div class="col-md-6">
+                            <label for="review-name" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="review-name" required="">
+                          </div>
+                          <div class="col-md-6">
+                            <label for="review-email" class="form-label">Your Email</label>
+                            <input type="email" class="form-control" id="review-email" required="">
+                          </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="review-title" class="form-label">Review Title</label>
+                          <input type="text" class="form-control" id="review-title" required="">
+                        </div>
+
+                        <div class="mb-4">
+                          <label for="review-content" class="form-label">Your Review</label>
+                          <textarea class="form-control" id="review-content" rows="4" required=""></textarea>
+                          <div class="form-text">Tell others what you think about this product. Be honest and helpful!
+                          </div>
+                        </div>
+
+                        <div class="d-grid">
+                          <button type="submit" class="btn btn-primary">Submit Review</button>
+                        </div>
+                      </form>
+                    </div>
+
+                    <div class="reviews-list mt-5">
+                      <h4>Customer Reviews</h4>
+
+                      /* Review Item */
+                      <div class="review-item">
+                        <div class="review-header">
+                          <div class="reviewer-info">
+                            <img src="assets/img/person/person-m-1.webp" alt="Reviewer" class="reviewer-avatar">
+                            <div>
+                              <h5 class="reviewer-name">John Doe</h5>
+                              <div class="review-date">03/15/2024</div>
+                            </div>
+                          </div>
+                          <div class="review-rating">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                          </div>
+                        </div>
+                        <h5 class="review-title">Exceptional sound quality and comfort</h5>
+                        <div class="review-content">
+                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue,
+                            suscipit elit nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis.
+                            Suspendisse vulputate quam diam, et consectetur augue condimentum in.</p>
+                        </div>
+                      </div>/* End Review Item */
+
+                      /* Review Item */
+                      <div class="review-item">
+                        <div class="review-header">
+                          <div class="reviewer-info">
+                            <img src="assets/img/person/person-f-2.webp" alt="Reviewer" class="reviewer-avatar">
+                            <div>
+                              <h5 class="reviewer-name">Jane Smith</h5>
+                              <div class="review-date">02/28/2024</div>
+                            </div>
+                          </div>
+                          <div class="review-rating">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star"></i>
+                          </div>
+                        </div>
+                        <h5 class="review-title">Great headphones, battery could be better</h5>
+                        <div class="review-content">
+                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue,
+                            suscipit elit nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis.
+                          </p>
+                        </div>
+                      </div>/* End Review Item */
+
+                      /* Review Item */
+                      <div class="review-item">
+                        <div class="review-header">
+                          <div class="reviewer-info">
+                            <img src="assets/img/person/person-m-3.webp" alt="Reviewer" class="reviewer-avatar">
+                            <div>
+                              <h5 class="reviewer-name">Michael Johnson</h5>
+                              <div class="review-date">02/15/2024</div>
+                            </div>
+                          </div>
+                          <div class="review-rating">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-half"></i>
+                          </div>
+                        </div>
+                        <h5 class="review-title">Impressive noise cancellation</h5>
+                        <div class="review-content">
+                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue,
+                            suscipit elit nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis.
+                            Suspendisse vulputate quam diam.</p>
+                        </div>
+                      </div>/* End Review Item */
+
+                      <div class="text-center mt-4">
+                        <button class="btn btn-outline-primary load-more-btn">Load More Reviews</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>-->
+      </div>
+    </section><!-- /Product Details Section -->
+
+  </main>
+
+  <div id="footer">
+    <script>
+      fetch("./Part/Footer.html")
+        .then(response => response.text())
+        .then(data => document.getElementById("footer").innerHTML = data);
+    </script>
+  </div>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/drift-zoom/Drift.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+  <!-- Info Modal -->
+  <div id="infoModal" class="info-modal">
+    <div class="info-modal-content">
+      <div class="info-modal-header">
+        <h3 id="infoModalTitle">Information</h3>
+        <button class="info-modal-close" onclick="closeInfoModal()">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      <div class="info-modal-body" id="infoModalBody">
+        <!-- Content will be filled by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ฟังก์ชันสำหรับแสดง Metal Karat Info
+    function showMetalInfo() {
+      const title = "Metal Karat Information";
+      const content = `
+        <div class="info-option-detail">
+          <h4>9 Karat Gold</h4>
+          <p>9K gold contains 37.5% pure gold, making it the most affordable option. It's durable and suitable for everyday wear, though it may tarnish slightly over time. Perfect for those looking for gold jewelry on a budget.</p>
+        </div>
+        <div class="info-option-detail">
+          <h4>14 Karat Gold</h4>
+          <p>14K gold contains 58.3% pure gold, offering a perfect balance between durability and purity. It's resistant to tarnishing and scratching, making it ideal for engagement rings and daily wear jewelry. Most popular choice for fine jewelry.</p>
+        </div>
+        <div class="info-option-detail">
+          <h4>18 Karat Gold</h4>
+          <p>18K gold contains 75% pure gold, providing the richest color and highest purity suitable for jewelry. It's softer than lower karat gold but offers superior quality and appearance. Preferred for luxury and heirloom pieces.</p>
+        </div>
+      `;
+      showInfoModal(title, content);
+    }
+
+    // ฟังก์ชันสำหรับแสดง Ring Size Info
+    function showRingSizeInfo() {
+      const title = "Ring Size Guide";
+      const content = `
+        <div class="info-option-detail">
+          <h4>How to Measure Your Ring Size</h4>
+          <p>The most accurate way to determine your ring size is to visit a jeweler for professional measurement. Alternatively, you can measure an existing ring or use our ring size guide.</p>
+        </div>
+        <div class="info-option-detail">
+          <h4>Size Chart (Thai/Asian Sizes)</h4>
+          <p><strong>Size 47:</strong> Circumference 47mm (US size 4)<br>
+          <strong>Size 48:</strong> Circumference 48mm (US size 4.5)<br>
+          <strong>Size 49:</strong> Circumference 49mm (US size 5)<br>
+          <strong>Size 50:</strong> Circumference 50mm (US size 5.5)<br>
+          <strong>Size 51:</strong> Circumference 51mm (US size 6)<br>
+          <strong>Size 52:</strong> Circumference 52mm (US size 6.5)<br>
+          <strong>Size 53:</strong> Circumference 53mm (US size 7)<br>
+          <strong>Size 54:</strong> Circumference 54mm (US size 7.5)</p>
+        </div>
+        <div class="info-option-detail">
+          <h4>Important Tips</h4>
+          <p>Ring size can vary slightly throughout the day due to temperature and humidity. For the most accurate measurement, measure your finger at room temperature in the evening. Consider the width of the band - wider rings typically need a slightly larger size.</p>
+        </div>
+      `;
+      showInfoModal(title, content);
+    }
+
+    // ฟังก์ชันสำหรับแสดง Gemstone Info
+    function showGemstoneInfo() {
+      const title = "Gemstone Information";
+      const content = `
+        <div class="info-option-detail">
+          <h4>Diamond Quality & Pricing</h4>
+          <p>Our diamonds are carefully selected for their exceptional quality. Each diamond is graded based on the 4Cs: Cut, Color, Clarity, and Carat weight. All prices include certification and premium setting.</p>
+        </div>
+        <div class="info-option-detail">
+          <h4>Carat Weight Guide</h4>
+          <p><strong>0.50 ct:</strong> Perfect for delicate, elegant settings<br>
+          <strong>1.00 ct:</strong> Classic size, most popular choice<br>
+          <strong>1.25-1.50 ct:</strong> Statement piece with excellent presence<br>
+          <strong>1.80-2.00 ct:</strong> Luxury size for special occasions<br>
+          <strong>2.50+ ct:</strong> Exceptional rare diamonds for collectors</p>
+        </div>
+        <div class="info-option-detail">
+          <h4>Price Variations</h4>
+          <p>Diamond prices increase exponentially with carat weight due to rarity. Each size represents carefully selected diamonds with excellent cut quality to maximize brilliance and fire. Prices include professional setting and certification.</p>
+        </div>
+      `;
+      showInfoModal(title, content);
+    }
+
+    // ฟังก์ชันสำหรับแสดง Modal
+    function showInfoModal(title, content) {
+      document.getElementById('infoModalTitle').textContent = title;
+      document.getElementById('infoModalBody').innerHTML = content;
+      document.getElementById('infoModal').classList.add('active');
+    }
+
+    // ฟังก์ชันสำหรับปิด Modal
+    function closeInfoModal() {
+      document.getElementById('infoModal').classList.remove('active');
+    }
+
+    // ปิด Modal เมื่อคลิกที่พื้นหลัง
+    document.getElementById('infoModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeInfoModal();
+      }
+    });
+
+    // ปิด Modal เมื่อกด Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeInfoModal();
+      }
+    });
+  </script>
+
+</body>
+
+</html>

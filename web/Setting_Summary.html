@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Product Details - eStore Bootstrap Template</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- Premium Fonts for Setting Summary -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/drift-zoom/drift-basic.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+
+  <!-- =======================================================
+  * Template Name: eStore
+  * Template URL: https://bootstrapmade.com/estore-bootstrap-ecommerce-template/
+  * Updated: Apr 26 2025 with Bootstrap v5.3.5
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body class="product-details-page">
+
+  <div id="header">
+    <script>
+      fetch("./Part/Header.html")
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("header").innerHTML = data;
+          // Initialize mobile navigation after header is loaded
+          console.log('Header loaded, initializing mobile navigation...');
+          setTimeout(() => {
+            if (typeof initMobileNavigation === 'function') {
+              initMobileNavigation();
+            } else {
+              console.error('initMobileNavigation function not found');
+            }
+          }, 100);
+        })
+        .catch(error => {
+          console.error('Error loading header:', error);
+        });
+    </script>
+  </div>
+  <main class="main">
+    <script>
+      // ตัวแปร global สำหรับการจัดการราคา
+      let globalBasePrice = 0;
+      let globalGemstonePrice = 0;
+      let globalBespokePrice = 0;
+      let globalCraftingFee = 0;
+
+      // ฟังก์ชันคำนวณค่าใช้จ่ายการผลิต
+      function calculateCraftingFee() {
+        const timeframeSelect = document.getElementById('crafting-timeframe');
+        const baseTotal = globalBasePrice + globalGemstonePrice + globalBespokePrice;
+
+        // ตรวจสอบว่า dropdown มีอยู่หรือไม่
+        if (!timeframeSelect) {
+          return 0; // ถ้าไม่มี dropdown ให้ return 0 (Standard crafting)
+        }
+
+        switch (timeframeSelect.value) {
+          case '5-7':
+            return Math.round(baseTotal * 0.15); // Express +15%
+          case '3-4':
+            return Math.round(baseTotal * 0.30); // Rush +30%
+          default:
+            return 0; // Standard no extra fee
+        }
+      }
+
+      // ฟังก์ชันอัปเดตราคารวม
+      function updateTotalPrice() {
+        globalCraftingFee = calculateCraftingFee();
+        const totalPrice = globalBasePrice + globalGemstonePrice + globalBespokePrice + globalCraftingFee;
+
+        // อัปเดตการแสดงผล - ตรวจสอบว่า element มีอยู่หรือไม่ก่อนอัปเดต
+        const baseElement = document.getElementById('base-price');
+        const gemstoneElement = document.getElementById('gemstone-price');
+        const bespokeElement = document.getElementById('bespoke-price');
+        const craftingElement = document.getElementById('crafting-fee');
+        const totalElement = document.getElementById('final-total');
+
+        if (baseElement) baseElement.textContent = `฿${globalBasePrice.toLocaleString('th-TH')}`;
+        if (gemstoneElement) gemstoneElement.textContent = `฿${globalGemstonePrice.toLocaleString('th-TH')}`;
+        if (bespokeElement) bespokeElement.textContent = `฿${globalBespokePrice.toLocaleString('th-TH')}`;
+        if (craftingElement) craftingElement.textContent = `฿${globalCraftingFee.toLocaleString('th-TH')}`;
+        if (totalElement) totalElement.textContent = `฿${totalPrice.toLocaleString('th-TH')}`;
+
+        console.log('Price updated - Total:', totalPrice);
+      }
+
+      // ฟังก์ชันอัปเดตวันที่ส่งมอบ
+      function updateDeliveryDate() {
+        const timeframeSelect = document.getElementById('crafting-timeframe');
+        const deliveryElement = document.getElementById('delivery-date');
+
+        // ตรวจสอบว่า element มีอยู่หรือไม่
+        if (!timeframeSelect || !deliveryElement) {
+          return; // ถ้าไม่มี element ให้ออกจากฟังก์ชัน
+        }
+
+        const today = new Date();
+        let startWeeks, endWeeks;
+
+        switch (timeframeSelect.value) {
+          case '5-7':
+            startWeeks = 5; endWeeks = 7; break;
+          case '3-4':
+            startWeeks = 3; endWeeks = 4; break;
+          default:
+            startWeeks = 7; endWeeks = 10; break;
+        }
+
+        const startDate = new Date(today.getTime() + startWeeks * 7 * 24 * 60 * 60 * 1000);
+        const endDate = new Date(today.getTime() + endWeeks * 7 * 24 * 60 * 60 * 1000);
+
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const startStr = startDate.toLocaleDateString('en-GB', options);
+        const endStr = endDate.toLocaleDateString('en-GB', options);
+
+        deliveryElement.textContent =
+          `Your piece will be crafted and ready for collection or delivery on ${startStr} - ${endStr}`;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // โหลดข้อมูลจาก localStorage
+        const selectedProduct = JSON.parse(localStorage.getItem('selectedProduct')) || {};
+        const selectedRing = JSON.parse(localStorage.getItem('selectedRing')) || {};
+        const finalPrices = JSON.parse(localStorage.getItem('finalPrices')) || {};
+
+        console.log('Loading data:', { selectedProduct, selectedRing, finalPrices });
+
+        // ตั้งชื่อสินค้า
+        if (selectedProduct.name) {
+          // เก็บชื่อไว้ใน console สำหรับ debug
+          console.log('Product name:', selectedProduct.name);
+          document.getElementById("setting-name").textContent = selectedProduct.name;
+        }
+
+        // โหลดราคาจากแหล่งที่มาที่ถูกต้อง
+
+        // 1. Base Setting Price: ราคาจากหน้า Women_Ring (ราคาเริ่มต้นก่อนเลือก Gemstone และ Bespoke)
+        if (selectedProduct.price) {
+          globalBasePrice = parseInt(selectedProduct.price);
+          console.log('Base price from Women_Ring:', globalBasePrice);
+        } else {
+          globalBasePrice = 0;
+          console.log('No base price found, setting to 0');
+        }
+
+        // 2. Gemstone Price: ราคาจาก dropdown ในหน้า Setting_Custom
+        if (selectedRing.gemstone) {
+          const gemstoneData = selectedRing.gemstone.split(' ');
+          if (gemstoneData.length >= 2) {
+            // ราคา gemstone อยู่ในตำแหน่งที่ 1 ของ array (หลังจาก carat)
+            globalGemstonePrice = parseInt(gemstoneData[1]) || 0;
+            console.log('Gemstone price from Setting_Custom:', globalGemstonePrice);
+          } else {
+            globalGemstonePrice = 0;
+          }
+        } else {
+          globalGemstonePrice = 0;
+          console.log('No gemstone selected, price = 0');
+        }
+
+        // 3. Bespoke Options: ราคาจากหน้า Setting_Bespoke (ถ้าไม่ได้เลือกแสดง 0)
+        if (selectedRing.bespoke) {
+          const bespokeData = selectedRing.bespoke.split(' ');
+          if (bespokeData.length >= 2) {
+            // ราคา bespoke อยู่ในตำแหน่งที่ 1 ของ array (หลังจากชื่อ option)
+            globalBespokePrice = parseInt(bespokeData[1]) || 0;
+            console.log('Bespoke price from Setting_Bespoke:', globalBespokePrice);
+          } else {
+            globalBespokePrice = 0;
+          }
+        } else {
+          globalBespokePrice = 0;
+          console.log('No bespoke option selected, price = 0');
+        }
+
+        // แสดงข้อมูล Setting Summary
+        // แสดงสีโลหะ - ตรวจสอบหลายแหล่งข้อมูล
+        let displayColor = "";
+        if (selectedRing.color) {
+          displayColor = selectedRing.color;
+        } else if (selectedProduct.color) {
+          displayColor = selectedProduct.color;
+        } else {
+          displayColor = "Yellow"; // ค่าเริ่มต้น
+        }
+
+        // อัปเดตการแสดงผลสี
+        document.getElementById("metal-type").textContent = `${displayColor} Gold`;
+        console.log('Displaying metal type:', `${displayColor} Gold`);
+
+        if (selectedRing.metal) {
+          document.getElementById("metal-karat").textContent = selectedRing.metal;
+        }
+
+        if (selectedRing.ringsize) {
+          document.getElementById("ring-size").textContent = selectedRing.ringsize + " mm";
+        }
+
+        // แสดงข้อมูล Bespoke Options
+        if (selectedRing.bespoke) {
+          const bespokeData = selectedRing.bespoke.split(' ');
+          if (bespokeData.length >= 1) {
+            const bespokeName = bespokeData[0].replace(/_/g, ' ');
+            document.getElementById("bespoke-options").textContent = bespokeName;
+          }
+        } else {
+          document.getElementById("bespoke-options").textContent = "None";
+        }
+
+        // แสดงข้อมูล Gemstone
+        if (selectedRing.gemstone) {
+          const gemstoneData = selectedRing.gemstone.split(' ');
+          if (gemstoneData.length >= 1) {
+            document.getElementById("gemstone-carat").textContent = `${gemstoneData[0]} ct`;
+            document.getElementById("gemstone").textContent = "Lab Grown Diamond ";
+            document.getElementById("gemstone-type").textContent = "CVD";
+            document.getElementById("gemstone-clarity").textContent = "VS1";
+          }
+        } else {
+          document.getElementById("gemstone").textContent = "-";
+          document.getElementById("gemstone-carat").textContent = "-";
+          document.getElementById("gemstone-type").textContent = "-";
+          document.getElementById("gemstone-clarity").textContent = "-";
+        }
+
+        // แสดงรูปทรง (Shape) จากชื่อสินค้า
+        if (selectedProduct.name) {
+          const shapeList = ['Cushion', 'Emerald', 'Marquise', 'Oval', 'Pear', 'Radiant', 'Round'];
+          const productName = selectedProduct.name;
+
+          // หารูปทรงจากชื่อสินค้า
+          const detectedShape = shapeList.find(shape => productName.includes(shape));
+
+          if (detectedShape) {
+            document.getElementById("gemstone-shape").textContent = detectedShape;
+            console.log('Detected shape from product name:', detectedShape);
+          } else {
+            document.getElementById("gemstone-shape").textContent = "-";
+            console.log('No shape detected in product name:', productName);
+          }
+        } else {
+          document.getElementById("gemstone-shape").textContent = "-";
+        }
+
+        // ตั้งรูปภาพและ thumbnails
+        if (selectedProduct.folder) {
+          const { folder } = selectedProduct;
+
+          // กำหนดสี - ตรวจสอบหลายแหล่งข้อมูลตามลำดับความสำคัญ
+          let currentColor;
+
+          if (selectedRing.color) {
+            // ถ้ามีสีที่บันทึกใน Setting_Custom ให้ใช้สีนั้น
+            currentColor = selectedRing.color;
+            console.log('Using saved color from Setting_Custom:', currentColor);
+          } else if (selectedProduct.color) {
+            // ถ้าไม่มีสีใน localStorage แต่มีสีส่งมาจาก Women_Ring
+            currentColor = selectedProduct.color;
+            console.log('Using color from Women_Ring:', currentColor);
+          } else {
+            // ถ้าไม่มีทั้งสองแหล่ง ใช้ค่าเริ่มต้น
+            currentColor = "Yellow";
+            console.log('Using default color:', currentColor);
+          }
+
+          const mainImg = document.getElementById("main-product-image");
+
+          // ฟังก์ชัน mapping ชื่อโฟลเดอร์จาก Best_Seller ไปหา Women_Ring
+          function findMatchingFolder(bestSellerFolder) {
+            // Mapping table สำหรับแปลงชื่อจาก Best_Seller ไป Women_Ring
+            const folderMapping = {
+              "Cushion Cut Diamond Solitaire Ring_19000_New": "Cushion Cut Diamond Solitaire Ring_19000_Cushion",
+              "Marquise with Pear Diamonds Trilogy Ring_29000_Pre Order": "Marquise with Pear Diamonds Trilogy Ring_29000_Marquise",
+              "Oval Cut Diamond Solitaire Ring_19000": "Oval Cut Diamond Solitaire Ring_19000_Oval",
+              "Pear Curved Solitaire Ring_19000": "Pear Curved Solitaire Ring_19000_Pear",
+              "Round Diamond Trilogy Ring_29000": "Round Diamond Trilogy Ring_29000_Round"
+            };
+            
+            // หาโฟลเดอร์ที่ตรงกัน
+            return folderMapping[bestSellerFolder] || bestSellerFolder;
+          }
+
+          // ฟังก์ชันอัปเดตรูปภาพหลัก
+          function updateMainImage(color, position = 'Top') {
+            const actualFolder = findMatchingFolder(folder);
+            mainImg.src = `assets/img/product/Jewelry/Women_s Rings/${actualFolder}/${position}_${color}.webp`;
+            mainImg.setAttribute("data-zoom", mainImg.src);
+          }
+
+          // แสดงรูปหลักด้วยสีที่เลือก
+          updateMainImage(currentColor, 'Top');
+
+          // ตั้ง thumbnails ใหม่ (ใช้โฟลเดอร์ที่แมปแล้ว)
+          const thumbnailContainer = document.querySelector(".swiper-wrapper");
+          if (thumbnailContainer) {
+            thumbnailContainer.innerHTML = ""; // ล้างเก่า
+
+            // หาโฟลเดอร์ที่ตรงกัน
+            const actualFolder = findMatchingFolder(folder);
+            
+            // สร้าง thumbnails สำหรับทุกสีและทุกมุมมอง
+            const colors = ["Yellow", "White", "Rose"];
+            const positions = ["Top", "Front"];
+
+            positions.forEach(position => {
+              colors.forEach(colorOption => {
+                const imagePath = `assets/img/product/Jewelry/Women_s Rings/${actualFolder}/${position}_${colorOption}.webp`;
+                const slide = document.createElement("div");
+                slide.className = "swiper-slide thumbnail-item";
+                slide.dataset.image = imagePath;
+                slide.dataset.color = colorOption;
+                slide.dataset.position = position;
+                slide.innerHTML = `<img src="${imagePath}" alt="${position} ${colorOption}" class="img-fluid">`;
+                thumbnailContainer.appendChild(slide);
+              });
+            });
+
+            // อัปเดตรูปเมื่อคลิก thumbnail
+            document.querySelectorAll(".thumbnail-item").forEach(item => {
+              item.addEventListener("click", function () {
+                // ลบ active จาก thumbnails อื่น
+                document.querySelectorAll(".thumbnail-item").forEach(thumb => thumb.classList.remove("active"));
+                // เพิ่ม active ให้ thumbnail ที่คลิก
+                this.classList.add("active");
+                
+                // ใช้ข้อมูล position และ color จาก dataset
+                const position = this.dataset.position || 'Top';
+                const color = this.dataset.color || currentColor;
+                updateMainImage(color, position);
+              });
+            });
+          }
+        }
+
+        // Event listener สำหรับ crafting timeframe (ถ้ามี)
+        const timeframeSelect = document.getElementById('crafting-timeframe');
+        if (timeframeSelect) {
+          timeframeSelect.addEventListener('change', () => {
+            updateTotalPrice();
+            updateDeliveryDate();
+          });
+        }
+
+        // คำนวณราคาเริ่มต้น
+        updateTotalPrice();
+        updateDeliveryDate();
+      });
+    </script>
+
+
+    <!-- Page Title -->
+    <!--<div class="page-title">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Ring Details</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="Yaniga_Diamonds.html">Home</a></li>
+            <li class="current">Ring Details</li>
+          </ol>
+        </nav>
+      </div>
+    </div>--><!-- End Page Title -->
+
+         <!-- Page Title -->
+    <div class="page-title light-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Women's Rings</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="Yaniga_Diamonds.html">Home</a></li>
+            <li><a href="Jewelry/Women_Ring.html">Women's Rings</a></li>
+            <li class="current">Setting Summary</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Step Navigation -->
+    <section class="step-navigation-section">
+      <div class="container">
+        <div class="step-navigation">
+          <div class="step completed clickable" onclick="location.href='Jewelry/Women_Ring.html'">
+            <span>1. SELECT YOUR SETTING</span>
+          </div>
+          <div class="step completed clickable" onclick="location.href='Setting_Custom.html'">
+            <span>2. CUSTOMISE YOUR SETTING</span>
+          </div>
+          <div class="step completed clickable" onclick="location.href='Setting_Bespoke.html'">
+            <span>3. BESPOKE CUSTOMISATIONS</span>
+          </div>
+          <div class="step active">
+            <span>4. SUMMARY YOUR SETTING</span>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Step Navigation -->
+
+    <!-- Product Details Section -->
+    <section id="product-details" class="product-details section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row">
+          <!-- Product Images -->
+          <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="200">
+            <div class="product-images">
+              <div class="main-image-container mb-3">
+                <div class="image-zoom-container">
+                  <img id="main-product-image" class="img-fluid main-image drift-zoom" src="" alt="Product Image" />
+                </div>
+              </div>
+
+              <div class="product-thumbnails">
+                <div class="swiper product-thumbnails-slider init-swiper">
+                  <script type="application/json" class="swiper-config">
+                    {
+                      "loop": false,
+                      "speed": 400,
+                      "slidesPerView": 4,
+                      "spaceBetween": 10,
+                      "navigation": {
+                        "nextEl": ".swiper-button-next",
+                        "prevEl": ".swiper-button-prev"
+                      },
+                      "breakpoints": {
+                        "320": {
+                          "slidesPerView": 3
+                        },
+                        "576": {
+                          "slidesPerView": 4
+                        }
+                      }
+                    }
+                  </script>
+                  <div class="swiper-wrapper">
+                    <!-- Thumbnails will be generated dynamically by JavaScript -->
+                  </div>
+                  <div class="swiper-button-next"></div>
+                  <div class="swiper-button-prev"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Info -->
+          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+            <div class="product-info">
+              <!--<div class="product-meta mb-2">
+                <span class="product-best-sellers">Headphones</span>
+                <div class="product-rating">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-half"></i>
+                  <span class="rating-count">(42)</span>
+                </div>
+              </div>-->
+
+              <!-- Summary Information -->
+
+
+              <!-- Settings Summary -->
+              <div class="settings-summary mb-4">
+                <div class="option-title text-start mb-3">
+                  <h5 class="mb-0">Setting Summary</h5>
+                </div>
+                <div class="setting-item mb-3 d-flex align-items-center border-bottom pb-2">
+                  <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Ring Setting</strong>
+                  <span id="setting-name" class="text-muted"
+                    style="width: 50%; text-align: left; padding-left: 40px;">-</span>
+                </div>
+                <div class="setting-item mb-3 d-flex align-items-center border-bottom pb-2">
+                  <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Precious Metal
+                    Type</strong>
+                  <span id="metal-type" class="text-muted"
+                    style="width: 50%; text-align: left; padding-left: 40px;">-</span>
+                </div>
+                <div class="setting-item mb-3 d-flex align-items-center border-bottom pb-2">
+                  <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Metal Karat</strong>
+                  <span id="metal-karat" class="text-muted"
+                    style="width: 50%; text-align: left; padding-left: 40px;">-</span>
+                </div>
+                <div class="setting-item mb-3 d-flex align-items-center border-bottom pb-2">
+                  <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Ring Size</strong>
+                  <span id="ring-size" class="text-muted"
+                    style="width: 50%; text-align: left; padding-left: 40px;">-</span>
+                </div>
+                <div class="setting-item mb-3 d-flex align-items-center">
+                  <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Bespoke
+                    Customisations</strong>
+                  <span id="bespoke-options" class="text-muted"
+                    style="width: 50%; text-align: left; padding-left: 40px;">-</span>
+                </div>
+              </div>
+
+              <!-- Gemstone Summary -->
+              <div class="gemstone-summary mb-4">
+                <div class="option-title text-start mb-3">
+                  <h5 class="mb-0">Gemstone Summary</h5>
+                </div>
+                <div class="gemstone-item mb-3 d-flex align-items-center border-bottom pb-2">
+                  <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Diamond</strong>
+                  <span id="gemstone" class="text-muted"
+                    style="width: 50%; text-align: left; padding-left: 40px;">-</span>
+                </div>
+                <div class="gemstone-item mb-3 d-flex align-items-center border-bottom pb-2">
+                  <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Shape</strong>
+                  <span id="gemstone-shape" class="text-muted"
+                    style="width: 50%; text-align: left; padding-left: 40px;">-</span>
+                </div>
+                <div class="gemstone-item mb-3 d-flex align-items-center border-bottom pb-2">
+                  <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Carat Weight</strong>
+                  <span id="gemstone-carat" class="text-muted"
+                    style="width: 50%; text-align: left; padding-left: 40px;">-</span>
+                </div>
+                <div class="gemstone-item mb-3 d-flex align-items-center border-bottom pb-2">
+                  <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Type</strong>
+                  <span id="gemstone-type" class="text-muted"
+                    style="width: 50%; text-align: left; padding-left: 40px;">-</span>
+                </div>
+                <div class="gemstone-item mb-3 d-flex align-items-center">
+                  <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Clarity</strong>
+                  <span id="gemstone-clarity" class="text-muted"
+                    style="width: 50%; text-align: left; padding-left: 40px;">-</span>
+                </div>
+              </div>
+
+              <!--<div class="summary-section mb-4">
+                <div class="option-title">
+                  <h4>Crafting Timeframe:</h4>
+                  <hr>
+                </div>
+                <div class="dropdown mb-3">
+                  <select class="form-select" id="crafting-timeframe">
+                    <option value="7-10">Standard Crafting: 7-10 weeks</option>
+                    <option value="5-7">Express Crafting: 5-7 weeks (+15%)</option>
+                    <option value="3-4">Rush Crafting: 3-4 weeks (+30%)</option>
+                  </select>
+                </div>
+                <p class="text-muted" id="delivery-date">Your piece will be crafted and ready for collection or delivery
+                  on 5 October - 26 October 2025</p>
+              </div>-->
+
+              <!-- Price Breakdown -->
+              <div class="price-breakdown mb-4">
+                <div class="option-title">
+                  <h5>Price Breakdown:</h5>
+                  <hr>
+                </div>
+                <div class="price-item d-flex justify-content-between mb-2">
+                  <span>Base Setting Price:</span>
+                  <span id="base-price">฿0</span>
+                </div>
+                <div class="price-item d-flex justify-content-between mb-2">
+                  <span>Gemstone Price:</span>
+                  <span id="gemstone-price">฿0</span>
+                </div>
+                <div class="price-item d-flex justify-content-between mb-2">
+                  <span>Bespoke Options:</span>
+                  <span id="bespoke-price">฿0</span>
+                </div>
+                <!--<div class="price-item d-flex justify-content-between mb-2">
+                  <span>Crafting Fee:</span>
+                  <span id="crafting-fee">฿0</span>
+                </div>-->
+                <hr>
+                <div class="price-total d-flex justify-content-between">
+                  <strong>Total Price:</strong>
+                  <strong id="final-total">฿0</strong>
+                </div>
+              </div>
+
+              <!-- Customer Notice -->
+              <div class="customer-notice mt-3 mb-4 w-100">
+                <p class="text-muted text-start small mb-0 d-flex align-items-start"
+                  style="width: 100%; padding-right: 0;">
+                  <i class="bi bi-info-circle me-2 flex-shrink-0"></i>
+                  <span>Please review the shipping, warranty, and refund details below before adding items to your
+                    cart.</span>
+                </p>
+              </div>
+
+              <!-- <div class="product-short-description mb-4">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue, suscipit elit
+                  nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis.</p>
+              </div>-->
+
+              <!--<div class="product-availability mb-4">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span>In Stock</span>
+                <span class="stock-count">(24 items left)</span>
+              </div>-->
+
+              <!-- Size Options if applicable -->
+              <!--<div class="product-sizes mb-4">
+                <h6 class="option-title">Ring Size: <span class="selected-option">M</span> </h6>
+                <div class="size-options">
+                  <div class="size-option" data-size="47">47</div>
+                  <div class="size-option" data-size="48">48</div>
+                  <div class="size-option" data-size="49">49</div>
+                  <div class="size-option" data-size="50">50</div>
+                  <div class="size-option" data-size="51">51</div>
+                  <div class="size-option" data-size="52">52</div>
+                  <div class="size-option" data-size="53">53</div>
+                  <div class="size-option" data-size="54">54</div>
+
+                </div>
+              </div>-->
+
+              <!-- Quantity Selector -->
+              <!--<div class="product-quantity mb-4">
+                <h6 class="option-title">Quantity:</h6>
+                <div class="quantity-selector">
+                  <button class="quantity-btn decrease">
+                    <i class="bi bi-dash"></i>
+                  </button>
+                  <input type="number" class="quantity-input" value="1" min="1" max="24">
+                  <button class="quantity-btn increase">
+                    <i class="bi bi-plus"></i>
+                  </button>
+                </div>
+              </div>-->
+
+              <!-- Action Buttons -->
+              <div class="product-actions">
+                <!--<button class="btn btn-primary add-to-cart-btn">
+                  <i class="bi bi-cart-plus"></i> Back
+                </button>-->
+                <a href="Setting_Bespoke.html" class="btn btn-outline-primary buy-now-btn">
+                  <i class="bi"></i> Back
+                </a>
+                <a href="Cart.html" class="btn btn-outline-primary buy-now-btn">
+                  <i class="bi"></i> Add to Cart
+                </a>
+
+
+                <!--<button class="btn btn-outline-secondary wishlist-btn">
+                  <i class="bi bi-heart"></i>
+                </button>-->
+              </div>
+
+              <!-- Additional Info -->
+              <!--<div class="additional-info mt-4">
+                <div class="info-item">
+                  <i class="bi bi-truck"></i>
+                  <span>Free shipping on orders over $50</span>
+                </div>
+                <div class="info-item">
+                  <i class="bi bi-arrow-repeat"></i>
+                  <span>30-day return policy</span>
+                </div>
+                <div class="info-item">
+                  <i class="bi bi-shield-check"></i>
+                  <span>2-year warranty</span>
+                </div>
+              </div>-->
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Details Tabs -->
+        <div class="row">
+          <div class="col-12">
+            <div class="product-details-tabs">
+              <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                    data-bs-target="#description" type="button" role="tab" aria-controls="description"
+                    aria-selected="true">Shipping & Delivery</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" data-bs-target="#specifications"
+                    type="button" role="tab" aria-controls="specifications" aria-selected="false">Warranty & After-Sales
+                    Care</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button"
+                    role="tab" aria-controls="reviews" aria-selected="false">Refund & Exchange Policy</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="productTabsContent">
+                <!-- Description Tab -->
+                <div class="tab-pane fade show active" id="description" role="tabpanel"
+                  aria-labelledby="description-tab">
+                  <div class="product-description">
+                    <!--<h4>Product Overview</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue, suscipit
+                      elit nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis. Suspendisse
+                      vulputate quam diam, et consectetur augue condimentum in. Aenean dapibus urna eget nisi pharetra,
+                      in iaculis nulla blandit. Praesent at consectetur sem, sed sollicitudin nibh. Ut interdum risus ac
+                      nulla placerat aliquet.</p>-->
+
+                    <h4>Domestic Delivery (Thailand)</h4>
+                    <ul style="padding-left: 2.5rem;">
+                      <li>Free insured shipping nationwide for all orders</li>
+                      <li>Bangkok area: Premium messenger service (delivery within 2 hours available)</li>
+                      <li>Same-day or next-day delivery depending on order confirmation time</li>
+                      <li>Outside Bangkok: Estimated delivery 2-3 business days</li>
+                    </ul>
+
+                    <h4>International Delivery</h4>
+                    <ul style="padding-left: 2.5rem;">
+                      <li>We ship worldwide via DHL or FedEx</li>
+                      <li>Fully insured shipments</li>
+                      <li>Estimated delivery time: 3-7 business days depending on destination</li>
+                      <li>Customers are responsible for any import duties, taxes, or customs fee</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Specifications Tab -->
+                <div class="tab-pane fade" id="specifications" role="tabpanel" aria-labelledby="specifications-tab">
+                  <div class="product-specifications">
+                    <div class="product-description">
+                      <h4>Warranty Coverage</h4>
+                      <p class="mb-2"><span style="font-weight: 500; color: var(--heading-color);">Yaniga
+                          Diamond</span>offers a complimentary 3-year limited warranty on all fine jewelry
+                        purchases. This warranty covers quality issues resulting from manufacturing defects,
+                        including:</p>
+                      <ul style="padding-left: 2.5rem;">
+                        <li>Loose or misaligned stones caused by faulty settings</li>
+                        <li>Defective prongs or mountings</li>
+                        <li>Broken clasps, soldering issues, or structural flaws</li>
+                      </ul>
+
+                      <h4>What's Not Covered</h4>
+                      <ul style="padding-left: 2.5rem;">
+                        <li>Normal wear and tear (e.g., scratches, dents, fading, tarnishing)</li>
+                        <li>Damage caused by accidents, improper care, or unauthorized third-party repairs</li>
+                      </ul>
+
+                      <h4>After-Sales Service</h4>
+                      <p class="mb-2">To keep your jewelry looking as beautiful as the day you received it,
+                        <span style="font-weight: 500; color: var(--heading-color);">Yaniga Diamond</span>
+                        provides the following complimentary services:
+                      </p>
+                      <ul style="padding-left: 2.5rem;" class="mb-2">
+                        <li>Deep Cleaning (includes setting inspection)</li>
+                        <li>Free Prong Tightening (up to 2 times)</li>
+                        <li>Free Polishing (up to 2 times)</li>
+                        <li>Free Resizing (up to 2 times)</li>
+                        <li>Free Rhodium Plating for white gold (up to 2 times)</li>
+                      </ul>
+                      <p class="mb-2"><span style="font-weight: 500; color: var(--heading-color);">Note:</span>
+                        Customers are responsible for the shipping cost of sending items to <span
+                          style="font-weight: 500; color: var(--heading-color);">Yaniga Diamond</span>. Any
+                        applicable customs duties or taxes upon arrival in Thailand are also the customer’s
+                        responsibility.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+
+                <!-- Reviews Tab -->
+                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                  <div class="product-reviews">
+                    <p> At <span style="font-weight: 500; color: var(--heading-color);">Yaniga Diamond</span>, we are
+                      committed to delivering
+                      high-quality diamond jewelry and a smooth shopping experience. While we do <span
+                        style="font-weight: 500; color: var(--heading-color);">not offer refunds</span>,
+                      we do provide an <span style="font-weight: 500; color: var(--heading-color);">exchange policy
+                        within 7 days</span> of
+                      purchase for eligible items.
+                    </p>
+                    <h4>Exchange Policy</h4>
+                    <ul>
+                      <li>Exchanges must be requested within 7 days of the original purchase
+                        date.</li>
+                      <li>
+                        <span style="font-weight: 500; color: var(--heading-color);">Custom-made items are not eligible
+                        </span>for exchange
+                      </li>
+                    </ul>
+
+                    <h4>Conditions for Exchange</h4>
+                    <p class="mb-2">To be eligible for an exchange, the item must meet the following
+                      conditions:</p>
+                    <ul>
+                      <li>
+                        The <span style="font-weight: 500; color: var(--heading-color);">original packaging </span>must
+                        be included and in
+                        like-new condition.
+                      </li>
+                      <li>
+                        <span style="font-weight: 500; color: var(--heading-color);">All tags, stickers, and identifying
+                          labels </span>must be intact
+                        and undamaged.
+                      </li>
+                      <li>
+                        <span style="font-weight: 500; color: var(--heading-color);">All accompanying documentation
+                        </span>(certificates, invoices,
+                        etc.) must be included and in pristine condition.
+                      </li>
+                      <li>
+                        The product itself must be <span
+                          style="font-weight: 500; color: var(--heading-color);">undamaged and in like-new
+                          condition</span>.
+                      </li>
+                      <li>
+                        A <span style="font-weight: 500; color: var(--heading-color);">valid receipt </span>must be
+                        presented as proof of
+                        purchase.
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /Product Details Section -->
+
+  </main>
+  <div id="footer">
+    <script>
+      fetch("./Part/Footer.html")
+        .then(response => response.text())
+        .then(data => document.getElementById("footer").innerHTML = data);
+    </script>
+  </div>
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/drift-zoom/Drift.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+  
+  <!-- Yaniga API Integration -->
+  <script src="assets/js/yaniga-api.js"></script>
+</body>
+
+</html>

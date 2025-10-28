@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Product Details - eStore Bootstrap Template</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/drift-zoom/drift-basic.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+
+  <!-- =======================================================
+  * Template Name: eStore
+  * Template URL: https://bootstrapmade.com/estore-bootstrap-ecommerce-template/
+  * Updated: Apr 26 2025 with Bootstrap v5.3.5
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body class="product-details-page">
+
+  <div id="header">
+    <script>
+      fetch("./Part/Header.html")
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("header").innerHTML = data;
+          // Initialize mobile navigation after header is loaded
+          console.log('Header loaded, initializing mobile navigation...');
+          setTimeout(() => {
+            if (typeof initMobileNavigation === 'function') {
+              initMobileNavigation();
+            } else {
+              console.error('initMobileNavigation function not found');
+            }
+          }, 100);
+        })
+        .catch(error => {
+          console.error('Error loading header:', error);
+        });
+    </script>
+  </div>
+  <main class="main">
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const nextButton = document.querySelector(".Next-Button");
+        const nextLink = document.querySelector("#nextLink");
+
+        nextButton.addEventListener("click", (e) => {
+          // ลบการตรวจสอบการเลือก radio button - ให้ไปหน้าถัดไปได้เสมอ
+          window.location.href = nextLink.href; // เปลี่ยนหน้าได้ทันที
+        });
+      });
+    </script>
+
+    <script>
+      // ตัวแปร global สำหรับการจัดการราคา
+      let globalBasePrice = 0;
+      let globalGemstonePrice = 0;
+      let globalBespokePrice = 0;
+
+      // ฟังก์ชันอัปเดตราคารวม
+      function updateTotalPrice() {
+        const totalPrice = globalBasePrice + globalGemstonePrice + globalBespokePrice;
+        const formattedPrice = totalPrice.toLocaleString('th-TH') + ' B';
+        const priceElement = document.querySelector('.current-price');
+        if (priceElement) {
+          priceElement.textContent = formattedPrice;
+        }
+        console.log('Price breakdown:', {
+          base: globalBasePrice,
+          gemstone: globalGemstonePrice,
+          bespoke: globalBespokePrice,
+          total: totalPrice
+        });
+      }
+
+      // ฟังก์ชันโหลดราคาจากข้อมูลที่บันทึกไว้
+      function loadPricesFromStorage() {
+        const selected = JSON.parse(localStorage.getItem('selectedProduct'));
+        const savedSelections = JSON.parse(localStorage.getItem('selectedRing')) || {};
+        
+        // โหลดราคาฐาน (ราคาแหวน)
+        if (selected) {
+          if (selected.price) {
+            globalBasePrice = parseInt(selected.price);
+          } else if (selected.fullData) {
+            const parts = selected.fullData.split('_');
+            if (parts.length >= 2) {
+              globalBasePrice = parseInt(parts[parts.length - 2]);
+            }
+          } else if (selected.folder) {
+            const parts = selected.folder.split('_');
+            if (parts.length >= 2) {
+              globalBasePrice = parseInt(parts[parts.length - 2]);
+            }
+          }
+        }
+
+        // โหลดราคา gemstone ที่เลือกไว้
+        if (savedSelections.gemstone) {
+          const gemstoneData = savedSelections.gemstone.split(' ');
+          if (gemstoneData.length >= 2) {
+            globalGemstonePrice = parseInt(gemstoneData[1]);
+          }
+        }
+
+        // โหลดราคา bespoke ที่เลือกไว้ (ถ้ามี)
+        if (savedSelections.bespoke) {
+          const bespokeData = savedSelections.bespoke.split(' ');
+          if (bespokeData.length >= 2) {
+            globalBespokePrice = parseInt(bespokeData[1]);
+          }
+        }
+
+        console.log('Loaded prices from storage:', {
+          base: globalBasePrice,
+          gemstone: globalGemstonePrice,
+          bespoke: globalBespokePrice
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // โหลดราคาจาก localStorage
+        loadPricesFromStorage();
+        
+        const selected = JSON.parse(localStorage.getItem('selectedProduct'));
+        if (!selected) return;
+
+        const { name, folder } = selected;
+        
+        // อ่านข้อมูลการเลือกจาก localStorage (รวมทั้งสี)
+        const savedSelections = JSON.parse(localStorage.getItem('selectedRing')) || {};
+        
+        // กำหนดสี - ตรวจสอบหลายแหล่งข้อมูลตามลำดับความสำคัญ
+        let currentColor;
+        
+        if (savedSelections.color) {
+          // ถ้ามีสีที่บันทึกใน Setting_Custom ให้ใช้สีนั้น
+          currentColor = savedSelections.color;
+          console.log('Using saved color from Setting_Custom:', currentColor);
+        } else if (selected.color) {
+          // ถ้าไม่มีสีใน localStorage แต่มีสีส่งมาจาก Women_Ring
+          currentColor = selected.color;
+          console.log('Using color from Women_Ring:', currentColor);
+        } else {
+          // ถ้าไม่มีทั้งสองแหล่ง ใช้ค่าเริ่มต้น
+          currentColor = "Yellow";
+          console.log('Using default color:', currentColor);
+        }
+
+        // ตั้งชื่อสินค้า
+        document.getElementById("detail-name").textContent = name;
+
+        // ตั้งภาพหลัก
+        const mainImg = document.getElementById("main-product-image");
+
+        // ฟังก์ชัน mapping ชื่อโฟลเดอร์จาก Best_Seller ไปหา Women_Ring
+        function findMatchingFolder(bestSellerFolder) {
+          // Mapping table สำหรับแปลงชื่อจาก Best_Seller ไป Women_Ring
+          const folderMapping = {
+            "Cushion Cut Diamond Solitaire Ring_19000_New": "Cushion Cut Diamond Solitaire Ring_19000_Cushion",
+            "Marquise with Pear Diamonds Trilogy Ring_29000_Pre Order": "Marquise with Pear Diamonds Trilogy Ring_29000_Marquise",
+            "Oval Cut Diamond Solitaire Ring_19000": "Oval Cut Diamond Solitaire Ring_19000_Oval",
+            "Pear Curved Solitaire Ring_19000": "Pear Curved Solitaire Ring_19000_Pear",
+            "Round Diamond Trilogy Ring_29000": "Round Diamond Trilogy Ring_29000_Round"
+          };
+          
+          // หาโฟลเดอร์ที่ตรงกัน
+          return folderMapping[bestSellerFolder] || bestSellerFolder;
+        }
+
+        // ฟังก์ชันอัปเดตรูปภาพหลัก
+        function updateMainImage(color, position = 'Top') {
+          const actualFolder = findMatchingFolder(folder);
+          mainImg.src = `assets/img/product/Jewelry/Women_s Rings/${actualFolder}/${position}_${color}.webp`;
+          mainImg.setAttribute("data-zoom", mainImg.src);
+        }
+
+        // แสดงรูปหลักด้วยสีที่เลือก
+        updateMainImage(currentColor);
+
+        // ตั้ง thumbnails ใหม่ (ใช้โฟลเดอร์ที่แมปแล้ว)
+        const thumbnailContainer = document.querySelector(".swiper-wrapper");
+        if (thumbnailContainer) {
+          thumbnailContainer.innerHTML = ""; // ล้างเก่า
+
+          // หาโฟลเดอร์ที่ตรงกัน
+          const actualFolder = findMatchingFolder(folder);
+          
+          // สร้าง thumbnails สำหรับทุกสีและทุกมุมมอง
+          const colors = ["Yellow", "White", "Rose"];
+          const positions = ["Top", "Front"];
+
+          positions.forEach(position => {
+            colors.forEach(colorOption => {
+              const imagePath = `assets/img/product/Jewelry/Women_s Rings/${actualFolder}/${position}_${colorOption}.webp`;
+              const slide = document.createElement("div");
+              slide.className = "swiper-slide thumbnail-item";
+              slide.dataset.image = imagePath;
+              slide.dataset.color = colorOption;
+              slide.dataset.position = position;
+              slide.innerHTML = `<img src="${imagePath}" alt="${position} ${colorOption}" class="img-fluid">`;
+              thumbnailContainer.appendChild(slide);
+            });
+          });
+
+          // อัปเดตรูปเมื่อคลิก thumbnail
+          document.querySelectorAll(".thumbnail-item").forEach(item => {
+            item.addEventListener("click", function () {
+              // ลบ active จาก thumbnails อื่น
+              document.querySelectorAll(".thumbnail-item").forEach(thumb => thumb.classList.remove("active"));
+              // เพิ่ม active ให้ thumbnail ที่คลิก
+              this.classList.add("active");
+              
+              // ใช้ข้อมูล position และ color จาก dataset
+              const position = this.dataset.position || 'Top';
+              const color = this.dataset.color || currentColor;
+              updateMainImage(color, position);
+            });
+          });
+        }
+
+        // จัดการการเลือกสี (ถ้ามีส่วน color options ในหน้านี้)
+        document.querySelectorAll(".color-option").forEach(option => {
+          option.addEventListener("click", function () {
+            // ลบ active จากทุกตัวเลือก
+            document.querySelectorAll(".color-option").forEach(opt => opt.classList.remove("active"));
+
+            // เพิ่ม active ให้ตัวที่เลือก
+            this.classList.add("active");
+
+            // อัปเดตสีปัจจุบัน
+            currentColor = this.dataset.color;
+
+            // บันทึกสีที่เลือกใน localStorage
+            let selectedRing = JSON.parse(localStorage.getItem('selectedRing')) || {};
+            selectedRing.color = currentColor;
+            localStorage.setItem('selectedRing', JSON.stringify(selectedRing));
+
+            // อัปเดตข้อความแสดงสีที่เลือก (ถ้ามี)
+            const selectedOptionElement = document.querySelector(".product-colors .selected-option");
+            if (selectedOptionElement) {
+              selectedOptionElement.textContent = ` ${currentColor} Gold`;
+            }
+
+            // อัปเดตรูปหลัก
+            const activeThumbnail = document.querySelector(".thumbnail-item.active");
+            const currentPosition = activeThumbnail ? activeThumbnail.dataset.position || 'Top' : 'Top';
+            updateMainImage(currentColor, currentPosition);
+            
+            console.log('Color updated and saved to localStorage:', currentColor);
+          });
+        });
+
+        // ตั้งค่า active color option ให้ตรงกับสีที่เลือก (ถ้ามีส่วน color options)
+        const activeColorOption = document.querySelector(`[data-color="${currentColor}"]`);
+        if (activeColorOption) {
+          document.querySelectorAll(".color-option").forEach(opt => opt.classList.remove("active"));
+          activeColorOption.classList.add("active");
+          
+          // อัปเดตข้อความแสดงสีที่เลือก (ถ้ามี)
+          const selectedOptionElement = document.querySelector(".product-colors .selected-option");
+          if (selectedOptionElement) {
+            selectedOptionElement.textContent = ` ${currentColor} Gold`;
+          }
+        }
+
+        console.log('Setting_Bespoke initialized with color:', currentColor);
+        console.log('Product folder:', folder);
+        console.log('Saved selections:', savedSelections);
+        
+        // อัปเดตราคาเริ่มต้น
+        updateTotalPrice();
+      });
+    </script>
+
+
+    <!-- Page Title -->
+    <!--<div class="page-title">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Ring Details</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="Yaniga_Diamonds.html">Home</a></li>
+            <li class="current">Ring Details</li>
+          </ol>
+        </nav>
+      </div>
+    </div>--><!-- End Page Title -->
+             <!-- Page Title -->
+         <!-- Page Title -->
+    <div class="page-title light-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Women's Rings</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="Yaniga_Diamonds.html">Home</a></li>
+            <li><a href="Jewelry/Women_Ring.html">Women's Rings</a></li>
+            <li class="current">Setting Bespoke</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Step Navigation -->
+    <section class="step-navigation-section">
+      <div class="container">
+        <div class="step-navigation">
+          <div class="step completed clickable" onclick="location.href='Jewelry/Women_Ring.html'">
+            <span>1. SELECT YOUR SETTING</span>
+          </div>
+          <div class="step completed clickable" onclick="location.href='Setting_Custom.html'">
+            <span>2. CUSTOMISE YOUR SETTING</span>
+          </div>
+          <div class="step active">
+            <span>3. BESPOKE CUSTOMISATIONS</span>
+          </div>
+          <div class="step">
+            <span>4. SUMMARY YOUR SETTING</span>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Step Navigation -->
+
+    <!-- Product Details Section -->
+    <section id="product-details" class="product-details section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row">
+          <!-- Product Images -->
+          <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="200">
+            <div class="product-images">
+              <div class="main-image-container mb-3">
+                <div class="image-zoom-container">
+                  <img id="main-product-image" class="img-fluid main-image drift-zoom" src="" alt="Product Image" />
+                </div>
+              </div>
+
+              <div class="product-thumbnails">
+                <div class="swiper product-thumbnails-slider init-swiper">
+                  <script type="application/json" class="swiper-config">
+                    {
+                      "loop": false,
+                      "speed": 400,
+                      "slidesPerView": 4,
+                      "spaceBetween": 10,
+                      "navigation": {
+                        "nextEl": ".swiper-button-next",
+                        "prevEl": ".swiper-button-prev"
+                      },
+                      "breakpoints": {
+                        "320": {
+                          "slidesPerView": 3
+                        },
+                        "576": {
+                          "slidesPerView": 4
+                        }
+                      }
+                    }
+                  </script>
+                  <div class="swiper-wrapper">
+                    <div class="swiper-slide thumbnail-item active"
+                      data-image="assets/img/product/product-details-1.webp">
+                      <img src="assets/img/product/product-details-1.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide thumbnail-item" data-image="assets/img/product/product-details-2.webp">
+                      <img src="assets/img/product/product-details-2.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide thumbnail-item" data-image="assets/img/product/product-details-3.webp">
+                      <img src="assets/img/product/product-details-3.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide thumbnail-item" data-image="assets/img/product/product-details-4.webp">
+                      <img src="assets/img/product/product-details-4.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide thumbnail-item" data-image="assets/img/product/product-details-5.webp">
+                      <img src="assets/img/product/product-details-5.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                  </div>
+                  <div class="swiper-button-next"></div>
+                  <div class="swiper-button-prev"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Info -->
+          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+            <div class="product-info">
+              <!--<div class="product-meta mb-2">
+                <span class="product-best-sellers">Headphones</span>
+                <div class="product-rating">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-half"></i>
+                  <span class="rating-count">(42)</span>
+                </div>
+              </div>-->
+
+              <h1 class="product-title" id="detail-name"></h1>
+
+              <div class="product-price-container mb-4">
+                <span class="current-price">Loading...</span>
+                <!--<span class="original-price">$299.99</span>
+                <span class="discount-badge">-17%</span>-->
+              </div>
+
+              <!-- <div class="product-short-description mb-4">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue, suscipit elit
+                  nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis.</p>
+              </div>-->
+
+              <!--<div class="product-availability mb-4">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span>In Stock</span>
+                <span class="stock-count">(24 items left)</span>
+              </div>-->
+
+              <div class="option-title selector">
+                <h6>
+                  <span>
+                    Bespoke Customisations
+                    <button type="button" class="bespoke-info-btn" onclick="showBespokeInfo()" title="View details about Bespoke options"></button>
+                  </span>
+                  <span class="right" id="remove-selection">Remove Selection</span>
+                </h6>
+                <form class="ring-selection" id="bespoke">
+                  <label class="ring-option">
+                    <input type="radio" name="ring" value="Pavé_Bridge 8500">
+                    <div class="ring-content">
+                      <img src="assets/img/product/bespoke/Pave_Bridge.avif" alt="Pavé Bridge">
+                      <span>Pavé Bridge - 8,500 B</span>
+                    </div>
+                  </label>
+
+                  <label class="ring-option">
+                    <input type="radio" name="ring" value="Pavé_Band 9500">
+                    <div class="ring-content">
+                      <img src="assets/img/product/bespoke/Pave_Band.avif" alt="Pavé Band">
+                      <span>Pavé Band - 9,500 B</span>
+                    </div>
+                  </label>
+
+                  <label class="ring-option">
+                    <input type="radio" name="ring" value="Hidden_Halo 9500">
+                    <div class="ring-content">
+                      <img src="assets/img/product/bespoke/Hidden_Halo.avif" alt="Hidden_Halo">
+                      <span>Hidden Halo - 9,500 B</span>
+                    </div>
+                  </label>
+                </form>
+              </div>
+
+              <script>
+                // จัดการการเลือก Bespoke options
+                document.addEventListener('DOMContentLoaded', () => {
+                  const bespokeForm = document.querySelector('#bespoke');
+                  const removeButton = document.querySelector('#remove-selection');
+                  
+                  // โหลดการเลือก bespoke ที่บันทึกไว้
+                  const savedSelections = JSON.parse(localStorage.getItem('selectedRing')) || {};
+                  if (savedSelections.bespoke) {
+                    const savedValue = savedSelections.bespoke;
+                    const radioInput = document.querySelector(`input[name="ring"][value="${savedValue}"]`);
+                    if (radioInput) {
+                      radioInput.checked = true;
+                      // เพิ่ม class selected ให้ option ที่ถูกเลือก
+                      const selectedOption = radioInput.closest('.ring-option');
+                      if (selectedOption) {
+                        selectedOption.classList.add('selected');
+                      }
+                    }
+                  }
+                  
+                  if (bespokeForm) {
+                    bespokeForm.addEventListener('change', (e) => {
+                      if (e.target.type === 'radio') {
+                        // ลบ class selected จากทุก ring-option
+                        document.querySelectorAll('.ring-option').forEach(option => {
+                          option.classList.remove('selected');
+                        });
+                        
+                        // เพิ่ม class selected ให้ option ที่ถูกเลือก
+                        const selectedOption = e.target.closest('.ring-option');
+                        if (selectedOption) {
+                          selectedOption.classList.add('selected');
+                        }
+                        
+                        const selectedValue = e.target.value; // format: "Pavé_Bridge 8500"
+                        const parts = selectedValue.split(' ');
+                        
+                        if (parts.length >= 2) {
+                          const bespokePrice = parseInt(parts[parts.length - 1]); // เอาตัวสุดท้าย (ราคา)
+                          
+                          // อัปเดตราคา bespoke
+                          globalBespokePrice = bespokePrice;
+                          
+                          // บันทึกการเลือกใน localStorage
+                          let selectedRing = JSON.parse(localStorage.getItem('selectedRing')) || {};
+                          selectedRing.bespoke = selectedValue;
+                          localStorage.setItem('selectedRing', JSON.stringify(selectedRing));
+                          
+                          // อัปเดตราคารวม
+                          updateTotalPrice();
+                          
+                          console.log('Bespoke option selected:', selectedValue, 'Price:', bespokePrice);
+                        }
+                      }
+                    });
+                  }
+                  
+                  // จัดการปุ่ม Remove Selection
+                  if (removeButton) {
+                    removeButton.addEventListener('click', () => {
+                      // ล้างการเลือก radio buttons
+                      const radioButtons = document.querySelectorAll('input[name="ring"]');
+                      radioButtons.forEach(radio => radio.checked = false);
+                      
+                      // ลบ class selected จากทุก ring-option
+                      document.querySelectorAll('.ring-option').forEach(option => {
+                        option.classList.remove('selected');
+                      });
+                      
+                      // รีเซ็ตราคา bespoke
+                      globalBespokePrice = 0;
+                      
+                      // ลบข้อมูลจาก localStorage
+                      let selectedRing = JSON.parse(localStorage.getItem('selectedRing')) || {};
+                      delete selectedRing.bespoke;
+                      localStorage.setItem('selectedRing', JSON.stringify(selectedRing));
+                      
+                      // อัปเดตราคารวม
+                      updateTotalPrice();
+                      
+                      console.log('Bespoke selection removed');
+                    });
+                  }
+                });
+
+                document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+                  const selected = dropdown.querySelector('.dropdown-selected');
+                  const options = dropdown.querySelector('.dropdown-options');
+                  const dropdownId = dropdown.id; // ดึง ID ของ dropdown
+
+                  // เปิด/ปิด dropdown
+                  selected.addEventListener('click', () => {
+                    document.querySelectorAll('.custom-dropdown').forEach(d => {
+                      if (d !== dropdown) d.classList.remove('open');
+                    });
+                    dropdown.classList.toggle('open');
+                  });
+
+                  // เลือก option
+                  options.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('dropdown-option')) {
+                      selected.textContent = e.target.textContent;
+                      dropdown.classList.remove('open');
+                      console.log(`Selected ${dropdownId}:`, e.target.dataset.value);
+
+
+                      // ดึงข้อมูล `selectedRing` จาก localStorage
+                      let selectedRing = JSON.parse(localStorage.getItem('selectedRing')) || {};
+                      //delete selectedRing.Karat;
+
+
+                      // อัปเดตค่าใหม่เข้าไปใน selectedRing โดยใช้ ID เป็น key
+                      selectedRing[dropdownId] = e.target.dataset.value;
+
+
+                      // บันทึกค่าที่อัปเดตกลับเข้าไปใน localStorage
+                      localStorage.setItem('selectedRing', JSON.stringify(selectedRing));
+
+                      console.log("Updated selectedRing:", selectedRing); // ตรวจสอบค่าหลังอัปเดต
+                    }
+                  });
+
+                  // ปิด dropdown เมื่อคลิกข้างนอก
+                  document.addEventListener('click', (e) => {
+                    if (!dropdown.contains(e.target)) {
+                      dropdown.classList.remove('open');
+                    }
+                  });
+                });
+
+              </script>
+
+
+              <!-- Size Options if applicable -->
+              <!--<div class="product-sizes mb-4">
+                <h6 class="option-title">Ring Size: <span class="selected-option">M</span> </h6>
+                <div class="size-options">
+                  <div class="size-option" data-size="47">47</div>
+                  <div class="size-option" data-size="48">48</div>
+                  <div class="size-option" data-size="49">49</div>
+                  <div class="size-option" data-size="50">50</div>
+                  <div class="size-option" data-size="51">51</div>
+                  <div class="size-option" data-size="52">52</div>
+                  <div class="size-option" data-size="53">53</div>
+                  <div class="size-option" data-size="54">54</div>
+
+                </div>
+              </div>-->
+
+              <!-- Quantity Selector -->
+              <!--<div class="product-quantity mb-4">
+                <h6 class="option-title">Quantity:</h6>
+                <div class="quantity-selector">
+                  <button class="quantity-btn decrease">
+                    <i class="bi bi-dash"></i>
+                  </button>
+                  <input type="number" class="quantity-input" value="1" min="1" max="24">
+                  <button class="quantity-btn increase">
+                    <i class="bi bi-plus"></i>
+                  </button>
+                </div>
+              </div>-->
+
+              <!-- Action Buttons -->
+              <div class="product-actions">
+                <!--<button class="btn btn-primary add-to-cart-btn">
+                  <i class="bi bi-cart-plus"></i> Back
+                </button>-->
+                <a href="Setting_Custom.html" class="btn btn-outline-primary buy-now-btn">
+                  <i class="bi"></i> Back
+                </a>
+                <button id="nextButton" class="btn btn-outline-primary buy-now-btn Next-Button">
+                  <i class="bi"></i> Next
+                </button>
+                <a href="Setting_Summary.html" id="nextLink" style="display: none;"></a>
+
+                <!--<button class="btn btn-outline-secondary wishlist-btn">
+                  <i class="bi bi-heart"></i>
+                </button>-->
+              </div>
+
+              <!-- Additional Info -->
+              <div class="additional-info mt-4">
+                <div class="info-item">
+                  <i class="bi bi-truck"></i>
+                  <span>Free shipping on orders over $50</span>
+                </div>
+                <div class="info-item">
+                  <i class="bi bi-arrow-repeat"></i>
+                  <span>30-day return policy</span>
+                </div>
+                <div class="info-item">
+                  <i class="bi bi-shield-check"></i>
+                  <span>2-year warranty</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /Product Details Section -->
+
+  </main>
+
+  <div id="footer">
+    <script>
+      fetch("./Part/Footer.html")
+        .then(response => response.text())
+        .then(data => document.getElementById("footer").innerHTML = data);
+    </script>
+  </div>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/drift-zoom/Drift.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+  <!-- Bespoke Info Modal -->
+  <div id="bespokeModal" class="bespoke-modal">
+    <div class="bespoke-modal-content">
+      <div class="bespoke-modal-header">
+        <h3>Bespoke Customisation Options</h3>
+        <button class="bespoke-modal-close" onclick="closeBespokeInfo()">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      <div class="bespoke-modal-body">
+        <div class="bespoke-option-detail" data-option="Pavé_Bridge">
+          <h4>Pavé Bridge (+8,500 ฿)</h4>
+          <p>การตกแต่งแบบ Pavé Bridge เป็นการฝังเพชรเล็กๆ หลายเม็ดบนตัวแหวนอย่างต่อเนื่อง ทำให้แหวนดูมีความหรูหราและส่องแสงระยิบระยับ เหมาะสำหรับผู้ที่ต้องการความโดดเด่นและความสวยงามที่ละเอียดอ่อน</p>
+        </div>
+        
+        <div class="bespoke-option-detail" data-option="Secret_Halo">
+          <h4>Secret Halo (+7,500 ฿)</h4>
+          <p>การออกแบบ Secret Halo คือการฝังเพชรเล็กๆ รอบๆ เพชรเม็ดหลักในตำแหน่งที่ซ่อนอยู่ ทำให้เพชรเม็ดหลักดูใหญ่ขึ้นและมีความระยิบระยับมากยิ่งขึ้น โดยไม่ทำให้ดีไซน์ดูซับซ้อนเกินไป</p>
+        </div>
+        
+        <div class="bespoke-option-detail" data-option="Prong_Setting">
+          <h4>Prong Setting (+6,000 ฿)</h4>
+          <p>การยึดเพชรแบบ Prong Setting เป็นการใช้ตัวยึดโลหะเล็กๆ (Prong) ในการยึดเพชร ทำให้แสงสามารถเข้าถึงเพชรได้มากที่สุด เพชรจึงส่องแสงได้อย่างเต็มที่ และดูสวยงามแบบคลาสสิค</p>
+        </div>
+        
+        <div class="bespoke-option-detail" data-option="Gallery_Wire">
+          <h4>Gallery Wire (+5,500 ฿)</h4>
+          <p>การตกแต่ง Gallery Wire เป็นการใช้ลวดโลหะที่ประณีตในการสร้างลวดลายที่ละเอียดอ่อนรอบๆ แหวน ให้ความรู้สึกที่คลาสสิคและมีเอกลักษณ์ เหมาะสำหรับผู้ที่ชื่นชอบรายละเอียดที่ซับซ้อน</p>
+        </div>
+        
+        <div class="bespoke-option-detail" data-option="Engraving">
+          <h4>Engraving (+3,000 ฿)</h4>
+          <p>การแกะสลักข้อความ (Engraving) เป็นการเพิ่มความหมายพิเศษให้กับแหวน สามารถแกะสลักชื่อ วันที่สำคัญ หรือข้อความที่มีความหมายได้ ทำให้แหวนมีเอกลักษณ์และความหมายเฉพาะตัว</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ฟังก์ชันสำหรับแสดง Modal
+    function showBespokeInfo() {
+      const modal = document.getElementById('bespokeModal');
+      modal.classList.add('active');
+      
+      // อัพเดทรายการ options ที่ถูกเลือก
+      updateSelectedOptions();
+    }
+
+    // ฟังก์ชันสำหรับปิด Modal
+    function closeBespokeInfo() {
+      const modal = document.getElementById('bespokeModal');
+      modal.classList.remove('active');
+    }
+
+    // ฟังก์ชันสำหรับอัพเดทรายการ options ที่ถูกเลือก
+    function updateSelectedOptions() {
+      const selectedRadio = document.querySelector('input[name="ring"]:checked');
+      const allOptions = document.querySelectorAll('.bespoke-option-detail');
+      
+      // รีเซ็ตการแสดงผล
+      allOptions.forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      // เพิ่มคลาส selected ให้กับ option ที่ถูกเลือก
+      if (selectedRadio) {
+        const selectedValue = selectedRadio.value.split(' ')[0];
+        const selectedOption = document.querySelector(`[data-option="${selectedValue}"]`);
+        if (selectedOption) {
+          selectedOption.classList.add('selected');
+        }
+      }
+    }
+
+    // ปิด Modal เมื่อคลิกที่พื้นหลัง
+    document.getElementById('bespokeModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeBespokeInfo();
+      }
+    });
+
+    // ปิด Modal เมื่อกด Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeBespokeInfo();
+      }
+    });
+  </script>
+
+</body>
+
+</html>

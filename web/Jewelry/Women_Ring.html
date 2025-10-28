@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <!-- Favicons -->
+    <link href="../assets/img/favicon.png" rel="icon">
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/drift-zoom/drift-basic.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="../assets/css/main.css" rel="stylesheet">
+
+    <!-- =======================================================
+  * Template Name: eStore
+  * Template URL: https://bootstrapmade.com/estore-bootstrap-ecommerce-template/
+  * Updated: Apr 26 2025 with Bootstrap v5.3.5
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+    <!--<header section strats -->
+    <div id="header"></div>
+    <script>
+        fetch("Header.html")
+            .then(response => response.text())
+            .then(data => document.getElementById("header").innerHTML = data);
+    </script>
+    <script>
+        function formatPrice(price) {
+            return Number(price).toLocaleString("en-US");
+        }
+
+        function createStars(rating) {
+            let html = '';
+            const full = Math.floor(rating);
+            const half = rating % 1 >= 0.5;
+            for (let i = 0; i < full; i++) html += '<i class="bi bi-star-fill"></i>';
+            if (half) html += '<i class="bi bi-star-half"></i>';
+            for (let i = full + half; i < 5; i++) html += '<i class="bi bi-star"></i>';
+            return html;
+        }
+
+        const shapeList = ['Cushion', 'Emerald', 'Marquise', 'Oval', 'Pear', 'Radiant', 'Round'];
+        let selectedShape = '*';
+        let selectedColor = 'filter-color-Yellow'; // เริ่มต้นด้วยสี Yellow
+        let initIsotope;
+
+        async function loadProductData() {
+            try {
+                const response = await fetch("../assets/json/Women_Ring.json");
+                const data = await response.json();
+                const productContainer = document.querySelector(".product-container");
+
+                const newRings = []; // 👈 ใส่ชื่อแหวนใหม่ได้ที่นี่
+
+                const sortedFolders = data.folders.sort((a, b) => {
+                    const nameA = a.split("_").slice(0, -2).join(" ");
+                    const nameB = b.split("_").slice(0, -2).join(" ");
+                    const isNewA = newRings.includes(nameA) ? -1 : 1;
+                    const isNewB = newRings.includes(nameB) ? -1 : 1;
+                    return isNewA - isNewB;
+                });
+
+                sortedFolders.forEach(folder => {
+                    const parts = folder.split("_");
+                    const productName = parts.slice(0, -2).join(" ");
+                    const productPrice = parts[parts.length - 2];
+                    const formattedPrice = formatPrice(productPrice);
+                    const isNew = newRings.includes(productName);
+
+                    const shape = shapeList.find(shape => productName.includes(shape));
+                    const shapeClass = shape ? `filter-shape-${shape}` : '';
+
+                    const productItem = document.createElement("div");
+                    productItem.className = `col-md-6 col-lg-3 product-item isotope-item ${shapeClass}`;
+
+                    // ✅ สร้าง HTML โดยโหลดรูปภาพทุกสี (Yellow, White, Rose)
+                    productItem.innerHTML = `
+                    <div class="product-card">
+                        <div class="product-image" data-name="${productName}" data-folder="${folder}">
+                         ${isNew ? `<span class="badge">New</span>` : ""}
+                            <img src="../assets/img/product/Jewelry/Women_s Rings/${folder}/Top_Yellow.webp" alt="Yellow" class="img-fluid main-img img-Yellow">
+                            <img src="../assets/img/product/Jewelry/Women_s Rings/${folder}/Top_White.webp" alt="White" class="img-fluid main-img img-White d-none">
+                            <img src="../assets/img/product/Jewelry/Women_s Rings/${folder}/Top_Rose.webp" alt="Rose" class="img-fluid main-img img-Rose d-none">
+
+                            <img src="../assets/img/product/Jewelry/Women_s Rings/${folder}/Front_Yellow.webp" alt="Yellow Hover" class="img-fluid hover-img hover-Yellow">
+                            <img src="../assets/img/product/Jewelry/Women_s Rings/${folder}/Front_White.webp" alt="White Hover" class="img-fluid hover-img hover-White d-none">
+                            <img src="../assets/img/product/Jewelry/Women_s Rings/${folder}/Front_Rose.webp" alt="Rose Hover" class="img-fluid hover-img hover-Rose d-none">
+                        </div>
+                        <div class="product-info">
+                            <h5 class="product-title">
+                                <a href="#" class="go-detail" data-name="${productName}" data-folder="${folder}">${productName}</a>
+                            </h5>
+                            <div class="product-price">
+                                <span class="tm-text-gray-light">From ${formattedPrice} B</span>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+
+                    // ✅ เพิ่ม class สีไว้สำหรับ Isotope filter
+                    ['Yellow', 'White', 'Rose'].forEach(color => {
+                        productItem.classList.add(`filter-color-${color}`);
+                    });
+
+                    productContainer.appendChild(productItem);
+
+                    // Event: เมื่อคลิกแหวนเพื่อดูรายละเอียด
+                    productItem.querySelectorAll('.go-detail, .product-image').forEach(el => {
+                        el.addEventListener('click', () => {
+                            const folder = el.getAttribute('data-folder');
+                            const name = el.getAttribute('data-name');
+                            const colorText = selectedColor.replace('filter-color-', '');
+
+                            // เก็บไว้ใน localStorage พร้อมข้อมูลราคา
+                            localStorage.setItem('selectedProduct', JSON.stringify({
+                                name,
+                                folder,
+                                color: colorText,
+                                price: productPrice,  // ✅ เพิ่มราคา
+                                fullData: folder      // ✅ เพิ่มข้อมูลเต็มสำหรับ backup
+                            }));
+
+                            // ไปหน้ารายละเอียด
+                            window.location.href = "../Setting_Custom.html";
+                        });
+                    });
+
+                });
+            } catch (err) {
+                console.error("Error loading product data:", err);
+            }
+        }
+
+        function addFilterEvents() {
+            // Shape filter buttons
+            document.querySelectorAll('#shape_filter .filter-button').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    document.querySelector('#shape_filter .filter-button.filter-active')?.classList.remove('filter-active');
+                    this.classList.add('filter-active');
+                    selectedShape = this.getAttribute('data-filter').replace('.', '');
+                    applyCombinedFilter();
+
+                    // ✅ แสดงชื่อ Shape
+                    const shapeName = selectedShape.replace('filter-shape-', '');
+                    document.getElementById('shape_setting').textContent = shapeName;
+                });
+            });
+
+            // Color filter buttons
+            document.querySelectorAll('#color_filter .circle').forEach(circle => {
+                circle.addEventListener('click', function () {
+                    document.querySelector('#color_filter .circle.selected')?.classList.remove('selected');
+                    this.classList.add('selected');
+                    const color = this.getAttribute('data-color');
+                    selectedColor = `filter-color-${color}`;
+                    applyCombinedFilter();
+
+                    // ✅ แสดงชื่อ Color
+                    document.getElementById('color_setting').textContent = `${color} Gold`;
+
+                    // ✅ เปลี่ยนรูปภาพตามสีที่เลือก
+                    document.querySelectorAll('.product-item').forEach(item => {
+                        item.querySelectorAll('.main-img, .hover-img').forEach(img => img.classList.add('d-none'));
+                        item.querySelectorAll(`.img-${color}, .hover-${color}`).forEach(img => img.classList.remove('d-none'));
+                    });
+                });
+            });
+        }
+
+        function applyCombinedFilter() {
+            let filter = '*';
+
+            if (selectedShape !== '*' && selectedColor !== '*') {
+                filter = `.${selectedShape}.${selectedColor}`;
+            } else if (selectedShape !== '*') {
+                filter = `.${selectedShape}`;
+            } else if (selectedColor !== '*') {
+                filter = `.${selectedColor}`;
+            }
+
+            if (initIsotope) {
+                initIsotope.arrange({ filter });
+            }
+        }
+
+        window.onload = async function () {
+            await loadProductData();
+
+            const container = document.querySelector(".product-container");
+
+            imagesLoaded(container, function () {
+                initIsotope = new Isotope(container, {
+                    itemSelector: ".product-item",
+                    layoutMode: "fitRows",
+                    filter: '*'
+                });
+
+                initIsotope.layout();
+                addFilterEvents();
+
+                // ✅ ตั้งค่าเริ่มต้นและเลือก Yellow เป็นสีเริ่มต้น
+                document.getElementById('shape_setting').textContent = 'All Shapes';
+                document.getElementById('color_setting').textContent = 'Yellow Gold';
+
+                // ✅ เลือก Yellow circle เป็นค่าเริ่มต้น
+                const yellowCircle = document.querySelector('#color_filter .circle[data-color="Yellow"]');
+                if (yellowCircle) {
+                    yellowCircle.classList.add('selected');
+                }
+
+                // ✅ แสดงรูป Yellow เป็นค่าเริ่มต้นทันที
+                document.querySelectorAll('.product-item').forEach(item => {
+                    item.querySelectorAll('.main-img, .hover-img').forEach(img => img.classList.add('d-none'));
+                    item.querySelectorAll('.img-Yellow, .hover-Yellow').forEach(img => img.classList.remove('d-none'));
+                });
+            });
+        };
+    </script>
+
+    <main class="main">
+         <!-- Page Title -->
+    <div class="page-title light-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Women's Rings</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="../Yaniga_Diamonds.html">Home</a></li>
+            <li class="current">Women's Rings</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+        <section class="step-navigation-section">
+            <div class="container">
+                <div class="step-navigation">
+                    <div class="step active">
+                        <span>1. SELECT YOUR SETTING</span>
+                    </div>
+                    <div class="step">
+                        <span>2. CUSTOMISE YOUR SETTING</span>
+                    </div>
+                    <div class="step">
+                        <span>3. BESPOKE CUSTOMISATIONS</span>
+                    </div>
+                    <div class="step">
+                        <span>4. SUMMARY YOUR SETTING</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="product-list" class="product-list section">
+            <div class="container isotope-layout" data-aos="fade-up" data-aos-delay="100" data-default-filter="*"
+                data-layout="masonry" data-sort="original-order">
+                <div class="row my-4">
+                    <!-- Shape Filter -->
+                    <div class="col-lg-6 col-12">
+                        <span class="tm-text-gray-darkest">Shape Setting:</span>
+                        <span class="tm-text-gray" id="shape_setting"></span>
+                        <div class="jewelry_setting_shape isotope-filters d-flex flex-wrap gap-2" id="shape_filter">
+                            <img src="../assets/img/product/jewelry_icon/Cushion.avif" alt="Cushion Shape Button"
+                                class="filter-button" data-filter=".filter-shape-Cushion">
+                            <img src="../assets/img/product/jewelry_icon/Emerald.webp" alt="Emerald Shape Button"
+                                class="filter-button" data-filter=".filter-shape-Emerald">
+                            <img src="../assets/img/product/jewelry_icon/Marquise.avif" alt="Marquise Shape Button"
+                                class="filter-button" data-filter=".filter-shape-Marquise">
+                            <img src="../assets/img/product/jewelry_icon/Oval.avif" alt="Oval Shape Button"
+                                class="filter-button" data-filter=".filter-shape-Oval">
+                            <img src="../assets/img/product/jewelry_icon/Pear.avif" alt="Pear Shape Button"
+                                class="filter-button" data-filter=".filter-shape-Pear">
+                            <img src="../assets/img/product/jewelry_icon/Radiant.avif" alt="Radiant Shape Button"
+                                class="filter-button" data-filter=".filter-shape-Radiant">
+                            <img src="../assets/img/product/jewelry_icon/Round.avif" alt="Round Shape Button"
+                                class="filter-button" data-filter=".filter-shape-Round">
+                            <!--<img src="../assets/img/icon/all.png" alt="All Shapes" class="filter-button filter-active"
+                                data-filter="*">-->
+                        </div>
+
+                    </div>
+
+                    <!-- Color Filter -->
+                    <div class="col-lg-6 col-12">
+                        <span class="tm-text-gray-darkest">Color Setting:</span>
+                        <span class="tm-text-gray" id="color_setting"></span>
+                        <div class="circle-container" id="color_filter">
+                            <div class="circle-with-text">
+                                <div class="circle yellow" data-color="Yellow"></div>
+                                <span class="tm-text-gray-dark">Yellow Gold</span>
+                            </div>
+                            <div class="circle-with-text">
+                                <div class="circle platinum" data-color="White"></div>
+                                <span class="tm-text-gray-dark">White Gold</span>
+                            </div>
+                            <div class="circle-with-text">
+                                <div class="circle rose" data-color="Rose"></div>
+                                <span class="tm-text-gray-dark">Rose Gold</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--<div class="row">
+                    <div class="col-12">
+                        <div class="product-filters isotope-filters mb-5 d-flex justify-content-center"
+                            data-aos="fade-up">
+                            <ul class="d-flex flex-wrap gap-2 list-unstyled">
+                                <li class="filter-active" data-filter="*">All</li>
+                                <li data-filter=".filter-clothing">Clothing</li>
+                                <li data-filter=".filter-accessories">Accessories</li>
+                                <li data-filter=".filter-electronics">Electronics</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>-->
+
+                <div class="row product-container isotope-container" data-aos="fade-up" data-aos-delay="200">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="product-item isotope-item filter-shape-All">
+                            <!-- สินค้าจะถูก generate ด้วย JavaScript -->
+                        </div>
+                    </div>
+
+                </div>
+
+        </section><!-- /Product List Section -->
+
+    </main>
+
+
+
+    <!-- footer section -->
+  <div id="footer">
+    <script>
+      fetch("Footer.html")
+        .then(response => response.text())
+        .then(data => document.getElementById("footer").innerHTML = data);
+    </script>
+  </div>
+    <!-- footer section -->
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Preloader -->
+    <div id="preloader"></div>
+
+    <!-- Vendor JS Files -->
+    <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/vendor/php-email-form/validate.js"></script>
+    <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="../assets/vendor/aos/aos.js"></script>
+    <script src="../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="../assets/vendor/drift-zoom/Drift.min.js"></script>
+    <script src="../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+    <!-- Main JS File -->
+    <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>
+<script>
+    // Update the year in the footer
+    document.getElementById("displayYear").textContent = new Date().getFullYear();
+</script>
