@@ -126,67 +126,65 @@
           <!-- Actions -->
           <div class="header-actions d-flex align-items-center ms-auto">
 
-            <!-- Mobile Search Toggle -->
-            <!-- <button class="header-action-btn mobile-search-toggle d-xl-none" type="button" data-bs-toggle="collapse"
-            data-bs-target="#mobileSearch" aria-expanded="false" aria-controls="mobileSearch">
-            <i class="bi bi-search"></i>
-          </button>-->
-
-            <!-- Account -->
-            <div class="dropdown account-dropdown">
-              <button class="header-action-btn" data-bs-toggle="dropdown">
-                <i class="bi bi-person"></i>
-              </button>
-              <div class="dropdown-menu">
-                <div class="dropdown-header">
-                  <h6>Welcome to <span class="sitename">eStore</span></h6>
-                  <p class="mb-0">Access account &amp; manage orders</p>
-                </div>
-                <div class="dropdown-body">
-                  <a class="dropdown-item d-flex align-items-center" href="account.html">
-                    <i class="bi bi-person-circle me-2"></i>
-                    <span>My Profile</span>
-                  </a>
-                  <a class="dropdown-item d-flex align-items-center" href="account.html">
-                    <i class="bi bi-bag-check me-2"></i>
-                    <span>My Orders</span>
-                  </a>
-                  <a class="dropdown-item d-flex align-items-center" href="account.html">
-                    <i class="bi bi-heart me-2"></i>
-                    <span>My Wishlist</span>
-                  </a>
-                  <a class="dropdown-item d-flex align-items-center" href="account.html">
-                    <i class="bi bi-gear me-2"></i>
-                    <span>Settings</span>
-                  </a>
-                </div>
-                <div class="dropdown-footer">
-                  <a href="login-register.html" class="btn btn-primary w-100 mb-2">Sign In</a>
-                  <a href="login-register.html" class="btn btn-outline-primary w-100">Register</a>
+            <!-- Desktop Actions (Hidden on Mobile) -->
+            <div class="desktop-actions d-none d-xl-flex align-items-center">
+              <!-- Account -->
+              <div class="dropdown account-dropdown">
+                <button class="header-action-btn" data-bs-toggle="dropdown">
+                  <i class="bi bi-person"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <div class="dropdown-header">
+                    <h6>Welcome to <span class="sitename">Yaniga Diamonds</span></h6>
+                    <p class="mb-0">Access account &amp; manage orders</p>
+                  </div>
+                  <div class="dropdown-body">
+                    <a class="dropdown-item d-flex align-items-center" href="account.html">
+                      <i class="bi bi-person-circle me-2"></i>
+                      <span>My Profile</span>
+                    </a>
+                    <a class="dropdown-item d-flex align-items-center" href="account.html">
+                      <i class="bi bi-bag-check me-2"></i>
+                      <span>My Orders</span>
+                    </a>
+                    <a class="dropdown-item d-flex align-items-center" href="account.html">
+                      <i class="bi bi-heart me-2"></i>
+                      <span>My Wishlist</span>
+                    </a>
+                    <a class="dropdown-item d-flex align-items-center" href="account.html">
+                      <i class="bi bi-gear me-2"></i>
+                      <span>Settings</span>
+                    </a>
+                  </div>
+                  <div class="dropdown-footer">
+                    <a href="login-register.html" class="btn btn-primary w-100 mb-2">Sign In</a>
+                    <a href="login-register.html" class="btn btn-outline-primary w-100">Register</a>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Wishlist -->
-            <a href="account.html" class="header-action-btn d-none d-md-block">
-              <i class="bi bi-heart"></i>
-              <span class="badge">0</span>
-            </a>
-
-            <!-- Cart -->
-            <a href="Cart.html" class="header-action-btn">
-              <i class="bi bi-cart3"></i>
-              <span class="badge">3</span>
-            </a>
-
-            <div class="top-bar-item dropdown header-action-btn">
-              <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="bi bi-translate me-2"></i>EN
+              <!-- Wishlist -->
+              <a href="account.html" class="header-action-btn">
+                <i class="bi bi-heart"></i>
+                <span class="badge">0</span>
               </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#"><i class="bi bi-check2 me-2 selected-icon"></i>English</a></li>
-                <li><a class="dropdown-item" href="#">Thai</a></li>
-              </ul>
+
+              <!-- Cart -->
+              <a href="Cart.html" class="header-action-btn">
+                <i class="bi bi-cart3"></i>
+                <span class="badge">3</span>
+              </a>
+
+              <!-- Language Switcher -->
+              <div class="top-bar-item dropdown header-action-btn">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                  <i class="bi bi-translate me-2"></i>EN
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#"><i class="bi bi-check2 me-2 selected-icon"></i>English</a></li>
+                  <li><a class="dropdown-item" href="#">Thai</a></li>
+                </ul>
+              </div>
             </div>
 
             <!-- Mobile Navigation Toggle -->
@@ -684,6 +682,52 @@
               </li><!-- End Products Mega Menu 2 -->
 
               <li><a href="contact.html">Contact</a></li>
+
+              <!-- Mobile Only Actions -->
+              <li class="mobile-only-actions d-xl-none">
+                <div class="mobile-actions-divider"></div>
+                
+                <!-- Account Section -->
+                <div class="mobile-account-section">
+                  <h6 class="mobile-section-title">Account</h6>
+                  <a href="account.html" class="mobile-action-item">
+                    <i class="bi bi-person-circle me-2"></i>
+                    <span>My Profile</span>
+                  </a>
+                  <a href="account.html" class="mobile-action-item">
+                    <i class="bi bi-bag-check me-2"></i>
+                    <span>My Orders</span>
+                  </a>
+                  <a href="account.html" class="mobile-action-item">
+                    <i class="bi bi-heart me-2"></i>
+                    <span>My Wishlist</span>
+                    <span class="badge">0</span>
+                  </a>
+                  <a href="Cart.html" class="mobile-action-item">
+                    <i class="bi bi-cart3 me-2"></i>
+                    <span>Shopping Cart</span>
+                    <span class="badge">3</span>
+                  </a>
+                </div>
+
+                <!-- Language Section -->
+                <div class="mobile-language-section">
+                  <h6 class="mobile-section-title">Language</h6>
+                  <a href="#" class="mobile-action-item active">
+                    <i class="bi bi-check2 me-2"></i>
+                    <span>English</span>
+                  </a>
+                  <a href="#" class="mobile-action-item">
+                    <span class="ms-4">Thai</span>
+                  </a>
+                </div>
+
+                <!-- Auth Section -->
+                <div class="mobile-auth-section">
+                  <a href="login-register.html" class="btn btn-primary w-100 mb-2">Sign In</a>
+                  <a href="login-register.html" class="btn btn-outline-primary w-100">Register</a>
+                </div>
+              </li>
 
             </ul>
           </nav>
