@@ -294,14 +294,14 @@
                       aria-labelledby="featured-tab">
                       <div class="product-grid">
                         <div class="product-card">
-                          <div class="product-image">
-                            <img src="assets/img/menu-tab/women-ring.jpg" alt="Featured Product" loading="lazy">
-                          </div>
-                          <div class="product-info">
-                            <h5>Women Ring</h5>
-                            <!--<p class="price">10,000 B</p>-->
-                            <a href="Jewelry/Women_Ring.html" class="btn-view">View Product</a>
-                          </div>
+                            <div class="product-image">
+                              <img src="assets/img/menu-tab/women-ring.jpg" alt="Featured Product" loading="lazy">
+                            </div>
+                            <div class="product-info">
+                              <h5>Women Ring</h5>
+                              <!--<p class="price">10,000 B</p>-->
+                              <a href="Jewelry/Women_Ring.html" class="btn-view">View Product</a>
+                            </div>
                         </div>
                         <div class="product-card">
                           <div class="product-image">
@@ -686,7 +686,7 @@
               <!-- Mobile Only Actions -->
               <li class="mobile-only-actions d-xl-none">
                 <div class="mobile-actions-divider"></div>
-                
+
                 <!-- Account Section -->
                 <div class="mobile-account-section">
                   <h6 class="mobile-section-title">Account</h6>
@@ -1451,7 +1451,7 @@
       // Only work on home page (index.html)
       const currentPage = window.location.pathname;
       const isHomePage = currentPage.includes('index.html') || currentPage === '/' || currentPage.endsWith('/');
-      
+
       if (!isHomePage) {
         console.log('showJewelryMenu: Not on home page, skipping dropdown');
         return; // Exit if not on home page
@@ -1485,7 +1485,7 @@
       // Only initialize on home page
       const currentPage = window.location.pathname;
       const isHomePage = currentPage.includes('index.html') || currentPage === '/' || currentPage.endsWith('/');
-      
+
       if (!isHomePage) {
         console.log('initViewAllButtons: Not on home page, skipping initialization');
         return; // Exit if not on home page
@@ -1510,11 +1510,11 @@
       viewDescriptionButtons.forEach(button => {
         button.addEventListener('click', function (e) {
           e.preventDefault();
-          
+
           const ringName = this.dataset.name;
           const ringPrice = this.dataset.price;
           const ringFolder = this.dataset.folder;
-          
+
           // Store ring data in localStorage with same format as Women_Ring.html
           const ringData = {
             name: ringName,
@@ -1524,9 +1524,9 @@
             fullData: ringFolder,
             selectedFrom: 'home' // Flag to indicate this came from home page
           };
-          
+
           localStorage.setItem('selectedProduct', JSON.stringify(ringData));
-          
+
           // Navigate to Setting_Custom.html
           window.location.href = 'Setting_Custom.html';
         });

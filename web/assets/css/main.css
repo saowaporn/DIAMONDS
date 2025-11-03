@@ -1048,7 +1048,7 @@ h6 {
 }
 
 .header .main-header .logo img {
-  max-height: 100px;
+  max-height: 180px;
   margin-right: 8px;
   margin-top: 30px;
   display: block;
@@ -1070,7 +1070,7 @@ h6 {
 /* Responsive logo for medium screens */
 @media (max-width: 480px) {
   .header .main-header .logo img {
-    max-height: 80px;
+    max-height: 120px;
     margin-right: 6px;
     margin-top: 15px;
   }
@@ -1083,7 +1083,7 @@ h6 {
 /* Responsive logo for small screens */
 @media (max-width: 390px) {
   .header .main-header .logo img {
-    max-height: 70px;
+    max-height: 115px;
     margin-right: 6px;
     margin-top: 10px;
   }
@@ -1096,7 +1096,7 @@ h6 {
 /* Responsive logo for very small screens */
 @media (max-width: 320px) {
   .header .main-header .logo img {
-    max-height: 60px;
+    max-height: 110px;
     margin-right: 4px;
     margin-top: 8px;
   }
