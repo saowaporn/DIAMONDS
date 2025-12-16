@@ -1685,7 +1685,7 @@ h6 {
     padding: 10px;
     display: flex;
     flex-direction: column;
-    max-height: 50vh;
+    max-height: 80vh;
     overflow: hidden;
   }
 
