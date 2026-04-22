@@ -18,8 +18,9 @@
 /* Fonts */
 :root {
   --default-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --heading-font: "Playfair Display", serif;
+  --heading-font: "Bellefair", serif;
   --bellefair-font: "Bellefair", "Playfair Display", serif;
+  --playfair-display-font: "Playfair Display", serif;
   --nav-font: "Inter", sans-serif;
 }
 
@@ -29,22 +30,25 @@
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
 :root {
-  --background-color: #f9f9f9;
+  --background-color: #EDEDED;
   /* Background color for the entire website, including individual sections */
   --default-color: #212529;
   /* ตัวหนังสือ ข้อความทั่วไป ตัวเล็ก*/
   --small-text-color: #999999;
   /* Default color used for the majority of the text content across the entire website */
-  --heading-color: #640000;
+  --red-color: #640000;
   /* ตัวหนังสือ หัวข้อ ย่อย*/
   /* Color for headings, subheadings and title throughout the website */
-  --accent-color: #d3a662;
+  --gold-color: #D4B585;
+  --redwine-color: #501022;
   /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
   --surface-color: #ffffff;
   /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
-  --contrast-color: #ffffff;
+  --white-color: #ffffff;
   /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
+   --whitegray-color: #bfbfbf;
 }
+
 
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
 :root {
@@ -58,14 +62,14 @@
   /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
   --nav-dropdown-color: #2d170b;
   /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #640000;
-  /* Similar to --nav-hover-color, thi--accent-colors color is applied to dropdown navigation links when they are hovered over. */
+  --nav-dropdown-hover-color: var(--redwine-color);
+  /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
 }
 
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
 
 .light-background {
-  --background-color: color-mix(in srgb, var(--accent-color), transparent 95%);
+  --background-color: color-mix(in srgb, var(--gold-color), transparent 95%);
   --surface-color: #ffffff;
 }
 
@@ -73,9 +77,9 @@
   --background-color: #232931;
   --default-color: #ffffff;
   --heading-color: #ffffff;
-  --accent-color: #397deb;
+  --gold-color: #397deb;
   --surface-color: #38424f;
-  --contrast-color: #ffffff;
+  --white-color: #ffffff;
 }
 
 /* Smooth scroll */
@@ -93,13 +97,13 @@ body {
 }
 
 a {
-  color: var(--accent-color);
+  color: var(--gold-color);
   text-decoration: none;
   transition: 0.3s;
 }
 
 a:hover {
-  color: color-mix(in srgb, var(--accent-color), transparent 25%);
+  color: color-mix(in srgb, var(--gold-color), transparent 25%);
   text-decoration: none;
 }
 
@@ -109,7 +113,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: var(--heading-color);
+  color: var(--red-color);
   font-family: var(--heading-font);
 }
 
@@ -119,7 +123,7 @@ h6 {
   /* กระจายขั้นตอนให้ห่างเท่า ๆ กัน */
   align-items: center;
   padding: 5px;
-  background-color: #f9f9f9;
+  background-color: var(--background-color);
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -146,7 +150,7 @@ h6 {
 /* Step ที่กำลังดำเนินการ (active) */
 .step.active {
   background-color: #640000;
-  color:var(--accent-color);
+  color:var(--gold-color);
   box-shadow: 0 4px 8px rgba(100, 0, 0, 0.2);
   font-weight: 600;
 }
@@ -233,14 +237,14 @@ h6 {
 /* สไตล์สำหรับ dropdown-selected เมื่อมีการเลือกแล้ว */
 .dropdown-selected.has-selection {
   background-color: #f9f8f6;
-  color: var(--accent-color)!important;
+  color: var(--gold-color)!important;
   font-weight: 700!important;
   border: 1px solid #d5c19a;
   box-shadow: 0 2px 8px rgba(213, 193, 154, 0.3);
 }
 
 .dropdown-selected.has-selection::after {
-  border-top: 6px solid var(--accent-color);
+  border-top: 6px solid var(--gold-color);
 }
 
 .dropdown-options {
@@ -307,13 +311,13 @@ h6 {
 
 .dropdown-option:hover {
   background-color: #f9f8f6;
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-weight: 700;
 }
 
 .dropdown-option.selected {
   background-color: #f9f8f6;
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-weight: 700;
 }
 
@@ -385,7 +389,7 @@ h6 {
   font-weight: 700;
   font-size: 1.1em;
   letter-spacing: -0.01em;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 /* ลบเส้นแบ่งระหว่างหัวข้อและ dropdown ทั้งหมด */
@@ -458,7 +462,7 @@ h6 {
 
 /* เปลี่ยนสีและความหนาของตัวอักษรเมื่อถูกเลือก */
 .ring-option.selected span {
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-weight: 700;
 }
 
@@ -563,7 +567,7 @@ h6 {
 .option-title h6, .option-title h5, .option-title h4 {
   margin-bottom: 0;
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 18px; /* ให้หัวข้อหลักมีขนาดเท่ากัน */
   display: flex;
   justify-content: space-between;
@@ -577,7 +581,7 @@ h6 {
   margin-bottom: 15px;
   font-size: 16px;
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
   position: relative;
 }
 
@@ -640,7 +644,7 @@ h6 {
 }
 
 .info-modal-header h3 {
-  color: var( --heading-color);
+  color: var( --red-color);
   font-size: 24px;
   font-weight: 600;
   margin: 0;
@@ -677,11 +681,11 @@ h6 {
   padding: 15px;
   background-color: #f8f9fa;
   border-radius: 8px;
-  border-left: 4px solid var(--accent-color);
+  border-left: 4px solid var(--gold-color);
 }
 
 .info-option-detail h4 {
-  color:  var(--accent-color);
+  color:  var(--gold-color);
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 8px;
@@ -735,7 +739,7 @@ h6 {
 }
 
 .bespoke-modal-header h3 {
-  color: var( --heading-color);
+  color: var( --red-color);
   font-size: 24px;
   font-weight: 600;
   margin: 0;
@@ -772,11 +776,11 @@ h6 {
   padding: 15px;
   background-color: #f8f9fa;
   border-radius: 8px;
-  border-left: 4px solid var(--accent-color);
+  border-left: 4px solid var(--gold-color);
 }
 
 .bespoke-option-detail h4 {
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 8px;
@@ -792,11 +796,11 @@ h6 {
    border-color: #d5c19a;
   background-color: #f7f2e7;
   box-shadow: 0 2px 8px rgba(213, 193, 154, 0.3);
-  border-left-color:  var(--accent-color);
+  border-left-color:  var(--gold-color);
 }*/
 
 .bespoke-option-detail.selected h4 {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 @keyframes fadeIn {
@@ -853,7 +857,7 @@ h6 {
   width: 24px;
   height: 24px;
   margin: 0 10px -6px 0;
-  border: 3px solid var(--accent-color);
+  border: 3px solid var(--gold-color);
   border-top-color: var(--surface-color);
   animation: php-email-form-loading 1s linear infinite;
 }
@@ -873,7 +877,7 @@ h6 {
 .pulsating-play-btn {
   width: 94px;
   height: 94px;
-  background: radial-gradient(var(--accent-color) 50%, color-mix(in srgb, var(--accent-color), transparent 75%) 52%);
+  background: radial-gradient(var(--gold-color) 50%, color-mix(in srgb, var(--gold-color), transparent 75%) 52%);
   border-radius: 50%;
   display: block;
   position: relative;
@@ -892,7 +896,7 @@ h6 {
   animation-timing-function: steps;
   opacity: 1;
   border-radius: 50%;
-  border: 5px solid color-mix(in srgb, var(--accent-color), transparent 30%);
+  border: 5px solid color-mix(in srgb, var(--gold-color), transparent 30%);
   top: -15%;
   left: -15%;
   background: rgba(198, 16, 0, 0);
@@ -931,7 +935,7 @@ h6 {
 }
 
 .pulsating-play-btn:hover:after {
-  border-left: 15px solid var(--accent-color);
+  border-left: 15px solid var(--gold-color);
   transform: scale(20);
 }
 
@@ -961,10 +965,11 @@ h6 {
 
 .header .top-bar {
   color: var(--default-color);
-  background: linear-gradient( 360deg,
-    rgba(137, 1, 1, 1) 9%,
-    rgba(59, 14, 14, 1) 65%,
-    rgba(0, 0, 0, 1) 100%);
+   background: linear-gradient(
+    360deg,
+    rgba(80, 16, 34, 1) 9.960173815488815%,
+    rgba(0, 0, 0, 1) 100%
+  );
   transition: all 0.5s;
   z-index: 997;
   font-size: 14px;
@@ -987,7 +992,7 @@ h6 {
 }
 
 .header .top-bar .top-bar-item a {
-  color: var(--accent-color);
+  color: var(--gold-color);
   text-decoration: none;
 }
 
@@ -996,13 +1001,13 @@ h6 {
 }
 
 .header .top-bar .top-bar-item .selected-icon {
-  color: var(--accent-color);
+  color: var(--gold-color);
   opacity: 1;
   width: 16px;
 }
 
 .header .top-bar .announcement-slider {
-  color: var(--background-color);
+  color: var(--whitegray-color);
   font-family: var(--bellefair-font);
   font-weight: 100;
   height: 24px;
@@ -1024,7 +1029,7 @@ h6 {
   padding: 0.5rem 0;
   margin-top: 0.5rem;
   background-color: var(--surface-color);
-  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 90%);
+  border: 1px solid color-mix(in srgb, var(--gold-color), transparent 90%);
   border-radius: 4px;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
 }
@@ -1039,17 +1044,17 @@ h6 {
 
 .header .top-bar .dropdown-menu .dropdown-item .selected-icon {
   opacity: 1;
-  color: var(--accent-color);
+  color: var(--gold-color);
   width: 16px;
 }
 
 .header .top-bar .dropdown-menu .dropdown-item:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: var(--gold-color);
 }
 
 .header .main-header {
-  border-bottom: 1px solid color-mix(in srgb, var(--accent-color), transparent 90%);
+  border-bottom: 1px solid color-mix(in srgb, var(--gold-color), transparent 90%);
   background-color: var(--background-color);
   color: var(--default-color);
 }
@@ -1087,7 +1092,7 @@ h6 {
   font-size: 26px;
   margin: 0;
   font-weight: 700;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 @media (max-width: 768px) {
@@ -1130,15 +1135,15 @@ h6 {
 }
 
 .header .main-header .header-actions .header-action-btn:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .header .main-header .header-actions .header-action-btn .badge {
   position: absolute;
   top: -5px;
   right: -5px;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   font-size: 10px;
   padding: 2px 6px;
   border-radius: 10px;
@@ -1161,12 +1166,12 @@ h6 {
 
 .header .main-header .account-dropdown .dropdown-menu .dropdown-header {
   padding: 1.25rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--accent-color), transparent 90%);
+  border-bottom: 1px solid color-mix(in srgb, var(--gold-color), transparent 90%);
 }
 
 .header .main-header .account-dropdown .dropdown-menu .dropdown-header h6 {
   margin: 0 0 0.25rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 16px;
 }
 
@@ -1193,12 +1198,12 @@ h6 {
 }
 
 .header .main-header .account-dropdown .dropdown-menu .dropdown-body .dropdown-item:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: var(--gold-color);
 }
 
 .header .main-header .account-dropdown .dropdown-menu .dropdown-body .dropdown-item:hover i {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .header .main-header .account-dropdown .dropdown-menu .dropdown-footer {
@@ -1210,19 +1215,19 @@ h6 {
 .header .main-header .account-dropdown .dropdown-menu .dropdown-footer .btn {
   font-size: 14px;
   padding: 0.5rem 1rem;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   transition: 0.3s;
 }
 
 .header .main-header .account-dropdown .dropdown-menu .dropdown-footer .btn-outline-primary {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   background-color: transparent;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .header .main-header .account-dropdown .dropdown-menu .dropdown-footer .btn-outline-primary:hover {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .header .search-form {
@@ -1240,7 +1245,7 @@ h6 {
 }
 
 .header .search-form .input-group:focus-within {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -1262,8 +1267,8 @@ h6 {
 }
 
 .header .search-form .input-group .btn {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   padding: 0 25px;
   border: none;
   transition: all 0.3s ease;
@@ -1272,7 +1277,7 @@ h6 {
 }
 
 .header .search-form .input-group .btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 20%);
 }
 
 .header .search-form .input-group .btn i {
@@ -1281,7 +1286,7 @@ h6 {
 
 @media (min-width: 1200px) {
   .header .header-nav {
-    border-bottom: color-mix(in srgb, var(--accent-color), transparent 90%);
+    border-bottom: color-mix(in srgb, var(--gold-color), transparent 90%);
   }
 }
 
@@ -1479,13 +1484,13 @@ h6 {
     justify-content: center;
     border-radius: 50%;
     transition: 0.3s;
-    background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+    background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
   }
 
   .navmenu a i:hover,
   .navmenu a:focus i:hover {
-    background-color: var(--accent-color);
-    color: var(--contrast-color);
+    background-color: var(--gold-color);
+    color: var(--white-color);
   }
 
   .navmenu a:hover,
@@ -1496,8 +1501,8 @@ h6 {
 
   .navmenu .active i,
   .navmenu .active:focus i {
-    background-color: var(--accent-color);
-    color: var(--contrast-color);
+    background-color: var(--gold-color);
+    color: var(--white-color);
     transform: rotate(180deg);
   }
 
@@ -1568,7 +1573,7 @@ h6 {
   }
 
   .mobile-nav-active .navmenu a:hover {
-    color: var(--accent-color);
+    color: var(--gold-color);
     background-color: #f8f9fa;
   }
 
@@ -1677,9 +1682,9 @@ h6 {
   }
 
   .navmenu .products-megamenu-1 .megamenu-tabs .nav-tabs .nav-link.active {
-    color: var(--accent-color);
+    color: var(--gold-color);
     background-color: transparent;
-    border-bottom: 2px solid var(--accent-color);
+    border-bottom: 2px solid var(--gold-color);
   }
 
   .navmenu .products-megamenu-1 .megamenu-content {
@@ -1721,14 +1726,14 @@ h6 {
   }
 
   .navmenu .products-megamenu-1 .megamenu-content .best-sellers-grid .best-sellers-column {
-    background-color: color-mix(in srgb, var(--surface-color), var(--accent-color) 3%);
+    background-color: color-mix(in srgb, var(--surface-color), var(--gold-color) 3%);
     border-radius: 8px;
     padding: 15px;
     transition: 0.3s;
   }
 
   .navmenu .products-megamenu-1 .megamenu-content .best-sellers-grid .best-sellers-column h4 {
-    color: var(--heading-color);
+    color: var(--red-color);
     font-size: 16px;
     margin-bottom: 15px;
     font-weight: 600;
@@ -1744,7 +1749,7 @@ h6 {
     left: 0;
     width: 40px;
     height: 2px;
-    background-color: var(--accent-color);
+    background-color: var(--gold-color);
   }
 
   .navmenu .products-megamenu-1 .megamenu-content .best-sellers-grid .best-sellers-column ul {
@@ -1785,7 +1790,7 @@ h6 {
     left: 0;
     top: 2px;
     font-size: 12px;
-    color: var(--accent-color);
+    color: var(--gold-color);
     opacity: 0.7;
   }
 
@@ -1891,11 +1896,11 @@ h6 {
     margin: 0 0 5px;
     font-size: 15px;
     font-weight: 600;
-    color: var(--heading-color);
+    color: var(--red-color);
   }
 
   .navmenu .products-megamenu-1 .megamenu-content .product-grid .product-card .product-info .price {
-    color: var(--accent-color);
+    color: var(--gold-color);
     font-weight: 600;
     margin-bottom: 10px;
     font-size: 14px;
@@ -1911,8 +1916,8 @@ h6 {
   .navmenu .products-megamenu-1 .megamenu-content .product-grid .product-card .product-info .btn-view {
     display: inline-block;
     padding: 5px 12px;
-    background-color: color-mix(in srgb, var(--accent-color), transparent 85%);
-    color: var(--accent-color);
+    background-color: color-mix(in srgb, var(--gold-color), transparent 85%);
+    color: var(--gold-color);
     border-radius: 4px;
     font-size: 12px;
     font-weight: 500;
@@ -1920,8 +1925,8 @@ h6 {
   }
 
   .navmenu .products-megamenu-1 .megamenu-content .product-grid .product-card .product-info .btn-view:hover {
-    background-color: var(--accent-color);
-    color: var(--contrast-color);
+    background-color: var(--gold-color);
+    color: var(--white-color);
   }
 
   /* รองรับ <a> tag ที่หุ้ม product-card ในหน้า home */
@@ -1991,25 +1996,25 @@ h6 {
 
   /* ป้องกันการ inherit สี link จาก <a> tag */
   .navmenu .products-megamenu-1 .megamenu-content .product-grid a .product-card .product-info h5 {
-    color: var(--heading-color) !important;
+    color: var(--red-color) !important;
   }
 
   .navmenu .products-megamenu-1 .megamenu-content .product-grid a .product-card .product-info .price {
-    color: var(--accent-color) !important;
+    color: var(--gold-color) !important;
   }
 
   .navmenu .products-megamenu-1 .megamenu-content .product-grid a .product-card .product-info .btn-view {
-    color: var(--accent-color) !important;
+    color: var(--gold-color) !important;
   }
 
   /* Hover effects สำหรับ text ใน product card */
   .navmenu .products-megamenu-1 .megamenu-content .product-grid a:hover .product-card .product-info h5 {
-    color: var(--accent-color) !important;
+    color: var(--gold-color) !important;
   }
 
   .navmenu .products-megamenu-1 .megamenu-content .product-grid a:hover .product-card .product-info .btn-view {
-    background-color: var(--accent-color) !important;
-    color: var(--contrast-color) !important;
+    background-color: var(--gold-color) !important;
+    color: var(--white-color) !important;
   }
 
   /* ปรับขนาดกริดสำหรับหน้าจอขนาดต่างๆ */
@@ -2164,9 +2169,9 @@ h6 {
   }
 
   .navmenu .products-megamenu-2 .megamenu-tabs .nav-tabs .nav-link.active {
-    color: var(--accent-color);
+    color: var(--gold-color);
     background-color: transparent;
-    border-bottom: 2px solid var(--accent-color);
+    border-bottom: 2px solid var(--gold-color);
   }
 
   .navmenu .products-megamenu-2 .megamenu-content {
@@ -2215,7 +2220,7 @@ h6 {
   }
 
   .navmenu .products-megamenu-2 .megamenu-content .categories-section .best-sellers-headers h4 {
-    color: var(--heading-color);
+    color: var(--red-color);
     font-size: 16px;
     font-weight: 600;
     position: relative;
@@ -2284,7 +2289,7 @@ h6 {
   }
 
   .navmenu .products-megamenu-2 .megamenu-content .featured-section .featured-image .featured-content h3 {
-    color: var(--heading-color);
+    color: var(--red-color);
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 20px;
@@ -2294,8 +2299,8 @@ h6 {
   .navmenu .products-megamenu-2 .megamenu-content .featured-section .featured-image .featured-content .btn-shop {
     display: inline-block;
     padding: 8px 20px;
-    background-color: var(--accent-color);
-    color: var(--contrast-color);
+    background-color: var(--gold-color);
+    color: var(--white-color);
     border-radius: 4px;
     font-size: 14px;
     font-weight: 500;
@@ -2304,7 +2309,7 @@ h6 {
   }
 
   .navmenu .products-megamenu-2 .megamenu-content .featured-section .featured-image .featured-content .btn-shop:hover {
-    background-color: color-mix(in srgb, var(--accent-color), black 15%);
+    background-color: color-mix(in srgb, var(--gold-color), black 15%);
     transform: translateY(-2px);
   }
 }
@@ -2377,7 +2382,7 @@ h6 {
 }
 
 .footer .footer-newsletter {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 95%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 95%);
   padding: 60px 0;
 }
 
@@ -2413,7 +2418,7 @@ h6 {
 
 .footer .footer-newsletter .newsletter-form input[type=email]:focus {
   outline: none;
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -2427,8 +2432,8 @@ h6 {
   top: 5px;
   bottom: 5px;
   border: 0;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   transition: all 0.3s ease;
   border-radius: 50px;
   padding: 0 30px;
@@ -2437,12 +2442,12 @@ h6 {
 }
 
 .footer .footer-newsletter .newsletter-form button:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 20%);
 }
 
 .footer .footer-main {
   background: linear-gradient(180deg, rgba(100, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 100%);
-  color: var(--contrast-color);
+  color: var(--white-color);
   padding: 70px 0 40px;
 }
 
@@ -2513,7 +2518,7 @@ h6 {
 }
 
 .footer .footer-main .footer-links a {
-  color: color-mix(in srgb, var(--contrast-color), transparent 30%);
+  color: color-mix(in srgb, var(--white-color), transparent 30%);
   transition: all 0.3s ease;
   position: relative;
   padding-left: 0;
@@ -2567,9 +2572,9 @@ h6 {
 }
 
 .footer .footer-main .app-buttons .app-btn:hover {
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   transform: translateY(-3px);
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 .footer .footer-main .social-icons {
@@ -2586,19 +2591,19 @@ h6 {
   height: 36px;
   border-radius: 50%;
   background-color: color-mix(in srgb, var(--default-color), transparent 90%);
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-size: 16px;
   transition: all 0.3s ease;
 }
 
 .footer .footer-main .social-icons a:hover {
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   /* transform: rotate(180deg); */
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 .footer .footer-bottom {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 95%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 95%);
   padding: 25px 0;
 }
 
@@ -2625,7 +2630,7 @@ h6 {
 }
 
 .footer .footer-bottom .payment-methods .payment-icons i:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .footer .footer-bottom .copyright {
@@ -2660,7 +2665,7 @@ h6 {
 }
 
 .footer .footer-bottom .legal-links a:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 @media (max-width: 991.98px) {
@@ -2731,7 +2736,7 @@ h6 {
   top: calc(50% - 30px);
   left: calc(50% - 30px);
   border: 6px solid #ffffff;
-  border-color: var(--accent-color) transparent var(--accent-color) transparent;
+  border-color: var(--gold-color) transparent var(--gold-color) transparent;
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -2758,7 +2763,7 @@ h6 {
   right: 15px;
   bottom: -15px;
   z-index: 99999;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   width: 44px;
   height: 44px;
   border-radius: 50px;
@@ -2767,13 +2772,13 @@ h6 {
 
 .scroll-top i {
   font-size: 24px;
-  color: var(--contrast-color);
+  color: var(--white-color);
   line-height: 0;
 }
 
 .scroll-top:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
-  color: var(--contrast-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 20%);
+  color: var(--white-color);
 }
 
 .scroll-top.active {
@@ -2885,8 +2890,8 @@ section,
 
 .top .content-col .content .promo-badge {
   display: inline-block;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 85%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 85%);
+  color: var(--gold-color);
   font-size: 0.875rem;
   font-weight: 600;
   padding: 0.5rem 1rem;
@@ -2895,14 +2900,14 @@ section,
 }
 
 .top .content-col .content h1 {
-  font-size: 3.5rem;
-  font-weight: 700;
+  font-size: 4.5rem;
+  font-weight: 400;
   line-height: 1.2;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .top .content-col .content h1 span {
-  color: var(--accent-color);
+  color: var(--gold-color);
   position: relative;
 }
 
@@ -2913,15 +2918,24 @@ section,
   left: 0;
   width: 100%;
   height: 0.5rem;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 85%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 85%);
   z-index: -1;
 }
 
 .top .content-col .content p {
-  font-size: 1.125rem;
+  font-family: var(--bellefair-font);
+  font-size: 2rem;
   line-height: 1.6;
   margin-bottom: 2rem;
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  color: color-mix(in srgb, var(--gold-color), transparent 5%);
+}
+
+.top .content-col .content p span {
+font-family: var(--bellefair-font);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: color-mix(in srgb, var(--gold-color), transparent 5%);
 }
 
 .top .content-col .content .top-cta {
@@ -2938,8 +2952,8 @@ section,
 }
 
 .top .content-col .content .top-cta .btn.btn-shop {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   border: none;
 }
 
@@ -2949,7 +2963,7 @@ section,
 }
 
 .top .content-col .content .top-cta .btn.btn-shop:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 10%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 10%);
 }
 
 .top .content-col .content .top-cta .btn.btn-shop:hover i {
@@ -2958,13 +2972,13 @@ section,
 
 .top .content-col .content .top-cta .btn.btn-collection {
   background-color: transparent;
-  color: var(--default-color);
-  border: 1px solid color-mix(in srgb, var(--default-color), transparent 70%);
+  color: var(--gold-color);
+  border: 1px solid color-mix(in srgb, var(--gold-color), transparent 5%);
 }
 
 .top .content-col .content .top-cta .btn.btn-collection:hover {
-  background-color: color-mix(in srgb, var(--default-color), transparent 95%);
-  border-color: var(--default-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 70%);
+  border-color: var(--gold-color);
 }
 
 .top .content-col .content .top-features {
@@ -2980,7 +2994,7 @@ section,
 
 .top .content-col .content .top-features .feature-item i {
   font-size: 1.25rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .top .content-col .content .top-features .feature-item span {
@@ -3032,7 +3046,7 @@ section,
 .top .image-col .top-image .floating-product .product-info .price {
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .top .image-col .top-image .floating-product.product-1 {
@@ -3049,8 +3063,8 @@ section,
   position: absolute;
   top: 10%;
   right: 10%;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   width: 4.5rem;
   height: 4.5rem;
   border-radius: 50%;
@@ -3070,6 +3084,18 @@ section,
 .top .image-col .top-image .discount-badge .text {
   font-size: 0.875rem;
   font-weight: 600;
+}
+
+@media (min-width: 992px) {
+  .ecommerce-top-1.top .content-col {
+    flex: 0 0 65%;
+    max-width: 65%;
+  }
+
+  .ecommerce-top-1.top .image-col {
+    flex: 0 0 35%;
+    max-width: 35%;
+  }
 }
 
 @media (max-width: 991.98px) {
@@ -3165,7 +3191,7 @@ section,
   min-height: 80vh;
   display: flex;
   align-items: center;
-  background-image: url('../img/ปก.png');
+  background-image: url('../img/background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -3178,7 +3204,7 @@ section,
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.3) 100%);
+  /*background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.3) 100%);*/
   z-index: 1;
   pointer-events: none;
 }
@@ -3192,13 +3218,10 @@ section,
   padding: 60px 0;
 }
 
-.top-with-background .top-content-white {
-  color: var(--heading-color);
-  text-shadow: 2px 2px 4px rgba(126, 126, 126, 0.7);
-}
+
 
 .top-with-background .top-content-white h1{
-  color: var(--heading-color);
+  color: var(--gold-color);
 }
 
 .top-with-background .top-content-white p {
@@ -3290,8 +3313,8 @@ section,
   top: 15px;
   left: 15px;
   z-index: 3;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   font-size: 0.7rem;
   font-weight: 600;
   padding: 0.35em 0.8em;
@@ -3338,7 +3361,7 @@ section,
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -3346,8 +3369,8 @@ section,
 }
 
 .category-product-list .quick-action-btn:hover {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   transform: translateY(-2px);
 }
 
@@ -3358,8 +3381,8 @@ section,
 .category-product-list .add-to-cart-btn {
   width: 100%;
   padding: 0.8rem 1.5rem;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   border: none;
   border-radius: 6px;
   font-weight: 600;
@@ -3370,7 +3393,7 @@ section,
 }
 
 .category-product-list .add-to-cart-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 15%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 15%);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
@@ -3401,7 +3424,7 @@ section,
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .category-product-list .product-title a {
@@ -3409,7 +3432,7 @@ section,
 }
 
 .category-product-list .product-title a:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .category-product-list .product-price {
@@ -3421,7 +3444,7 @@ section,
 .category-product-list .product-price span {
   font-weight: 700;
   font-size: 1.1rem;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .category-product-list .product-price .original {
@@ -3454,7 +3477,7 @@ section,
 .category-product-list .rating-number {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .category-product-list .product-color-options {
@@ -3482,7 +3505,7 @@ section,
   left: -3px;
   right: -3px;
   bottom: -3px;
-  border: 2px solid var(--accent-color);
+  border: 2px solid var(--gold-color);
   border-radius: 50%;
 }
 
@@ -3565,14 +3588,14 @@ section,
 }
 
 .category-pagination li a.active {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px color-mix(in srgb, var(--accent-color), transparent 70%);
+  box-shadow: 0 4px 8px color-mix(in srgb, var(--gold-color), transparent 70%);
 }
 
 .category-pagination li a:hover:not(.active) {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
   transform: translateY(-1px);
   box-shadow: 0 3px 6px color-mix(in srgb, var(--default-color), transparent 85%);
 }
@@ -3617,7 +3640,7 @@ section,
 }
 
 .info-cards .info-card:hover .icon-box i {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .info-cards .info-card .icon-box {
@@ -3627,7 +3650,7 @@ section,
 
 .info-cards .info-card .icon-box i {
   font-size: 3.5rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   transition: color 0.3s ease;
 }
 
@@ -3635,7 +3658,7 @@ section,
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 10px;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .info-cards .info-card p {
@@ -3687,7 +3710,7 @@ section,
   height: 40px;
   background-color: var(--surface-color);
   border-radius: 50%;
-  color: var(--heading-color);
+  color: var(--red-color);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -3699,8 +3722,8 @@ section,
 
 .best-sellers-cards .best-sellers-slider .swiper-button-next:hover,
 .best-sellers-cards .best-sellers-slider .swiper-button-prev:hover {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .best-sellers-cards .best-sellers-slider .swiper-button-prev {
@@ -3728,7 +3751,7 @@ section,
 }
 
 .best-sellers-cards .best-sellers-card:hover .best-sellers-title {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .best-sellers-cards .best-sellers-card:hover .best-sellers-image img {
@@ -3756,7 +3779,7 @@ section,
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   transition: 0.3s;
 }
 
@@ -3947,28 +3970,28 @@ section,
 }
 
 .best-sellers .product-tags .bg-accent {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .best-sellers .product-tags .bg-sale {
   background-color: #ff6b6b;
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 .best-sellers .product-tags .bg-sold-out {
   background-color: #6c757d;
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 .best-sellers .product-tags .bg-light-red {
   background-color: rgba(100, 0, 0, 0.7);
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 .best-sellers .product-tags .bg-light-gray {
   background-color: rgba(153, 153, 153, 0.7);
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 .best-sellers .product-actions {
@@ -3989,7 +4012,7 @@ section,
   border-radius: 50%;
   background-color: var(--surface-color);
   border: none;
-  color: var(--heading-color);
+  color: var(--red-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4000,8 +4023,8 @@ section,
 }
 
 .best-sellers .product-actions button:hover {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .best-sellers .product-actions button i {
@@ -4029,13 +4052,13 @@ section,
 }
 
 .best-sellers .product-title a {
-  color: var(--heading-color);
+  color: var(--red-color);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .best-sellers .product-title a:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .best-sellers .product-price {
@@ -4048,7 +4071,7 @@ section,
 .best-sellers .product-price .current-price {
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .best-sellers .product-price .original-price {
@@ -4078,8 +4101,8 @@ section,
 .best-sellers .btn-add-to-cart {
   width: 100%;
   padding: 0.6rem;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   border: none;
   border-radius: 4px;
   font-size: 0.875rem;
@@ -4091,7 +4114,7 @@ section,
 }
 
 .best-sellers .btn-add-to-cart:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 10%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 10%);
 }
 
 .best-sellers .btn-add-to-cart i {
@@ -4190,7 +4213,7 @@ section,
 
 .best-sellers .best-sellers-slider .swiper-button-next:hover,
 .best-sellers .best-sellers-slider .swiper-button-prev:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .best-sellers .best-sellers-slider .swiper-button-prev {
@@ -4370,13 +4393,13 @@ section,
 }
 
 .product-list .product-filters ul li:hover {
-  color: var(--accent-color);
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  color: var(--gold-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
 }
 
 .product-list .product-filters ul li.filter-active {
-  color: var(--contrast-color);
-  background-color: var(--accent-color);
+  color: var(--white-color);
+  background-color: var(--gold-color);
 }
 
 .product-list .product-container .isotope-container {
@@ -4453,8 +4476,8 @@ section,
   padding: 5px 12px;
   font-size: 12px;
   font-weight: 500;
-  color: var(--contrast-color);
-  background-color: var(--accent-color);
+  color: var(--white-color);
+  background-color: var(--gold-color);
   border-radius: 30px;
 }
 
@@ -4484,14 +4507,14 @@ section,
   padding: 10px 20px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--contrast-color);
-  background-color: var(--accent-color);
+  color: var(--white-color);
+  background-color: var(--gold-color);
   border-radius: 30px;
   transition: all 0.3s ease;
 }
 
 .product-list .product-image .product-overlay .btn-cart:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 10%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 10%);
   transform: translateY(-2px);
 }
 
@@ -4514,7 +4537,7 @@ section,
 }
 
 .product-list .product-image .product-overlay .product-actions .action-btn:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
   transform: translateY(-2px);
 }
 
@@ -4529,12 +4552,12 @@ section,
 }
 
 .product-list .product-info .product-title a {
-  color: var(--heading-color);
+  color: var(--red-color);
   transition: all 0.3s ease;
 }
 
 .product-list .product-info .product-title a:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .product-list .product-info .product-price {
@@ -4547,7 +4570,7 @@ section,
 .product-list .product-info .product-price .current-price {
   font-size: 18px;
   font-weight: 700;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .product-list .product-info .product-price .old-price {
@@ -4578,8 +4601,8 @@ section,
   padding: 12px 30px;
   font-size: 16px;
   font-weight: 500;
-  color: var(--contrast-color);
-  background-color: var(--accent-color);
+  color: var(--white-color);
+  background-color: var(--gold-color);
   border-radius: 30px;
   transition: all 0.3s ease;
 }
@@ -4589,7 +4612,7 @@ section,
 }
 
 .best-sellers .view-all-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 10%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 10%);
 }
 
 .product-list .view-all-btn:hover i {
@@ -4734,7 +4757,7 @@ section,
 }
 
 .product-details .product-images .product-thumbnails .thumbnail-item.active {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   opacity: 1;
 }
 
@@ -4746,7 +4769,7 @@ section,
 
 .product-details .product-images .product-thumbnails .swiper-button-next,
 .product-details .product-images .product-thumbnails .swiper-button-prev {
-  color: var(--accent-color);
+  color: var(--gold-color);
   background-color: var(--surface-color);
   width: 30px;
   height: 30px;
@@ -4803,7 +4826,7 @@ section,
   font-size: 1.75rem;
   font-weight: 700;
   margin: 0.5rem 0 0.2rem;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 @media (min-width: 768px) {
@@ -4832,7 +4855,7 @@ section,
 
 .product-details .product-info .product-price-container .discount-badge {
   background-color: #e53935;
-  color: var(--contrast-color);
+  color: var(--white-color);
   font-size: 0.75rem;
   font-weight: 600;
   padding: 0.25rem 0.5rem;
@@ -4886,7 +4909,7 @@ section,
 }
 
 .product-details .product-info .product-colors .color-options .color-option.active {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
 }
 
 .product-details .product-info .product-colors .color-options .color-option.active i {
@@ -4898,7 +4921,7 @@ section,
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: var(--contrast-color);
+  color: var(--white-color);
   font-size: 0.875rem;
   opacity: 0;
 }
@@ -4936,13 +4959,13 @@ section,
 }
 
 .product-details .product-info .product-sizes .size-options .size-option:hover {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
 }
 
 .product-details .product-info .product-sizes .size-options .size-option.active {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
-  border-color: var(--accent-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
+  border-color: var(--gold-color);
 }
 
 .product-details .product-info .product-sizes .selected-option {
@@ -4974,7 +4997,7 @@ section,
 }
 
 .product-details .product-info .product-quantity .quantity-selector .quantity-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
 }
 
 .product-details .product-info .product-quantity .quantity-selector .quantity-btn.decrease {
@@ -4998,7 +5021,7 @@ section,
 }
 
 .product-details .product-info .product-quantity .quantity-selector .quantity-input:focus {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   outline: none;
 }
 
@@ -5029,25 +5052,25 @@ section,
 
 .product-details .product-info .product-actions .add-to-cart-btn {
   flex: 1;
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .product-details .product-info .product-actions .add-to-cart-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 10%);
-  border-color: color-mix(in srgb, var(--accent-color), #000 10%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 10%);
+  border-color: color-mix(in srgb, var(--gold-color), #000 10%);
 }
 
 .product-details .product-info .product-actions .buy-now-btn {
   flex: 1;
-  border-color: var(--accent-color);
-  color: var(--accent-color);
+  border-color: var(--gold-color);
+  color: var(--gold-color);
 }
 
 .product-details .product-info .product-actions .buy-now-btn:hover {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .product-details .product-info .product-actions .wishlist-btn {
@@ -5093,7 +5116,7 @@ section,
 }
 
 .product-details .product-info .additional-info .info-item i {
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-size: 1.125rem;
   margin-right: 0.75rem;
 }
@@ -5126,13 +5149,13 @@ section,
 }
 
 .product-details .product-details-tabs .nav-tabs .nav-link:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .product-details .product-details-tabs .nav-tabs .nav-link.active {
-  color: var(--accent-color);
+  color: var(--gold-color);
   background-color: transparent;
-  border-bottom: 2px solid var(--accent-color);
+  border-bottom: 2px solid var(--gold-color);
 }
 
 .product-details .product-details-tabs .tab-content {
@@ -5140,7 +5163,7 @@ section,
 }
 
 .product-details .product-details-tabs .tab-content h4 {
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 1.25rem;
   margin-bottom: 1rem;
   font-weight: 600;
@@ -5184,7 +5207,7 @@ section,
   width: 40%;
   padding: 0.75rem 0;
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .product-details .product-details-tabs .product-specifications .specs-table .specs-row .specs-value {
@@ -5219,7 +5242,7 @@ section,
 .product-details .product-details-tabs .product-reviews .reviews-summary .overall-rating .rating-number {
   font-size: 3rem;
   font-weight: 700;
-  color: var(--heading-color);
+  color: var(--red-color);
   line-height: 1;
 }
 
@@ -5294,13 +5317,13 @@ section,
   left: 0;
   width: 50px;
   height: 3px;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   border-radius: 3px;
 }
 
 .product-details .product-details-tabs .product-reviews .review-form-container .form-label {
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
   margin-bottom: 0.5rem;
 }
 
@@ -5313,8 +5336,8 @@ section,
 }
 
 .product-details .product-details-tabs .product-reviews .review-form-container .form-control:focus {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--accent-color), transparent 80%);
+  border-color: var(--gold-color);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--gold-color), transparent 80%);
 }
 
 .product-details .product-details-tabs .product-reviews .review-form-container .form-text {
@@ -5353,9 +5376,9 @@ section,
 }
 
 .product-details .product-details-tabs .product-reviews .review-form-container .btn-primary {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
+  color: var(--white-color);
   padding: 0.75rem 1.5rem;
   font-weight: 600;
   border-radius: 6px;
@@ -5363,8 +5386,8 @@ section,
 }
 
 .product-details .product-details-tabs .product-reviews .review-form-container .btn-primary:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 10%);
-  border-color: color-mix(in srgb, var(--accent-color), #000 10%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 10%);
+  border-color: color-mix(in srgb, var(--gold-color), #000 10%);
 }
 
 .product-details .product-details-tabs .product-reviews .reviews-list h4 {
@@ -5419,7 +5442,7 @@ section,
   font-size: 1.125rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .product-details .product-details-tabs .product-reviews .reviews-list .review-item .review-content p {
@@ -5431,14 +5454,14 @@ section,
 .product-details .product-details-tabs .product-reviews .reviews-list .load-more-btn {
   padding: 0.625rem 1.5rem;
   font-weight: 600;
-  border-color: var(--accent-color);
-  color: var(--accent-color);
+  border-color: var(--gold-color);
+  color: var(--gold-color);
   transition: all 0.3s ease;
 }
 
 .product-details .product-details-tabs .product-reviews .reviews-list .load-more-btn:hover {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 /*--------------------------------------------------------------
@@ -5464,7 +5487,7 @@ section,
   font-weight: 600;
   font-size: 0.875rem;
   margin-bottom: 0.5rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   letter-spacing: 0.01em;
 }
 
@@ -5487,7 +5510,7 @@ section,
 }
 
 .best-sellers-header .filter-container .filter-item.search-form .input-group .form-control:focus {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: none;
 }
 
@@ -5497,15 +5520,15 @@ section,
 }
 
 .best-sellers-header .filter-container .filter-item.search-form .input-group .search-btn {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   border: none;
   padding: 0.5rem 1rem;
   transition: all 0.3s ease;
 }
 
 .best-sellers-header .filter-container .filter-item.search-form .input-group .search-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), var(--heading-color) 15%);
+  background-color: color-mix(in srgb, var(--gold-color), var(--red-color) 15%);
 }
 
 .best-sellers-header .filter-container .filter-item.search-form .input-group .search-btn i {
@@ -5525,8 +5548,8 @@ section,
 }
 
 .best-sellers-header .filter-container .filter-item .form-select:focus {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--accent-color), transparent 85%);
+  border-color: var(--gold-color);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--gold-color), transparent 85%);
 }
 
 .best-sellers-header .filter-container .filter-item .form-select.form-select-sm {
@@ -5555,16 +5578,16 @@ section,
 }
 
 .best-sellers-header .filter-container .filter-item .view-options .view-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-  border-color: var(--accent-color);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
+  border-color: var(--gold-color);
+  color: var(--gold-color);
 }
 
 .best-sellers-header .filter-container .filter-item .view-options .view-btn.active {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  color: var(--contrast-color);
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--accent-color), transparent 60%);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
+  color: var(--white-color);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--gold-color), transparent 60%);
 }
 
 .best-sellers-header .filter-container .filter-item .view-options .view-btn i {
@@ -5588,7 +5611,7 @@ section,
 .best-sellers-header .filter-container .active-filters .active-filter-label {
   font-weight: 600;
   font-size: 0.875rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   letter-spacing: 0.01em;
 }
 
@@ -5602,8 +5625,8 @@ section,
 .best-sellers-header .filter-container .active-filters .filter-tag {
   display: inline-flex;
   align-items: center;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: var(--gold-color);
   font-size: 0.875rem;
   padding: 0.35rem 0.85rem;
   border-radius: 50px;
@@ -5614,7 +5637,7 @@ section,
 .best-sellers-header .filter-container .active-filters .filter-tag .filter-remove {
   background: none;
   border: none;
-  color: var(--accent-color);
+  color: var(--gold-color);
   margin-left: 0.35rem;
   padding: 0;
   display: inline-flex;
@@ -5628,15 +5651,15 @@ section,
 }
 
 .best-sellers-header .filter-container .active-filters .filter-tag .filter-remove:hover {
-  color: color-mix(in srgb, var(--accent-color), var(--heading-color) 30%);
-  background-color: color-mix(in srgb, var(--accent-color), transparent 80%);
+  color: color-mix(in srgb, var(--gold-color), var(--red-color) 30%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 80%);
   transform: scale(1.1);
 }
 
 .best-sellers-header .filter-container .active-filters .clear-all-btn {
   background: none;
-  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 70%);
-  color: var(--accent-color);
+  border: 1px solid color-mix(in srgb, var(--gold-color), transparent 70%);
+  color: var(--gold-color);
   font-size: 0.875rem;
   font-weight: 600;
   padding: 0.35rem 0.85rem;
@@ -5647,9 +5670,9 @@ section,
 }
 
 .best-sellers-header .filter-container .active-filters .clear-all-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: color-mix(in srgb, var(--accent-color), var(--heading-color) 15%);
-  border-color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: color-mix(in srgb, var(--gold-color), var(--red-color) 15%);
+  border-color: var(--gold-color);
 }
 
 @media (max-width: 767.98px) {
@@ -5723,8 +5746,8 @@ section,
   top: 15px;
   left: 15px;
   z-index: 3;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   font-size: 0.7rem;
   font-weight: 600;
   padding: 0.35em 0.8em;
@@ -5775,7 +5798,7 @@ section,
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -5783,8 +5806,8 @@ section,
 }
 
 .best-sellers-product-list .quick-action-btn:hover {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   transform: translateY(-2px);
 }
 
@@ -5795,8 +5818,8 @@ section,
 .best-sellers-product-list .add-to-cart-btn {
   width: 100%;
   padding: 0.8rem 1.5rem;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   border: none;
   border-radius: 6px;
   font-weight: 600;
@@ -5807,7 +5830,7 @@ section,
 }
 
 .best-sellers-product-list .add-to-cart-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 15%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 15%);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
@@ -5838,7 +5861,7 @@ section,
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .best-sellers-product-list .product-title a {
@@ -5846,7 +5869,7 @@ section,
 }
 
 .best-sellers-product-list .product-title a:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .best-sellers-product-list .product-price {
@@ -5858,7 +5881,7 @@ section,
 .best-sellers-product-list .product-price span {
   font-weight: 700;
   font-size: 1.1rem;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .best-sellers-product-list .product-price .original {
@@ -5891,7 +5914,7 @@ section,
 .best-sellers-product-list .rating-number {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .best-sellers-product-list .product-color-options {
@@ -5919,7 +5942,7 @@ section,
   left: -3px;
   right: -3px;
   bottom: -3px;
-  border: 2px solid var(--accent-color);
+  border: 2px solid var(--gold-color);
   border-radius: 50%;
 }
 
@@ -6002,14 +6025,14 @@ section,
 }
 
 .best-sellers-pagination li a.active {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px color-mix(in srgb, var(--accent-color), transparent 70%);
+  box-shadow: 0 4px 8px color-mix(in srgb, var(--gold-color), transparent 70%);
 }
 
 .best-sellers-pagination li a:hover:not(.active) {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
   transform: translateY(-1px);
   box-shadow: 0 3px 6px color-mix(in srgb, var(--default-color), transparent 85%);
 }
@@ -6056,7 +6079,7 @@ section,
   left: 0;
   width: 100%;
   height: 0.25rem;
-  background: linear-gradient(90deg, var(--accent-color), color-mix(in srgb, var(--accent-color), transparent 50%));
+  background: linear-gradient(90deg, var(--gold-color), color-mix(in srgb, var(--gold-color), transparent 50%));
   border-radius: 0.25rem 0.25rem 0 0;
 }
 
@@ -6070,7 +6093,7 @@ section,
   font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 0;
-  color: var(--heading-color);
+  color: var(--red-color);
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -6087,7 +6110,7 @@ section,
 .cart .cart-items .cart-item:hover {
   transform: translateY(-3px);
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
-  border-color: color-mix(in srgb, var(--accent-color), transparent 70%);
+  border-color: color-mix(in srgb, var(--gold-color), transparent 70%);
 }
 
 .cart .cart-items .cart-item .product-info .product-image {
@@ -6133,12 +6156,12 @@ section,
   font-weight: 600;
   margin-bottom: 0.5rem;
   font-size: 1.05rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   transition: color 0.3s ease;
 }
 
 .cart .cart-items .cart-item .product-info .product-details .product-title:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .cart .cart-items .cart-item .product-info .product-details .product-meta {
@@ -6203,7 +6226,7 @@ section,
 
 .cart .cart-items .cart-item .price-tag .current-price {
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 1.05rem;
 }
 
@@ -6226,7 +6249,7 @@ section,
 }
 
 .cart .cart-items .cart-item .quantity-selector:hover {
-  border-color: color-mix(in srgb, var(--accent-color), transparent 70%);
+  border-color: color-mix(in srgb, var(--gold-color), transparent 70%);
 }
 
 .cart .cart-items .cart-item .quantity-selector .quantity-btn {
@@ -6251,7 +6274,7 @@ section,
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
   transform: scale(0);
   border-radius: 50%;
   transition: transform 0.3s ease;
@@ -6259,7 +6282,7 @@ section,
 }
 
 .cart .cart-items .cart-item .quantity-selector .quantity-btn:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .cart .cart-items .cart-item .quantity-selector .quantity-btn:hover::before {
@@ -6275,7 +6298,7 @@ section,
   text-align: center;
   border: none;
   font-size: 0.9375rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-weight: 600;
   padding: 0.25rem 0;
   background-color: transparent;
@@ -6293,7 +6316,7 @@ section,
 
 .cart .cart-items .cart-item .item-total {
   font-weight: 700;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 1.125rem;
 }
 
@@ -6309,7 +6332,7 @@ section,
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, var(--accent-color), transparent);
+  background: linear-gradient(90deg, var(--gold-color), transparent);
   border-radius: 1px;
 }
 
@@ -6343,7 +6366,7 @@ section,
 }
 
 .cart .cart-items .cart-actions .coupon-form .input-group .form-control:focus {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: none;
 }
 
@@ -6394,7 +6417,7 @@ section,
   right: 0;
   width: 100%;
   height: 0.25rem;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--accent-color), transparent 50%), var(--accent-color));
+  background: linear-gradient(90deg, color-mix(in srgb, var(--gold-color), transparent 50%), var(--gold-color));
   border-radius: 0.25rem 0.25rem 0 0;
 }
 
@@ -6414,7 +6437,7 @@ section,
   left: 0;
   width: 3rem;
   height: 2px;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   border-radius: 1px;
 }
 
@@ -6441,7 +6464,7 @@ section,
 
 .cart .cart-summary .summary-item .summary-value {
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
   padding: 0.25rem 0.75rem;
   border-radius: 2rem;
   background-color: color-mix(in srgb, var(--background-color), transparent 50%);
@@ -6477,13 +6500,13 @@ section,
 }
 
 .cart .cart-summary .summary-item .shipping-options .form-check .form-check-input:checked {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 0.15rem color-mix(in srgb, var(--accent-color), transparent 85%);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
+  box-shadow: 0 0 0 0.15rem color-mix(in srgb, var(--gold-color), transparent 85%);
 }
 
 .cart .cart-summary .summary-item .shipping-options .form-check .form-check-input:focus {
-  box-shadow: 0 0 0 0.15rem color-mix(in srgb, var(--accent-color), transparent 85%);
+  box-shadow: 0 0 0 0.15rem color-mix(in srgb, var(--gold-color), transparent 85%);
 }
 
 .cart .cart-summary .summary-item .shipping-options .form-check .form-check-label {
@@ -6493,7 +6516,7 @@ section,
 }
 
 .cart .cart-summary .summary-item .shipping-options .form-check .form-check-label:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .cart .cart-summary .summary-total {
@@ -6503,20 +6526,20 @@ section,
   margin: 1.75rem 0;
   padding: 1.25rem;
   border-radius: 0.75rem;
-  background: linear-gradient(145deg, color-mix(in srgb, var(--accent-color), transparent 95%), color-mix(in srgb, var(--background-color), transparent 95%));
+  background: linear-gradient(145deg, color-mix(in srgb, var(--gold-color), transparent 95%), color-mix(in srgb, var(--background-color), transparent 95%));
   border: 1px solid color-mix(in srgb, var(--default-color), transparent 92%);
 }
 
 .cart .cart-summary .summary-total .summary-label {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .cart .cart-summary .summary-total .summary-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--heading-color);
+  color: var(--red-color);
   position: relative;
 }
 
@@ -6527,7 +6550,7 @@ section,
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, var(--accent-color), transparent);
+  background: linear-gradient(90deg, var(--gold-color), transparent);
   border-radius: 1px;
 }
 
@@ -6557,7 +6580,7 @@ section,
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, var(--accent-color), color-mix(in srgb, var(--accent-color), transparent 30%));
+  background: linear-gradient(90deg, var(--gold-color), color-mix(in srgb, var(--gold-color), transparent 30%));
   z-index: -1;
   transition: transform 0.6s ease;
   transform: translateX(-100%);
@@ -6584,7 +6607,7 @@ section,
 }
 
 .cart .cart-summary .continue-shopping .btn-link {
-  color: var(--accent-color);
+  color: var(--gold-color);
   text-decoration: none;
   font-size: 0.9375rem;
   padding: 0.5rem;
@@ -6594,7 +6617,7 @@ section,
   gap: 0.375rem;
   transition: all 0.3s ease;
   border-radius: 2rem;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 95%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 95%);
 }
 
 .cart .cart-summary .continue-shopping .btn-link i {
@@ -6602,8 +6625,8 @@ section,
 }
 
 .cart .cart-summary .continue-shopping .btn-link:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: color-mix(in srgb, var(--accent-color), transparent 25%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: color-mix(in srgb, var(--gold-color), transparent 25%);
 }
 
 .cart .cart-summary .continue-shopping .btn-link:hover i {
@@ -6635,22 +6658,22 @@ section,
 }
 
 .cart .cart-summary .payment-methods .payment-icons i:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
   transform: translateY(-3px);
 }
 
 .cart .btn-accent {
-  color: var(--contrast-color);
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+  color: var(--white-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
 }
 
 .cart .btn-accent:hover,
 .cart .btn-accent:focus,
 .cart .btn-accent:active {
-  color: var(--contrast-color);
-  background-color: color-mix(in srgb, var(--accent-color), #000 15%);
-  border-color: color-mix(in srgb, var(--accent-color), #000 15%);
+  color: var(--white-color);
+  background-color: color-mix(in srgb, var(--gold-color), #000 15%);
+  border-color: color-mix(in srgb, var(--gold-color), #000 15%);
   transform: translateY(-2px);
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 }
@@ -6660,17 +6683,17 @@ section,
 }
 
 .cart .btn-outline-accent {
-  color: var(--accent-color);
-  border-color: var(--accent-color);
+  color: var(--gold-color);
+  border-color: var(--gold-color);
   background-color: transparent;
 }
 
 .cart .btn-outline-accent:hover,
 .cart .btn-outline-accent:focus,
 .cart .btn-outline-accent:active {
-  color: var(--contrast-color);
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+  color: var(--white-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
   transform: translateY(-2px);
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 }
@@ -6688,7 +6711,7 @@ section,
 .cart .btn-outline-danger:hover,
 .cart .btn-outline-danger:focus,
 .cart .btn-outline-danger:active {
-  color: var(--contrast-color);
+  color: var(--white-color);
   background-color: #dc3545;
   border-color: #dc3545;
   transform: translateY(-2px);
@@ -6755,8 +6778,8 @@ section,
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6769,7 +6792,7 @@ section,
   margin: 0;
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .checkout .checkout-section .section-content {
@@ -6789,7 +6812,7 @@ section,
   margin-bottom: 8px;
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .checkout .checkout-section .section-content .form-group .form-control,
@@ -6805,13 +6828,13 @@ section,
 
 .checkout .checkout-section .section-content .form-group .form-control:hover,
 .checkout .checkout-section .section-content .form-group .form-select:hover {
-  border-color: color-mix(in srgb, var(--accent-color), transparent 60%);
+  border-color: color-mix(in srgb, var(--gold-color), transparent 60%);
 }
 
 .checkout .checkout-section .section-content .form-group .form-control:focus,
 .checkout .checkout-section .section-content .form-group .form-select:focus {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color), transparent 85%);
+  border-color: var(--gold-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold-color), transparent 85%);
   outline: none;
 }
 
@@ -6874,7 +6897,7 @@ section,
 }
 
 .checkout .checkout-section .section-content .form-group .cvv-wrapper .cvv-hint:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .checkout .checkout-section .section-content .form-check {
@@ -6897,13 +6920,13 @@ section,
 }
 
 .checkout .checkout-section .section-content .form-check .form-check-input:checked {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
 }
 
 .checkout .checkout-section .section-content .form-check .form-check-input:focus {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color), transparent 85%);
+  border-color: var(--gold-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold-color), transparent 85%);
 }
 
 .checkout .checkout-section .section-content .form-check .form-check-label {
@@ -6912,7 +6935,7 @@ section,
 }
 
 .checkout .checkout-section .section-content .form-check .form-check-label a {
-  color: var(--accent-color);
+  color: var(--gold-color);
   text-decoration: none;
   font-weight: 500;
 }
@@ -6951,16 +6974,16 @@ section,
 }
 
 .checkout .checkout-section .section-content .payment-options .payment-option input[type=radio]:checked+label {
-  border-color: var(--accent-color);
-  background-color: color-mix(in srgb, var(--accent-color), transparent 95%);
+  border-color: var(--gold-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 95%);
 }
 
 .checkout .checkout-section .section-content .payment-options .payment-option input[type=radio]:checked+label .payment-icon {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .checkout .checkout-section .section-content .payment-options .payment-option input[type=radio]:focus+label {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color), transparent 85%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold-color), transparent 85%);
 }
 
 .checkout .checkout-section .section-content .payment-options .payment-option label {
@@ -6978,7 +7001,7 @@ section,
 }
 
 .checkout .checkout-section .section-content .payment-options .payment-option label:hover {
-  border-color: color-mix(in srgb, var(--accent-color), transparent 60%);
+  border-color: color-mix(in srgb, var(--gold-color), transparent 60%);
 }
 
 .checkout .checkout-section .section-content .payment-options .payment-option label .payment-icon {
@@ -6994,12 +7017,12 @@ section,
 }
 
 .checkout .checkout-section .section-content .payment-options .payment-option.active label {
-  border-color: var(--accent-color);
-  background-color: color-mix(in srgb, var(--accent-color), transparent 95%);
+  border-color: var(--gold-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 95%);
 }
 
 .checkout .checkout-section .section-content .payment-options .payment-option.active label .payment-icon {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 @media (max-width: 575.98px) {
@@ -7058,14 +7081,14 @@ section,
   font-size: 1rem;
   font-weight: 600;
   border-radius: 12px;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   border: none;
   box-shadow: 0 4px 12px rgba(54, 144, 231, 0.2);
   transition: all 0.3s ease;
 }
 
 .checkout .checkout-section .section-content .place-order-container .place-order-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 10%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 10%);
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(54, 144, 231, 0.25);
 }
@@ -7176,7 +7199,7 @@ section,
 }
 
 .checkout .order-summary .order-summary-content .order-items .order-item .order-item-details .order-item-price .price {
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .checkout .order-summary .order-summary-content .promo-code {
@@ -7194,7 +7217,7 @@ section,
 }
 
 .checkout .order-summary .order-summary-content .promo-code .input-group .form-control:focus {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: none;
   outline: none;
 }
@@ -7211,15 +7234,15 @@ section,
   border-bottom-right-radius: 12px;
   padding: 0 16px;
   font-weight: 500;
-  color: var(--accent-color);
+  color: var(--gold-color);
   background-color: var(--surface-color);
   transition: all 0.25s ease;
 }
 
 .checkout .order-summary .order-summary-content .promo-code .input-group .btn:hover {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .checkout .order-summary .order-summary-content .promo-code .input-group .btn:focus {
@@ -7245,7 +7268,7 @@ section,
   border-top: 1px dashed color-mix(in srgb, var(--default-color), transparent 80%);
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .checkout .order-summary .order-summary-content .secure-checkout {
@@ -7257,7 +7280,7 @@ section,
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-weight: 500;
   font-size: 0.9rem;
   margin-bottom: 12px;
@@ -7391,7 +7414,7 @@ section,
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 0.75rem;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
   border-radius: 6px;
   font-size: 0.9rem;
 }
@@ -7509,7 +7532,7 @@ section,
 }
 
 .order-confirmation .next-steps .tracking-info i {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .order-confirmation .next-steps .action-buttons .btn {
@@ -7521,24 +7544,24 @@ section,
 }
 
 .order-confirmation .next-steps .action-buttons .btn.btn-primary {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
 }
 
 .order-confirmation .next-steps .action-buttons .btn.btn-primary:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 10%);
-  border-color: color-mix(in srgb, var(--accent-color), #000 10%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 10%);
+  border-color: color-mix(in srgb, var(--gold-color), #000 10%);
   transform: translateY(-2px);
 }
 
 .order-confirmation .next-steps .action-buttons .btn.btn-outline-primary {
-  color: var(--accent-color);
-  border-color: var(--accent-color);
+  color: var(--gold-color);
+  border-color: var(--gold-color);
 }
 
 .order-confirmation .next-steps .action-buttons .btn.btn-outline-primary:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: var(--gold-color);
   transform: translateY(-2px);
 }
 
@@ -7547,7 +7570,7 @@ section,
 }
 
 .order-confirmation .help-contact a {
-  color: var(--accent-color);
+  color: var(--gold-color);
   text-decoration: none;
   font-weight: 500;
 }
@@ -7595,7 +7618,7 @@ section,
 .search-results-header .results-count .results-number,
 .search-results-header .results-count .search-term {
   font-weight: 600;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .search-results-header .search-form {
@@ -7620,7 +7643,7 @@ section,
 }
 
 .search-results-header .search-form .form-control:focus {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: none;
 }
 
@@ -7629,8 +7652,8 @@ section,
 }
 
 .search-results-header .search-form .search-btn {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   border: none;
   padding: 0 25px;
   border-radius: 0 50px 50px 0;
@@ -7638,13 +7661,13 @@ section,
 }
 
 .search-results-header .search-form .search-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 15%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 15%);
 }
 
 .search-results-header .search-filters .filter-label {
   font-weight: 600;
   margin-right: 10px;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .search-results-header .search-filters .tags-wrapper {
@@ -7656,8 +7679,8 @@ section,
 .search-results-header .search-filters .filter-tag {
   display: inline-flex;
   align-items: center;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: var(--gold-color);
   font-size: 0.85rem;
   padding: 5px 12px;
   border-radius: 30px;
@@ -7671,7 +7694,7 @@ section,
 }
 
 .search-results-header .search-filters .filter-tag:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 80%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 80%);
 }
 
 .search-results-header .search-filters .filter-tag:hover i {
@@ -7679,7 +7702,7 @@ section,
 }
 
 .search-results-header .search-filters .sort-options label {
-  color: var(--heading-color);
+  color: var(--red-color);
   font-weight: 500;
 }
 
@@ -7692,7 +7715,7 @@ section,
 }
 
 .search-results-header .search-filters .sort-options .form-select:focus {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: none;
 }
 
@@ -7810,7 +7833,7 @@ section,
   border-radius: 50%;
   background: var(--surface-color);
   border: none;
-  color: var(--accent-color);
+  color: var(--gold-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7825,8 +7848,8 @@ section,
 }
 
 .search-product-list .product-actions .action-btn:hover {
-  background: var(--accent-color);
-  color: var(--contrast-color);
+  background: var(--gold-color);
+  color: var(--white-color);
   transform: translateY(-2px);
 }
 
@@ -7847,13 +7870,13 @@ section,
 }
 
 .search-product-list .product-badge.new {
-  background: var(--accent-color);
-  color: var(--contrast-color);
+  background: var(--gold-color);
+  color: var(--white-color);
 }
 
 .search-product-list .product-badge.sale {
   background: #ffa007;
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 .search-product-list .product-details {
@@ -7873,13 +7896,13 @@ section,
 }
 
 .search-product-list .product-title a {
-  color: var(--heading-color);
+  color: var(--red-color);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .search-product-list .product-title a:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .search-product-list .product-meta {
@@ -7891,7 +7914,7 @@ section,
 .search-product-list .product-price {
   font-weight: 600;
   font-size: 1.125rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -7908,7 +7931,7 @@ section,
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-weight: 500;
 }
 
@@ -7972,7 +7995,7 @@ section,
   justify-content: center;
   gap: 10px;
   font-weight: 500;
-  color: var(--heading-color);
+  color: var(--red-color);
   transition: all 0.3s ease;
 }
 
@@ -7981,7 +8004,7 @@ section,
 }
 
 .account .mobile-menu .mobile-menu-toggle:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
 }
 
 .account .profile-menu {
@@ -8021,7 +8044,7 @@ section,
   right: 0;
   width: 32px;
   height: 32px;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -8030,7 +8053,7 @@ section,
 }
 
 .account .profile-menu .user-info .user-avatar .status-badge i {
-  color: var(--contrast-color);
+  color: var(--white-color);
   font-size: 14px;
 }
 
@@ -8045,8 +8068,8 @@ section,
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
+  color: var(--gold-color);
   border-radius: 20px;
   font-size: 13px;
 }
@@ -8087,32 +8110,32 @@ section,
 }
 
 .account .profile-menu .menu-nav .nav-link .badge {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .account .profile-menu .menu-nav .nav-link:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
+  color: var(--gold-color);
 }
 
 .account .profile-menu .menu-nav .nav-link:hover i {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .account .profile-menu .menu-nav .nav-link.active {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   font-weight: 500;
 }
 
 .account .profile-menu .menu-nav .nav-link.active i {
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 .account .profile-menu .menu-nav .nav-link.active .badge {
-  background-color: var(--contrast-color);
-  color: var(--accent-color);
+  background-color: var(--white-color);
+  color: var(--gold-color);
 }
 
 .account .profile-menu .menu-footer {
@@ -8139,12 +8162,12 @@ section,
 }
 
 .account .profile-menu .menu-footer a:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
+  color: var(--gold-color);
 }
 
 .account .profile-menu .menu-footer a:hover i {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .account .profile-menu .menu-footer a.logout-link {
@@ -8213,8 +8236,8 @@ section,
 
 .account .content-area .section-header .header-actions .search-box input:focus {
   outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color), transparent 90%);
+  border-color: var(--gold-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold-color), transparent 90%);
 }
 
 .account .content-area .section-header .header-actions .filter-btn {
@@ -8236,8 +8259,8 @@ section,
 }
 
 .account .content-area .section-header .header-actions .filter-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
+  color: var(--gold-color);
 }
 
 .account .content-area .orders-grid {
@@ -8255,7 +8278,7 @@ section,
 }
 
 .account .content-area .orders-grid .order-card:hover {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
@@ -8485,7 +8508,7 @@ section,
 .account .content-area .orders-grid .order-card .order-details .details-content .detail-section .order-items .item .item-price {
   font-size: 14px;
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .account .content-area .orders-grid .order-card .order-details .details-content .detail-section .price-breakdown {
@@ -8510,7 +8533,7 @@ section,
   margin-top: 4px;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
   font-weight: 600;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .account .content-area .orders-grid .order-card .order-details .details-content .detail-section .address-info {
@@ -8613,7 +8636,7 @@ section,
 
 .account .content-area .orders-grid .order-card .order-content .order-info .info-row .price {
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .account .content-area .orders-grid .order-card .order-footer {
@@ -8631,23 +8654,23 @@ section,
 }
 
 .account .content-area .orders-grid .order-card .order-footer button.btn-track {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   border: none;
 }
 
 .account .content-area .orders-grid .order-card .order-footer button.btn-track:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 15%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 15%);
 }
 
 .account .content-area .orders-grid .order-card .order-footer button.btn-details {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
+  color: var(--gold-color);
   border: none;
 }
 
 .account .content-area .orders-grid .order-card .order-footer button.btn-details:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 88%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 88%);
 }
 
 .account .content-area .orders-grid .order-card .order-footer button.btn-review {
@@ -8693,13 +8716,13 @@ section,
 }
 
 .account .content-area .pagination-wrapper button:hover:not(:disabled) {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
+  color: var(--gold-color);
 }
 
 .account .content-area .pagination-wrapper button.active {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .account .content-area .pagination-wrapper button:disabled {
@@ -8761,7 +8784,7 @@ section,
 }
 
 .account .wishlist-grid .wishlist-card:hover {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
@@ -8876,7 +8899,7 @@ section,
 .account .wishlist-grid .wishlist-card .wishlist-content .product-meta .price .current {
   font-size: 18px;
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .account .wishlist-grid .wishlist-card .wishlist-content .product-meta .price .original {
@@ -8896,13 +8919,13 @@ section,
 }
 
 .account .wishlist-grid .wishlist-card .wishlist-content .btn-add-cart {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   border: none;
 }
 
 .account .wishlist-grid .wishlist-card .wishlist-content .btn-add-cart:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 15%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 15%);
 }
 
 .account .wishlist-grid .wishlist-card .wishlist-content .btn-notify {
@@ -8931,12 +8954,12 @@ section,
 }
 
 .account .payment-cards-grid .payment-card:hover {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .account .payment-cards-grid .payment-card.default {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
 }
 
 .account .payment-cards-grid .payment-card .card-header {
@@ -8948,7 +8971,7 @@ section,
 
 .account .payment-cards-grid .payment-card .card-header i {
   font-size: 24px;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .account .payment-cards-grid .payment-card .card-header .card-badges {
@@ -8965,8 +8988,8 @@ section,
 }
 
 .account .payment-cards-grid .payment-card .card-header .card-badges .default-badge {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
+  color: var(--gold-color);
 }
 
 .account .payment-cards-grid .payment-card .card-header .card-badges .card-type {
@@ -9034,13 +9057,13 @@ section,
 }
 
 .account .payment-cards-grid .payment-card .card-actions button.btn-make-default {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
+  color: var(--gold-color);
   border: none;
 }
 
 .account .payment-cards-grid .payment-card .card-actions button.btn-make-default:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 88%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 88%);
 }
 
 .account .reviews-grid {
@@ -9058,7 +9081,7 @@ section,
 }
 
 .account .reviews-grid .review-card:hover {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
@@ -9169,12 +9192,12 @@ section,
 }
 
 .account .addresses-grid .address-card:hover {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .account .addresses-grid .address-card.default {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
 }
 
 .account .addresses-grid .address-card .card-header {
@@ -9195,8 +9218,8 @@ section,
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
+  color: var(--gold-color);
 }
 
 .account .addresses-grid .address-card .card-body {
@@ -9269,13 +9292,13 @@ section,
 }
 
 .account .addresses-grid .address-card .card-actions button.btn-make-default {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
+  color: var(--gold-color);
   border: none;
 }
 
 .account .addresses-grid .address-card .card-actions button.btn-make-default:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 88%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 88%);
 }
 
 .account .settings-content .settings-section {
@@ -9343,8 +9366,8 @@ section,
 }
 
 .account .settings-content .settings-form .form-control:focus {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color), transparent 90%);
+  border-color: var(--gold-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold-color), transparent 90%);
 }
 
 .account .settings-content .settings-form .form-buttons {
@@ -9356,8 +9379,8 @@ section,
 .account .settings-content .settings-form .form-buttons .btn-save {
   height: 40px;
   padding: 0 24px;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   border: none;
   border-radius: 10px;
   font-size: 14px;
@@ -9366,7 +9389,7 @@ section,
 }
 
 .account .settings-content .settings-form .form-buttons .btn-save:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 15%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 15%);
 }
 
 .account .settings-content .preferences-list .preference-item {
@@ -9414,13 +9437,13 @@ section,
 }
 
 .account .settings-content .preferences-list .preference-item .form-check .form-check-input:checked {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
 }
 
 .account .settings-content .preferences-list .preference-item .form-check .form-check-input:focus {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--accent-color), transparent 75%);
+  border-color: var(--gold-color);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--gold-color), transparent 75%);
 }
 
 @media (max-width: 575.98px) {
@@ -9486,13 +9509,13 @@ section,
 }
 
 .login-register .nav-tabs .nav-item .nav-link:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
+  color: var(--gold-color);
 }
 
 .login-register .nav-tabs .nav-item .nav-link.active {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   transform: translateY(-2px);
 }
 
@@ -9522,13 +9545,13 @@ section,
 }
 
 .login-register .form-control:focus {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color), transparent 85%);
+  border-color: var(--gold-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold-color), transparent 85%);
   background-color: var(--surface-color);
 }
 
 .login-register .form-control:hover {
-  border-color: color-mix(in srgb, var(--accent-color), transparent 50%);
+  border-color: color-mix(in srgb, var(--gold-color), transparent 50%);
   background-color: var(--surface-color);
 }
 
@@ -9547,13 +9570,13 @@ section,
 }
 
 .login-register .form-check .form-check-input:checked {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
 }
 
 .login-register .form-check .form-check-input:focus {
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color), transparent 85%);
-  border-color: var(--accent-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold-color), transparent 85%);
+  border-color: var(--gold-color);
 }
 
 .login-register .form-check .form-check-label {
@@ -9563,7 +9586,7 @@ section,
 }
 
 .login-register .form-check .form-check-label a {
-  color: var(--accent-color);
+  color: var(--gold-color);
   text-decoration: none;
   font-weight: 500;
   position: relative;
@@ -9576,7 +9599,7 @@ section,
   height: 1px;
   bottom: -1px;
   left: 0;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
@@ -9586,7 +9609,7 @@ section,
 }
 
 .login-register .btn-primary {
-  background: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color), transparent 25%));
+  background: linear-gradient(135deg, var(--gold-color), color-mix(in srgb, var(--gold-color), transparent 25%));
   border: none;
   padding: 1rem 2rem;
   font-weight: 600;
@@ -9598,7 +9621,7 @@ section,
 
 .login-register .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--accent-color), transparent 75%);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--gold-color), transparent 75%);
 }
 
 .login-register .btn-primary:active {
@@ -9606,7 +9629,7 @@ section,
 }
 
 .login-register .forgot-password {
-  color: color-mix(in srgb, var(--accent-color), transparent 15%);
+  color: color-mix(in srgb, var(--gold-color), transparent 15%);
   font-size: 0.95rem;
   font-weight: 500;
   position: relative;
@@ -9620,13 +9643,13 @@ section,
   height: 1px;
   bottom: -1px;
   left: 0;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
 
 .login-register .forgot-password:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
   text-decoration: none;
 }
 
@@ -9664,8 +9687,8 @@ section,
   padding: 0.5rem 1rem;
   border-radius: 50px;
   font-size: 0.875rem;
-  color: var(--accent-color);
-  background-color: color-mix(in srgb, var(--accent-color) 10%, transparent);
+  color: var(--gold-color);
+  background-color: color-mix(in srgb, var(--gold-color) 10%, transparent);
   margin-bottom: 1rem;
 }
 
@@ -9699,8 +9722,8 @@ section,
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  background-color: color-mix(in srgb, var(--accent-color) 15%, transparent);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color) 15%, transparent);
+  color: var(--gold-color);
   font-size: 1.75rem;
   transition: all 0.3s ease;
 }
@@ -9712,7 +9735,7 @@ section,
 }
 
 .about-2 .features-boxes .feature-box h3 a {
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .about-2 .features-boxes .feature-box p {
@@ -9722,12 +9745,12 @@ section,
 }
 
 .about-2 .features-boxes .feature-box:hover .icon-box {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .about-2 .features-boxes .feature-box:hover h3 a {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .about-2 .video-box {
@@ -9757,7 +9780,7 @@ section,
 .stats .avatars img {
   width: 60px;
   height: 60px;
-  border: 3px solid var(--accent-color);
+  border: 3px solid var(--gold-color);
   margin-right: -15px;
   transition: transform 0.3s ease;
 }
@@ -9768,7 +9791,7 @@ section,
 }
 
 .stats .counters h2 {
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 48px;
   font-weight: 700;
   margin-bottom: 10px;
@@ -9842,7 +9865,7 @@ section,
   position: absolute;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, color-mix(in srgb, var(--accent-color), transparent 95%), transparent);
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--gold-color), transparent 95%), transparent);
   opacity: 0.5;
   z-index: -1;
 }
@@ -9856,16 +9879,16 @@ section,
 }
 
 .testimonials .testimonial-item.highlight .testimonial-content {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 70%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
+  border: 1px solid color-mix(in srgb, var(--gold-color), transparent 70%);
 }
 
 .testimonials .testimonial-item.highlight .testimonial-content .quote-pattern {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 85%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 85%);
 }
 
 .testimonials .testimonial-item.highlight .testimonial-content .quote-pattern i {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .testimonials .testimonial-content {
@@ -9904,7 +9927,7 @@ section,
 
 .testimonials .quote-pattern i {
   font-size: 1.25rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .testimonials .client-info {
@@ -9937,7 +9960,7 @@ section,
 
 .testimonials .client-details .position {
   font-size: 0.875rem;
-  color: color-mix(in srgb, var(--heading-color), transparent 40%);
+  color: color-mix(in srgb, var(--red-color), transparent 40%);
 }
 
 @media (max-width: 1199.98px) {
@@ -10015,7 +10038,7 @@ section,
 
 .contact-2 .info-item i {
   font-size: 20px;
-  color: var(--accent-color);
+  color: var(--gold-color);
   width: 56px;
   height: 56px;
   font-size: 24px;
@@ -10025,7 +10048,7 @@ section,
   border-radius: 4px;
   transition: all 0.3s ease-in-out;
   border-radius: 50%;
-  border: 2px dotted color-mix(in srgb, var(--accent-color), transparent 40%);
+  border: 2px dotted color-mix(in srgb, var(--gold-color), transparent 40%);
 }
 
 .contact-2 .info-item h3 {
@@ -10069,7 +10092,7 @@ section,
 .contact-2 .php-email-form input[type=text]:focus,
 .contact-2 .php-email-form input[type=email]:focus,
 .contact-2 .php-email-form textarea:focus {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
 }
 
 .contact-2 .php-email-form input[type=text]::placeholder,
@@ -10079,8 +10102,8 @@ section,
 }
 
 .contact-2 .php-email-form button[type=submit] {
-  color: var(--contrast-color);
-  background: var(--accent-color);
+  color: var(--white-color);
+  background: var(--gold-color);
   border: 0;
   padding: 10px 30px;
   transition: 0.4s;
@@ -10088,7 +10111,7 @@ section,
 }
 
 .contact-2 .php-email-form button[type=submit]:hover {
-  background: color-mix(in srgb, var(--accent-color), transparent 20%);
+  background: color-mix(in srgb, var(--gold-color), transparent 20%);
 }
 
 /*--------------------------------------------------------------
@@ -10120,7 +10143,7 @@ section,
   transform: translateX(-50%);
   width: 100px;
   height: 4px;
-  background: linear-gradient(90deg, var(--accent-color) 0%, color-mix(in srgb, var(--accent-color), transparent 80%) 100%);
+  background: linear-gradient(90deg, var(--gold-color) 0%, color-mix(in srgb, var(--gold-color), transparent 80%) 100%);
   border-radius: 2px;
 }
 
@@ -10161,7 +10184,7 @@ section,
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, color-mix(in srgb, var(--accent-color), transparent 85%), color-mix(in srgb, var(--accent-color), transparent 95%));
+  background: linear-gradient(45deg, color-mix(in srgb, var(--gold-color), transparent 85%), color-mix(in srgb, var(--gold-color), transparent 95%));
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -10186,7 +10209,7 @@ section,
 
 .support .quick-support .action-item .action-content i {
   font-size: 2.5rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   margin-bottom: 20px;
   display: block;
 }
@@ -10208,13 +10231,13 @@ section,
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: var(--gold-color);
 }
 
 .support .quick-support .action-item .action-content .action-button:hover {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   transform: translateY(-2px);
 }
 
@@ -10265,7 +10288,7 @@ section,
 .support .help-categories .best-sellers-card .icon {
   width: 60px;
   height: 60px;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
   border-radius: 15px;
   display: flex;
   align-items: center;
@@ -10274,11 +10297,11 @@ section,
 
 .support .help-categories .best-sellers-card .icon i {
   font-size: 1.75rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .support .help-categories .best-sellers-card h5 {
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 1.2rem;
   margin-bottom: 10px;
 }
@@ -10300,7 +10323,7 @@ section,
 }
 
 .support .help-categories .best-sellers-card .arrow {
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-size: 1.5rem;
   opacity: 0;
   transition: all 0.3s;
@@ -10338,26 +10361,26 @@ section,
 }
 
 .support .self-help .content-box .resource-link:hover i {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .support .self-help .content-box .resource-link i {
   width: 50px;
   height: 50px;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   transition: all 0.3s;
 }
 
 .support .self-help .content-box .resource-link .link-content h6 {
   margin: 0 0 5px;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 1.1rem;
 }
 
@@ -10402,13 +10425,13 @@ section,
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  color: var(--heading-color);
+  color: var(--red-color);
   transition: all 0.3s;
 }
 
 .support .self-help .faq-section .faq-list .faq-item h3 i {
   font-size: 1.5rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   transition: transform 0.3s;
 }
 
@@ -10423,7 +10446,7 @@ section,
 }
 
 .support .self-help .faq-section .faq-list .faq-item.faq-active h3 {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .support .self-help .faq-section .faq-list .faq-item.faq-active h3 i {
@@ -10476,7 +10499,7 @@ section,
 
 .faq .faq-card i {
   font-size: 48px;
-  color: var(--accent-color);
+  color: var(--gold-color);
   margin-bottom: 20px;
   display: block;
 }
@@ -10497,14 +10520,14 @@ section,
   padding: 8px 20px;
   font-size: 16px;
   font-weight: 500;
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .faq .faq-card .btn-primary:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
-  border-color: color-mix(in srgb, var(--accent-color), transparent 20%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 20%);
+  border-color: color-mix(in srgb, var(--gold-color), transparent 20%);
 }
 
 .faq .faq-list {
@@ -10555,12 +10578,12 @@ section,
   right: 30px;
   top: 30px;
   font-size: 24px;
-  color: var(--accent-color);
+  color: var(--gold-color);
   transition: transform 0.2s ease;
 }
 
 .faq .faq-list .faq-item.faq-active h3 {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .faq .faq-list .faq-item.faq-active .faq-content {
@@ -10608,7 +10631,7 @@ section,
 }
 
 .blog-top .post-item:hover .post-title a {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .blog-top .post-item .post-img {
@@ -10630,7 +10653,7 @@ section,
   left: 15px;
   padding: 5px 15px;
   font-size: 14px;
-  color: var(--contrast-color);
+  color: var(--white-color);
   border-radius: 4px;
   z-index: 1;
 }
@@ -10657,12 +10680,12 @@ section,
 }
 
 .blog-top .post-item .post-content .post-title a {
-  color: var(--heading-color);
+  color: var(--red-color);
   transition: color 0.3s ease;
 }
 
 .blog-top .post-item .post-content .post-title a:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .blog-top .post-item .post-content .post-meta {
@@ -10744,12 +10767,12 @@ section,
 }
 
 .recent-posts .title a {
-  color: var(--heading-color);
+  color: var(--red-color);
   transition: 0.3s;
 }
 
 .recent-posts .title a:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .recent-posts .post-author-img {
@@ -10790,25 +10813,25 @@ section,
 }
 
 .blog-pagination li a {
-  color: var(--accent-color);
+  color: var(--gold-color);
   display: flex;
   align-items: center;
   justify-content: center;
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid var(--accent-color);
+  border: 1px solid var(--gold-color);
 }
 
 .blog-pagination li a.active,
 .blog-pagination li a:hover {
-  background: var(--accent-color);
-  color: var(--contrast-color);
+  background: var(--gold-color);
+  color: var(--white-color);
 }
 
 .blog-pagination li a.active a,
 .blog-pagination li a:hover a {
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 /*--------------------------------------------------------------
@@ -10859,7 +10882,7 @@ section,
   align-items: center;
   margin-right: 1rem;
   font-size: 0.9rem;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .blog-details .meta-categories .best-sellers i,
@@ -10872,7 +10895,7 @@ section,
   font-size: 2.5rem;
   line-height: 1.3;
   margin: 1rem 0 1.5rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-family: var(--heading-font);
 }
 
@@ -10916,11 +10939,11 @@ section,
 }
 
 .blog-details .meta-top ul li a {
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .blog-details .meta-top ul li a:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .blog-details .content {
@@ -10931,14 +10954,14 @@ section,
 .blog-details .content .lead {
   font-size: 1.25rem;
   font-weight: 500;
-  color: var(--heading-color);
+  color: var(--red-color);
   margin-bottom: 1.5rem;
 }
 
 .blog-details .content h2 {
   font-size: 1.8rem;
   margin: 2.5rem 0 1rem;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .blog-details .content p {
@@ -10979,8 +11002,8 @@ section,
 }
 
 .blog-details .content blockquote {
-  background: color-mix(in srgb, var(--accent-color), transparent 95%);
-  border-left: 4px solid var(--accent-color);
+  background: color-mix(in srgb, var(--gold-color), transparent 95%);
+  border-left: 4px solid var(--gold-color);
   padding: 2rem;
   margin: 2rem 0;
   border-radius: 0 8px 8px 0;
@@ -10989,7 +11012,7 @@ section,
 .blog-details .content blockquote p {
   font-size: 1.2rem;
   font-style: italic;
-  color: var(--heading-color);
+  color: var(--red-color);
   margin: 0 0 1rem;
 }
 
@@ -11038,15 +11061,15 @@ section,
   display: inline-block;
   padding: 0.25rem 0.75rem;
   font-size: 0.9rem;
-  background: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: var(--accent-color);
+  background: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: var(--gold-color);
   border-radius: 20px;
   transition: all 0.3s ease;
 }
 
 .blog-details .meta-bottom .article-tags .tags li a:hover {
-  background: var(--accent-color);
-  color: var(--contrast-color);
+  background: var(--gold-color);
+  color: var(--white-color);
 }
 
 .blog-details .meta-bottom .article-share {
@@ -11066,14 +11089,14 @@ section,
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: var(--accent-color);
+  background: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: var(--gold-color);
   transition: all 0.3s ease;
 }
 
 .blog-details .meta-bottom .article-share a:hover {
-  background: var(--accent-color);
-  color: var(--contrast-color);
+  background: var(--gold-color);
+  color: var(--white-color);
 }
 
 .blog-details .meta-bottom .article-share a i {
@@ -11097,7 +11120,7 @@ section,
 }
 
 .blog-comments .comments-header .title {
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 32px;
   font-weight: 700;
   font-family: var(--heading-font);
@@ -11141,7 +11164,7 @@ section,
   top: 80px;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--accent-color), transparent 40%), color-mix(in srgb, var(--accent-color), transparent 90%));
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--gold-color), transparent 40%), color-mix(in srgb, var(--gold-color), transparent 90%));
   z-index: 0;
 }
 
@@ -11233,7 +11256,7 @@ section,
 }
 
 .blog-comments .comment-header .user-info h4 {
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 5px;
@@ -11256,9 +11279,9 @@ section,
   align-items: center;
   gap: 5px;
   padding: 6px 12px;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
   border-radius: 20px;
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-size: 14px;
   font-weight: 500;
 }
@@ -11300,8 +11323,8 @@ section,
 }
 
 .blog-comments .comment-actions .action-btn:hover {
-  color: var(--accent-color);
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
+  color: var(--gold-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 92%);
 }
 
 .blog-comments .comment-actions .action-btn:hover.like-btn i {
@@ -11392,7 +11415,7 @@ section,
 }
 
 .blog-comment-form .form-header h3 {
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 1.75rem;
   margin-bottom: 0.5rem;
 }
@@ -11410,7 +11433,7 @@ section,
 .blog-comment-form .input-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-weight: 500;
   font-size: 0.875rem;
 }
@@ -11440,8 +11463,8 @@ section,
 .blog-comment-form .input-group input:focus,
 .blog-comment-form .input-group textarea:focus {
   outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color), transparent 90%);
+  border-color: var(--gold-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold-color), transparent 90%);
 }
 
 .blog-comment-form .input-group input:invalid:not(:placeholder-shown),
@@ -11472,8 +11495,8 @@ section,
 }
 
 .blog-comment-form button[type=submit] {
-  background: var(--accent-color);
-  color: var(--contrast-color);
+  background: var(--gold-color);
+  color: var(--white-color);
   padding: 0.875rem 2.5rem;
   border: none;
   border-radius: 8px;
@@ -11484,7 +11507,7 @@ section,
 }
 
 .blog-comment-form button[type=submit]:hover {
-  background: color-mix(in srgb, var(--accent-color), transparent 15%);
+  background: color-mix(in srgb, var(--gold-color), transparent 15%);
   transform: translateY(-2px);
 }
 
@@ -11517,9 +11540,9 @@ section,
 .terms-of-service .tos-header .last-updated {
   display: inline-block;
   padding: 8px 20px;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
   border-radius: 30px;
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-size: 0.95rem;
   margin-bottom: 20px;
 }
@@ -11548,7 +11571,7 @@ section,
 .terms-of-service .tos-content .content-section h3 {
   font-size: 1.8rem;
   margin-bottom: 20px;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .terms-of-service .tos-content .content-section p {
@@ -11566,14 +11589,14 @@ section,
   align-items: flex-start;
   gap: 15px;
   padding: 20px;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 95%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 95%);
   border-radius: 15px;
   margin-top: 20px;
 }
 
 .terms-of-service .tos-content .content-section .info-box i {
   font-size: 1.5rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   flex-shrink: 0;
 }
 
@@ -11607,7 +11630,7 @@ section,
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
 }
 
 .terms-of-service .tos-content .content-section .alert-box {
@@ -11616,13 +11639,13 @@ section,
   padding: 25px;
   background-color: var(--surface-color);
   border-radius: 15px;
-  border-left: 4px solid var(--accent-color);
+  border-left: 4px solid var(--gold-color);
   margin-top: 20px;
 }
 
 .terms-of-service .tos-content .content-section .alert-box i {
   font-size: 2rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   flex-shrink: 0;
 }
 
@@ -11702,7 +11725,7 @@ section,
   content: "•";
   position: absolute;
   left: 8px;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .terms-of-service .tos-content .content-section .notice-box {
@@ -11710,14 +11733,14 @@ section,
   align-items: center;
   gap: 15px;
   padding: 20px;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 95%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 95%);
   border-radius: 15px;
   margin-top: 20px;
 }
 
 .terms-of-service .tos-content .content-section .notice-box i {
   font-size: 1.5rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   flex-shrink: 0;
 }
 
@@ -11731,7 +11754,7 @@ section,
 }
 
 .terms-of-service .tos-contact .contact-box {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--accent-color), transparent 95%) 0%, color-mix(in srgb, var(--accent-color), transparent 98%) 100%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--gold-color), transparent 95%) 0%, color-mix(in srgb, var(--gold-color), transparent 98%) 100%);
   border-radius: 20px;
   padding: 40px;
   display: flex;
@@ -11749,7 +11772,7 @@ section,
 .terms-of-service .tos-contact .contact-box .contact-icon {
   width: 60px;
   height: 60px;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   border-radius: 15px;
   display: flex;
   align-items: center;
@@ -11759,7 +11782,7 @@ section,
 
 .terms-of-service .tos-contact .contact-box .contact-icon i {
   font-size: 1.8rem;
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 .terms-of-service .tos-contact .contact-box .contact-content {
@@ -11781,8 +11804,8 @@ section,
   align-items: center;
   gap: 8px;
   padding: 12px 25px;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   border-radius: 30px;
   text-decoration: none;
   font-weight: 500;
@@ -11832,7 +11855,7 @@ section,
 
 .privacy .privacy-header .header-content h1 {
   font-size: 2.8rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   margin-bottom: 20px;
   font-weight: 600;
 }
@@ -11858,14 +11881,14 @@ section,
 
 .privacy .privacy-content .content-section h2 {
   font-size: 1.8rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   margin-bottom: 25px;
   font-weight: 600;
 }
 
 .privacy .privacy-content .content-section h3 {
   font-size: 1.4rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   margin: 30px 0 20px;
   font-weight: 500;
 }
@@ -11898,7 +11921,7 @@ section,
   content: "•";
   position: absolute;
   left: 8px;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .privacy .privacy-contact {
@@ -11910,7 +11933,7 @@ section,
 
 .privacy .privacy-contact h2 {
   font-size: 1.8rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   margin-bottom: 20px;
   font-weight: 600;
 }
@@ -11934,7 +11957,7 @@ section,
 }
 
 .privacy .privacy-contact .contact-details p strong {
-  color: var(--heading-color);
+  color: var(--red-color);
   font-weight: 600;
 }
 
@@ -12012,8 +12035,8 @@ section,
 
 .retun-policy .policy-header .policy-label {
   display: inline-block;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: var(--gold-color);
   padding: 8px 20px;
   border-radius: 30px;
   font-size: 0.95rem;
@@ -12051,7 +12074,7 @@ section,
 
 .retun-policy .return-period .period-box .box-header i {
   font-size: 2.5rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   margin-bottom: 15px;
   display: block;
 }
@@ -12068,7 +12091,7 @@ section,
 .retun-policy .return-period .period-box .timer .days {
   font-size: 4rem;
   font-weight: 700;
-  color: var(--accent-color);
+  color: var(--gold-color);
   line-height: 1;
 }
 
@@ -12113,7 +12136,7 @@ section,
 }
 
 .retun-policy .return-period .eligibility-list ul li i {
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-size: 1.5rem;
 }
 
@@ -12153,7 +12176,7 @@ section,
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--accent-color), transparent 90%) 0%, color-mix(in srgb, var(--accent-color), transparent 90%) 100%);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--gold-color), transparent 90%) 0%, color-mix(in srgb, var(--gold-color), transparent 90%) 100%);
   z-index: 0;
 }
 
@@ -12172,7 +12195,7 @@ section,
   width: 80px;
   height: 80px;
   background-color: var(--surface-color);
-  border: 2px solid var(--accent-color);
+  border: 2px solid var(--gold-color);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -12182,7 +12205,7 @@ section,
 
 .retun-policy .return-process .process-step .step-icon i {
   font-size: 2rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .retun-policy .return-process .process-step h5 {
@@ -12213,7 +12236,7 @@ section,
 
 .retun-policy .non-returnable .section-header i {
   font-size: 2.5rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   margin-bottom: 15px;
   display: block;
 }
@@ -12256,7 +12279,7 @@ section,
 
 .retun-policy .non-returnable .items-grid .item i {
   font-size: 2rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   margin-bottom: 15px;
   display: block;
 }
@@ -12302,7 +12325,7 @@ section,
 .retun-policy .return-faqs .faq-item h3 i {
   transition: transform 0.3s;
   font-size: 1.2rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .retun-policy .return-faqs .faq-item .faq-answer {
@@ -12316,8 +12339,8 @@ section,
 }
 
 .retun-policy .return-faqs .faq-item.faq-active h3 {
-  color: var(--accent-color);
-  background-color: color-mix(in srgb, var(--accent-color), transparent 95%);
+  color: var(--gold-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 95%);
 }
 
 .retun-policy .return-faqs .faq-item.faq-active h3 i {
@@ -12337,7 +12360,7 @@ section,
 
 .retun-policy .need-help i {
   font-size: 2.5rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   margin-bottom: 15px;
   display: block;
 }
@@ -12374,14 +12397,14 @@ section,
 }
 
 .retun-policy .need-help .help-actions .btn-chat {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   padding: 12px 25px;
   border-radius: 30px;
 }
 
 .retun-policy .need-help .help-actions .btn-chat:hover {
-  background-color: color-mix(in srgb, var(--accent-color), black 20%);
+  background-color: color-mix(in srgb, var(--gold-color), black 20%);
   transform: translateY(-2px);
 }
 
@@ -12390,12 +12413,12 @@ section,
 }
 
 .retun-policy .need-help .help-actions .phone-link {
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 1.1rem;
 }
 
 .retun-policy .need-help .help-actions .phone-link:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 @media (max-width: 576px) {
@@ -12426,7 +12449,7 @@ section,
   transform: translateX(-50%);
   width: 80px;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent-color) 0%, color-mix(in srgb, var(--accent-color), transparent 80%) 100%);
+  background: linear-gradient(90deg, var(--gold-color) 0%, color-mix(in srgb, var(--gold-color), transparent 80%) 100%);
 }
 
 .paymnt-methods .payment-header p {
@@ -12452,11 +12475,11 @@ section,
 
 .paymnt-methods .payment-options .payment-card:hover .icon-box {
   transform: scale(1.1);
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
 }
 
 .paymnt-methods .payment-options .payment-card:hover .icon-box i {
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 .paymnt-methods .payment-options .payment-card .card-content {
@@ -12467,7 +12490,7 @@ section,
 .paymnt-methods .payment-options .payment-card .icon-box {
   width: 80px;
   height: 80px;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -12478,7 +12501,7 @@ section,
 
 .paymnt-methods .payment-options .payment-card .icon-box i {
   font-size: 2rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   transition: color 0.3s;
 }
 
@@ -12541,8 +12564,8 @@ section,
   flex-shrink: 0;
   width: 40px;
   height: 40px;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: var(--gold-color);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -12593,8 +12616,8 @@ section,
   flex-shrink: 0;
   width: 35px;
   height: 35px;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -12649,7 +12672,7 @@ section,
 .paymnt-methods .payment-faqs .faq-grid .faq-item h3 i {
   transition: transform 0.3s;
   font-size: 1.2rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .paymnt-methods .payment-faqs .faq-grid .faq-item .faq-answer {
@@ -12663,7 +12686,7 @@ section,
 }
 
 .paymnt-methods .payment-faqs .faq-grid .faq-item.faq-active h3 {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .paymnt-methods .payment-faqs .faq-grid .faq-item.faq-active h3 i {
@@ -12683,7 +12706,7 @@ section,
 
 .paymnt-methods .payment-support .support-content i {
   font-size: 2.5rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   margin-bottom: 20px;
 }
 
@@ -12711,8 +12734,8 @@ section,
 }
 
 .paymnt-methods .payment-support .support-content .support-actions .btn-primary {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   padding: 12px 25px;
   border-radius: 30px;
   text-decoration: none;
@@ -12744,7 +12767,7 @@ section,
 }
 
 .paymnt-methods .payment-support .support-content .support-actions .contact-email {
-  color: var(--heading-color);
+  color: var(--red-color);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -12753,7 +12776,7 @@ section,
 }
 
 .paymnt-methods .payment-support .support-content .support-actions .contact-email:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .paymnt-methods .payment-support .support-content .support-actions .contact-email i {
@@ -12784,7 +12807,7 @@ section,
   transform: translateX(-50%);
   width: 80px;
   height: 3px;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   border-radius: 2px;
 }
 
@@ -12841,7 +12864,7 @@ section,
   left: 0;
   right: 0;
   height: 0;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-color), transparent 97%) 0%, var(--surface-color) 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gold-color), transparent 97%) 0%, var(--surface-color) 100%);
   transition: height 0.4s ease-out;
   z-index: -1;
 }
@@ -12856,7 +12879,7 @@ section,
 }
 
 .shipping-info .delivery-option.featured .option-content {
-  border: 2px solid var(--accent-color);
+  border: 2px solid var(--gold-color);
   transform: scale(1.05);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
@@ -12868,7 +12891,7 @@ section,
 .shipping-info .delivery-option .icon-wrapper {
   width: 70px;
   height: 70px;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -12879,7 +12902,7 @@ section,
 
 .shipping-info .delivery-option .icon-wrapper i {
   font-size: 2rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .shipping-info .delivery-option:hover .icon-wrapper {
@@ -12892,7 +12915,7 @@ section,
 }
 
 .shipping-info .delivery-option .option-details .time {
-  color: var(--accent-color);
+  color: var(--gold-color);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -12913,8 +12936,8 @@ section,
 .shipping-info .delivery-option .option-details .price-tag {
   display: inline-block;
   padding: 8px 20px;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 90%);
+  color: var(--gold-color);
   border-radius: 30px;
   font-weight: 600;
 }
@@ -12942,7 +12965,7 @@ section,
   transform: translateX(-50%);
   width: 0;
   height: 3px;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   transition: width 0.3s;
 }
 
@@ -12961,7 +12984,7 @@ section,
 
 .shipping-info .shipping-features .feature-item i {
   font-size: 2.5rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   margin-bottom: 20px;
   transition: transform 0.3s;
   display: inline-block;
@@ -13015,7 +13038,7 @@ section,
 }
 
 .shipping-info .international-shipping .content-box .shipping-benefits li i {
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-size: 1.5rem;
 }
 
@@ -13037,7 +13060,7 @@ section,
 
 .shipping-info .international-shipping .info-cards .info-card i {
   font-size: 2rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   margin-bottom: 15px;
 }
 
@@ -13083,7 +13106,7 @@ section,
 
 .shipping-info .faq-section .faq-grid .faq-item h3 i {
   font-size: 1.5rem;
-  color: var(--accent-color);
+  color: var(--gold-color);
   transition: transform 0.3s;
 }
 
@@ -13098,8 +13121,8 @@ section,
 }
 
 .shipping-info .faq-section .faq-grid .faq-item.faq-active h3 {
-  color: var(--accent-color);
-  background-color: color-mix(in srgb, var(--accent-color), transparent 95%);
+  color: var(--gold-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 95%);
 }
 
 .shipping-info .faq-section .faq-grid .faq-item.faq-active h3 i {
@@ -13126,20 +13149,20 @@ section,
 
 .error-404 .error-icon {
   font-size: 5rem;
-  color: color-mix(in srgb, var(--accent-color), transparent 15%);
+  color: color-mix(in srgb, var(--gold-color), transparent 15%);
 }
 
 .error-404 .error-code {
   font-size: clamp(6rem, 15vw, 12rem);
   font-weight: 800;
-  color: color-mix(in srgb, var(--heading-color), transparent 10%);
+  color: color-mix(in srgb, var(--red-color), transparent 10%);
   font-family: var(--heading-font);
   line-height: 1;
 }
 
 .error-404 .error-title {
   font-size: 2rem;
-  color: var(--heading-color);
+  color: var(--red-color);
   font-weight: 600;
 }
 
@@ -13172,7 +13195,7 @@ section,
 
 .error-404 .search-box .form-control:focus {
   box-shadow: none;
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
 }
 
 .error-404 .search-box .form-control::placeholder {
@@ -13180,29 +13203,29 @@ section,
 }
 
 .error-404 .search-box .search-btn {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   border: none;
   padding: 0.75rem 1.5rem;
   transition: all 0.3s ease;
 }
 
 .error-404 .search-box .search-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 15%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 15%);
 }
 
 .error-404 .error-action .btn-primary {
   padding: 0.75rem 2rem;
   font-size: 1.1rem;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   border: none;
-  color: var(--contrast-color);
+  color: var(--white-color);
   border-radius: 50px;
   transition: all 0.3s ease;
 }
 
 .error-404 .error-action .btn-primary:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 15%);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 15%);
   transform: translateY(-2px);
 }
 
@@ -13247,7 +13270,7 @@ section,
 }
 
 .widget-title {
-  color: var(--heading-color);
+  color: var(--red-color);
   font-size: 20px;
   font-weight: 700;
   padding: 0;
@@ -13281,11 +13304,11 @@ section,
 }
 
 .product-categories-widget .best-sellers-tree .best-sellers-item .best-sellers-header:hover .best-sellers-link {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .product-categories-widget .best-sellers-tree .best-sellers-item .best-sellers-header:hover .best-sellers-toggle {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .product-categories-widget .best-sellers-tree .best-sellers-item .best-sellers-link {
@@ -13335,7 +13358,7 @@ section,
 }
 
 .product-categories-widget .best-sellers-tree .best-sellers-item .subbest-sellers-list .subbest-sellers-link:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 @media (max-width: 767.98px) {
@@ -13351,7 +13374,7 @@ section,
 .pricing-range-widget .price-range-container .current-range {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .pricing-range-widget .price-range-container .range-slider {
@@ -13375,7 +13398,7 @@ section,
   height: 0.5rem;
   top: 50%;
   transform: translateY(-50%);
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   border-radius: 0.25rem;
 }
 
@@ -13395,7 +13418,7 @@ section,
   height: 1.25rem;
   width: 1.25rem;
   border-radius: 50%;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   cursor: pointer;
   pointer-events: auto;
   -webkit-appearance: none;
@@ -13413,7 +13436,7 @@ section,
   width: 1.25rem;
   border: none;
   border-radius: 50%;
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
   cursor: pointer;
   pointer-events: auto;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
@@ -13429,11 +13452,11 @@ section,
 }
 
 .pricing-range-widget .price-range-container .range-slider input[type=range]:focus::-webkit-slider-thumb {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color), transparent 75%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold-color), transparent 75%);
 }
 
 .pricing-range-widget .price-range-container .range-slider input[type=range]:focus::-moz-range-thumb {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color), transparent 75%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold-color), transparent 75%);
 }
 
 .pricing-range-widget .price-range-container .range-slider .min-range {
@@ -13445,8 +13468,8 @@ section,
 }
 
 .pricing-range-widget .price-range-container .price-inputs .input-group-text {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 85%);
-  color: var(--heading-color);
+  background-color: color-mix(in srgb, var(--gold-color), transparent 85%);
+  color: var(--red-color);
   border-color: color-mix(in srgb, var(--default-color), transparent 80%);
 }
 
@@ -13457,7 +13480,7 @@ section,
 }
 
 .pricing-range-widget .price-range-container .price-inputs .form-control:focus {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: none;
 }
 
@@ -13466,21 +13489,21 @@ section,
 }
 
 .pricing-range-widget .price-range-container .filter-actions .btn-primary {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
+  color: var(--white-color);
   transition: all 0.3s ease;
   font-size: 16px;
   padding: 10px 20px;
 }
 
 .pricing-range-widget .price-range-container .filter-actions .btn-primary:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 10%);
-  border-color: color-mix(in srgb, var(--accent-color), #000 10%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 10%);
+  border-color: color-mix(in srgb, var(--gold-color), #000 10%);
 }
 
 .pricing-range-widget .price-range-container .filter-actions .btn-primary:focus {
-  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--accent-color), transparent 75%);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--gold-color), transparent 75%);
 }
 
 .brand-filter-widget .brand-filter-content {
@@ -13503,7 +13526,7 @@ section,
 }
 
 .brand-filter-widget .brand-search input:focus {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: none;
 }
 
@@ -13566,13 +13589,13 @@ section,
 }
 
 .brand-filter-widget .brand-item .form-check-input:checked {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
   box-shadow: none;
 }
 
 .brand-filter-widget .brand-item .form-check-input:focus {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
   box-shadow: none;
 }
 
@@ -13602,13 +13625,13 @@ section,
 }
 
 .brand-filter-widget .brand-actions .btn-outline-primary {
-  color: var(--accent-color);
-  border-color: var(--accent-color);
+  color: var(--gold-color);
+  border-color: var(--gold-color);
 }
 
 .brand-filter-widget .brand-actions .btn-outline-primary:hover {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
 }
 
 .brand-filter-widget .brand-actions .btn-link {
@@ -13653,7 +13676,7 @@ section,
 
 .color-filter-widget .color-filter-content .color-options .color-option .form-check-input:checked~.form-check-label .color-swatch {
   transform: scale(1.15);
-  border: 2px solid var(--accent-color);
+  border: 2px solid var(--gold-color);
 }
 
 .color-filter-widget .color-filter-content .color-options .color-option .form-check-input:checked~.form-check-label .color-swatch::after {
@@ -13671,7 +13694,7 @@ section,
 }
 
 .color-filter-widget .color-filter-content .color-options .color-option .form-check-input:checked~.form-check-label .color-swatch[style*="background-color: #ffffff"]::after {
-  background-color: var(--accent-color);
+  background-color: var(--gold-color);
 }
 
 .color-filter-widget .color-filter-content .color-options .color-option .form-check-input:checked~.form-check-label .color-swatch[style*="background-color: #f1c40f"]::after,
@@ -13701,7 +13724,7 @@ section,
 
 .color-filter-widget .color-filter-content .color-options .color-option .color-swatch:hover {
   transform: scale(1.1);
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
 }
 
 .color-filter-widget .color-filter-content .color-options .color-option .color-swatch[style*="background-color: #ffffff"] {
@@ -13721,17 +13744,17 @@ section,
 }
 
 .color-filter-widget .color-filter-content .filter-actions .btn.btn-primary {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+  background-color: var(--gold-color);
+  border-color: var(--gold-color);
 }
 
 .color-filter-widget .color-filter-content .filter-actions .btn.btn-primary:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 10%);
-  border-color: color-mix(in srgb, var(--accent-color), #000 10%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 10%);
+  border-color: color-mix(in srgb, var(--gold-color), #000 10%);
 }
 
 .color-filter-widget .color-filter-content .filter-actions .btn.btn-primary:focus {
-  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--accent-color), transparent 70%);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--gold-color), transparent 70%);
 }
 
 .color-filter-widget .color-filter-content .filter-actions .btn.btn-outline-secondary {
@@ -13791,11 +13814,11 @@ section,
 }
 
 .search-widget form button:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .search-widget form:is(:focus-within) {
-  border-color: var(--accent-color);
+  border-color: var(--gold-color);
 }
 
 .categories-widget ul {
@@ -13818,7 +13841,7 @@ section,
 }
 
 .categories-widget ul a:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .categories-widget ul a span {
@@ -13853,7 +13876,7 @@ section,
 }
 
 .recent-posts-widget .post-item h4 a:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .recent-posts-widget .post-item time {
@@ -13883,7 +13906,7 @@ section,
 
 .setting-item strong, .gemstone-item strong {
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 /* ลดระยะห่างของ dropdown section */
@@ -13946,8 +13969,8 @@ section,
 }
 
 .tags-widget ul a:hover {
-  background: var(--accent-color);
-  color: var(--contrast-color);
+  background: var(--gold-color);
+  color: var(--white-color);
 }
 
 .tags-widget ul a span {
@@ -14006,7 +14029,7 @@ section,
   border-radius: 20px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 
@@ -14025,13 +14048,13 @@ section,
 }
 
 .blog .blog-title a {
-  color: var(--heading-color);
+  color: var(--red-color);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .blog .blog-title a:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
 }
 
 .blog .blog-excerpt {
@@ -14066,7 +14089,7 @@ section,
 }
 
 .blog .read-more {
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-weight: 600;
   font-size: 0.85rem;
   text-decoration: none;
@@ -14077,12 +14100,12 @@ section,
 }
 
 .blog .read-more:hover {
-  color: var(--heading-color);
+  color: var(--red-color);
 }
 
 .blog .view-all-btn {
-  background: var(--accent-color);
-  color: var(--contrast-color);
+  background: var(--gold-color);
+  color: var(--white-color);
   padding: 12px 30px;
   border-radius: 25px;
   text-decoration: none;
@@ -14095,7 +14118,7 @@ section,
 }
 
 .blog .view-all-btn:hover {
-  background-color: color-mix(in srgb, var(--accent-color), #000 10%);
+  background-color: color-mix(in srgb, var(--gold-color), #000 10%);
 }
 
 .blog .view-all-btn i {
@@ -14150,7 +14173,7 @@ section,
 .mobile-section-title {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--heading-color);
+  color: var(--red-color);
   margin-bottom: 15px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -14169,7 +14192,7 @@ section,
 }
 
 .mobile-action-item:hover {
-  color: var(--accent-color);
+  color: var(--gold-color);
   background-color: #f8f9fa;
   padding-left: 10px;
   padding-right: 10px;
@@ -14178,13 +14201,13 @@ section,
 }
 
 .mobile-action-item.active {
-  color: var(--accent-color);
+  color: var(--gold-color);
   font-weight: 600;
 }
 
 .mobile-action-item .badge {
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
+  background-color: var(--gold-color);
+  color: var(--white-color);
   font-size: 0.75rem;
   padding: 4px 8px;
   border-radius: 12px;
