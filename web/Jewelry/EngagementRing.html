@@ -847,13 +847,19 @@
                             </div>
                             <div class="minmax-row mb-0">
                                 <div class="minmax-field">
-                                    <label for="price_min">Min</label>
-                                    <input id="price_min" type="number" min="0" step="1" value="0" placeholder="0">
+                                    <label for="price_min">From</label>
+                                    <div class="input-currency-wrapper">
+                                        <span class="input-currency-prefix">THB</span>
+                                        <input id="price_min" type="number" min="0" step="1" value="0" placeholder="0">
+                                    </div>
                                 </div>
                                 <div class="minmax-separator">&#8212;</div>
                                 <div class="minmax-field">
-                                    <label for="price_max">Max</label>
-                                    <input id="price_max" type="number" min="0" step="1" value="100000">
+                                    <label for="price_max">To</label>
+                                    <div class="input-currency-wrapper">
+                                        <span class="input-currency-prefix">THB</span>
+                                        <input id="price_max" type="number" min="0" step="1" value="100000">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -862,23 +868,19 @@
                     <div class="col-lg-4 col-md-12 col-12">
                         <div class="filter-card">
                             <div class="filter-card__header">
-                                <span>Color</span>
+                                <span>Certificate</span>
                                 <i class="bi bi-question-circle"></i>
                             </div>
-                            <div class="range-slider">
-                                <div class="range-slider__track">
-                                    <div id="color_slider_fill" class="range-slider__fill"></div>
-                                </div>
-                                <div class="range-slider__inputs">
-                                    <input id="color_min_range" type="range" min="0" max="7" step="1" value="0">
-                                    <input id="color_max_range" type="range" min="0" max="7" step="1" value="7">
-                                </div>
+                            <div class="cert-grid">
+                                <button class="cert-btn active" data-value="ANY">ANY</button>
+                                <button class="cert-btn" data-value="GIA">GIA</button>
+                                <button class="cert-btn" data-value="IGI">IGI</button>
+                                <button class="cert-btn" data-value="HRD">HRD</button>
                             </div>
-                            <div id="color_scale_labels" class="slider-labels"></div>
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-md-6 col-12">
+                    <div class="col-lg-4 col-md-6 col-12 filter-col--auto">
                         <div class="filter-card">
                             <div class="filter-card__header">
                                 <span>Clarity</span>
@@ -916,18 +918,22 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-md-12 col-12">
+                    <div class="col-lg-4 col-md-12 col-12 filter-col--auto">
                         <div class="filter-card">
                             <div class="filter-card__header">
-                                <span>Certificate</span>
+                                <span>Color</span>
                                 <i class="bi bi-question-circle"></i>
                             </div>
-                            <div class="cert-grid">
-                                <button class="cert-btn active" data-value="ANY">ANY</button>
-                                <button class="cert-btn" data-value="GIA">GIA</button>
-                                <button class="cert-btn" data-value="IGI">IGI</button>
-                                <button class="cert-btn" data-value="HRD">HRD</button>
+                            <div class="range-slider">
+                                <div class="range-slider__track">
+                                    <div id="color_slider_fill" class="range-slider__fill"></div>
+                                </div>
+                                <div class="range-slider__inputs">
+                                    <input id="color_min_range" type="range" min="0" max="7" step="1" value="0">
+                                    <input id="color_max_range" type="range" min="0" max="7" step="1" value="7">
+                                </div>
                             </div>
+                            <div id="color_scale_labels" class="slider-labels"></div>
                         </div>
                     </div>
                 </div>

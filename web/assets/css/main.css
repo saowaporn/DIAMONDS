@@ -12195,6 +12195,30 @@ font-family: var(--bellefair-font);
   padding-bottom: 8px;
 }
 
+/* ── Currency Prefix Input (THB / B prefix inside minmax inputs) ─
+   Used in the Price filter to show "THB" before the number.
+   ──────────────────────────────────────────────────────────── */
+.input-currency-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-currency-prefix {
+  position: absolute;
+  left: 10px;
+  color: #7d6f75;
+  font-size: 0.8rem;
+  font-weight: 500;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.input-currency-wrapper input[type="number"] {
+  padding-left: 40px;
+}
+
 /* ── Diamond Type Tabs (Natural / Lab Grown) ─────────────────
    Tab switcher at the top of the filter UI.
    ──────────────────────────────────────────────────────────── */
@@ -12424,6 +12448,11 @@ font-family: var(--bellefair-font);
   border-radius: 50%;
   background: #bfb6ba;
   top: 7px;
+}
+
+/* ── Column auto-height (prevents Bootstrap stretch for slider-only cards) ── */
+.filter-col--auto {
+  align-self: flex-start;
 }
 
 /* ── Responsive ──────────────────────────────────────────── */
