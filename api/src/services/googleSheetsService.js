@@ -5,7 +5,7 @@ const { google } = require('googleapis');
 async function getGoogleAuthClient() {
   const scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
   const keyFilePath = path.join(process.cwd(), 'credentials.json');
-  const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
   const privateKey = process.env.GOOGLE_PRIVATE_KEY;
 
   if (clientEmail && privateKey) {
