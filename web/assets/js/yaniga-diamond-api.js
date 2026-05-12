@@ -1,5 +1,6 @@
 (function () {
-    const apiBaseUrl = window.YANIGA_API_BASE_URL || 'http://localhost:3001/api';
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const apiBaseUrl = window.YANIGA_API_BASE_URL || (isLocal ? 'http://localhost:3001/api' : 'https://diamonds-dusky.vercel.app/api');
 
     function loadPartial(targetId, fileName, onLoaded) {
         const target = document.getElementById(targetId);
