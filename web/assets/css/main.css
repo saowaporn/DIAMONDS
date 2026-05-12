@@ -30,7 +30,7 @@
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
 :root {
-  --background-color: #EDEDED;
+  --background-color: #f6f6f6;
   /* Background color for the entire website, including individual sections */
   --default-color: #212529;
   /* ตัวหนังสือ ข้อความทั่วไป ตัวเล็ก*/

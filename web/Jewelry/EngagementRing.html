@@ -34,686 +34,8 @@
 </head>
 
 <body>
-    <!--<header section strats -->
+    <!--<header section starts -->
     <div id="header"></div>
-    <script>
-        fetch("Header.html")
-            .then(response => response.text())
-            .then(data => document.getElementById("header").innerHTML = data);
-    </script>
-    <script>
-        function formatPrice(price) {
-            return Number(price).toLocaleString("en-US");
-        }
-
-        function createStars(rating) {
-            let html = '';
-            const full = Math.floor(rating);
-            const half = rating % 1 >= 0.5;
-            for (let i = 0; i < full; i++) html += '<i class="bi bi-star-fill"></i>';
-            if (half) html += '<i class="bi bi-star-half"></i>';
-            for (let i = full + half; i < 5; i++) html += '<i class="bi bi-star"></i>';
-            return html;
-        }
-
-        const shapeList = ['Cushion', 'Emerald', 'Marquise', 'Oval', 'Pear', 'Radiant', 'Round'];
-        const diamondColorScale = ['K', 'J', 'I', 'H', 'G', 'F', 'E', 'D'];
-        const defaultClarityScale = ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF', 'FL'];
-        const defaultCutScale = ['FAIR', 'GOOD', 'VERY GOOD', 'EXCELLENT', 'IDEAL'];
-        const defaultPolishScale = ['GOOD', 'VERY GOOD', 'EXCELLENT'];
-        const defaultSymmetryScale = ['GOOD', 'VERY GOOD', 'EXCELLENT'];
-        const defaultFluorescenceScale = ['VERY STRONG', 'STRONG', 'MEDIUM', 'FAINT', 'NONE'];
-        const caratConfig = { range: [0, 12], step: 0.01 };
-        const priceConfig = { range: [0, 100000], step: 1 };
-        const tableConfig = { range: [50, 90], step: 1 };
-        const depthConfig = { range: [40, 90], step: 1 };
-        const lwRatioConfig = { range: [0.8, 2.2], step: 0.01 };
-        let selectedShape = '*';
-        let selectedColorRange = { min: 0, max: diamondColorScale.length - 1 };
-        let selectedClarityRange = { min: 0, max: defaultClarityScale.length - 1 };
-        let selectedCutRange = { min: 0, max: defaultCutScale.length - 1 };
-        let selectedPolishRange = { min: 0, max: defaultPolishScale.length - 1 };
-        let selectedSymmetryRange = { min: 0, max: defaultSymmetryScale.length - 1 };
-        let selectedFluorescenceRange = { min: 0, max: defaultFluorescenceScale.length - 1 };
-        let selectedCertificate = 'ANY';
-        let initIsotope;
-        const API_BASE_URL = window.YANIGA_API_BASE_URL || "http://localhost:3000/api";
-
-        function normalizeText(value) {
-            return (value || '').toString().trim().toUpperCase();
-        }
-
-        function parseInputNumber(value) {
-            if (value === null || value === undefined || value === '') return null;
-            const num = Number(value);
-            return Number.isFinite(num) ? num : null;
-        }
-
-        function clampValue(value, min, max) {
-            return Math.min(Math.max(value, min), max);
-        }
-
-        function formatCaratValue(value) {
-            return Number(value).toFixed(2);
-        }
-
-        function syncCaratSlider() {
-            const minRange = document.getElementById('carat_min_range');
-            const maxRange = document.getElementById('carat_max_range');
-            const minInput = document.getElementById('carat_min');
-            const maxInput = document.getElementById('carat_max');
-            const fill = document.getElementById('carat_slider_fill');
-
-            if (!minRange || !maxRange || !minInput || !maxInput || !fill) {
-                return;
-            }
-
-            const minValue = Number(minRange.value);
-            const maxValue = Number(maxRange.value);
-            const startPercent = ((minValue - caratConfig.range[0]) / (caratConfig.range[1] - caratConfig.range[0])) * 100;
-            const endPercent = ((maxValue - caratConfig.range[0]) / (caratConfig.range[1] - caratConfig.range[0])) * 100;
-
-            fill.style.left = `${startPercent}%`;
-            fill.style.width = `${endPercent - startPercent}%`;
-
-            minInput.value = formatCaratValue(minValue);
-            maxInput.value = formatCaratValue(maxValue);
-        }
-
-        function setupCaratSlider() {
-            const minRange = document.getElementById('carat_min_range');
-            const maxRange = document.getElementById('carat_max_range');
-            const minInput = document.getElementById('carat_min');
-            const maxInput = document.getElementById('carat_max');
-
-            if (!minRange || !maxRange || !minInput || !maxInput) {
-                return;
-            }
-
-            const syncFromRange = () => {
-                let minValue = clampValue(Number(minRange.value), caratConfig.range[0], caratConfig.range[1]);
-                let maxValue = clampValue(Number(maxRange.value), caratConfig.range[0], caratConfig.range[1]);
-
-                if (minValue > maxValue) {
-                    if (document.activeElement === minRange) {
-                        maxValue = minValue;
-                        maxRange.value = formatCaratValue(maxValue);
-                    } else {
-                        minValue = maxValue;
-                        minRange.value = formatCaratValue(minValue);
-                    }
-                }
-
-                syncCaratSlider();
-                applyCombinedFilter();
-            };
-
-            const syncFromInput = (source, commit = false) => {
-                let minValue = parseInputNumber(minInput.value);
-                let maxValue = parseInputNumber(maxInput.value);
-
-                if (!commit) {
-                    // While typing, wait for valid in-range numbers before forcing slider updates.
-                    if (minValue === null || maxValue === null) return;
-                    if (minValue < caratConfig.range[0] || minValue > caratConfig.range[1]) return;
-                    if (maxValue < caratConfig.range[0] || maxValue > caratConfig.range[1]) return;
-                }
-
-                minValue = minValue === null ? caratConfig.range[0] : clampValue(minValue, caratConfig.range[0], caratConfig.range[1]);
-                maxValue = maxValue === null ? caratConfig.range[1] : clampValue(maxValue, caratConfig.range[0], caratConfig.range[1]);
-
-                if (minValue > maxValue) {
-                    if (source === 'min') {
-                        maxValue = minValue;
-                    } else {
-                        minValue = maxValue;
-                    }
-                }
-
-                minRange.value = formatCaratValue(minValue);
-                maxRange.value = formatCaratValue(maxValue);
-                syncCaratSlider();
-                applyCombinedFilter();
-            };
-
-            minRange.addEventListener('input', syncFromRange);
-            maxRange.addEventListener('input', syncFromRange);
-            minInput.addEventListener('input', () => syncFromInput('min', false));
-            maxInput.addEventListener('input', () => syncFromInput('max', false));
-            minInput.addEventListener('blur', () => syncFromInput('min', true));
-            maxInput.addEventListener('blur', () => syncFromInput('max', true));
-
-            minRange.value = formatCaratValue(caratConfig.range[0]);
-            maxRange.value = formatCaratValue(caratConfig.range[1]);
-            syncCaratSlider();
-        }
-
-        function syncPriceSlider() {
-            const minRange = document.getElementById('price_min_range');
-            const maxRange = document.getElementById('price_max_range');
-            const minInput = document.getElementById('price_min');
-            const maxInput = document.getElementById('price_max');
-            const fill = document.getElementById('price_slider_fill');
-
-            if (!minRange || !maxRange || !minInput || !maxInput || !fill) {
-                return;
-            }
-
-            const minValue = Number(minRange.value);
-            const maxValue = Number(maxRange.value);
-            const startPercent = priceConfig.range[1] > priceConfig.range[0]
-                ? ((minValue - priceConfig.range[0]) / (priceConfig.range[1] - priceConfig.range[0])) * 100
-                : 0;
-            const endPercent = priceConfig.range[1] > priceConfig.range[0]
-                ? ((maxValue - priceConfig.range[0]) / (priceConfig.range[1] - priceConfig.range[0])) * 100
-                : 100;
-
-            fill.style.left = `${startPercent}%`;
-            fill.style.width = `${endPercent - startPercent}%`;
-
-            minInput.value = String(Math.round(minValue));
-            maxInput.value = String(Math.round(maxValue));
-        }
-
-        function setupPriceSlider() {
-            const minRange = document.getElementById('price_min_range');
-            const maxRange = document.getElementById('price_max_range');
-            const minInput = document.getElementById('price_min');
-            const maxInput = document.getElementById('price_max');
-
-            if (!minRange || !maxRange || !minInput || !maxInput) {
-                return;
-            }
-
-            minRange.min = String(priceConfig.range[0]);
-            maxRange.min = String(priceConfig.range[0]);
-            minRange.max = String(priceConfig.range[1]);
-            maxRange.max = String(priceConfig.range[1]);
-            minRange.step = String(priceConfig.step);
-            maxRange.step = String(priceConfig.step);
-
-            const syncFromRange = () => {
-                let minValue = clampValue(Number(minRange.value), priceConfig.range[0], priceConfig.range[1]);
-                let maxValue = clampValue(Number(maxRange.value), priceConfig.range[0], priceConfig.range[1]);
-
-                if (minValue > maxValue) {
-                    if (document.activeElement === minRange) {
-                        maxValue = minValue;
-                        maxRange.value = String(Math.round(maxValue));
-                    } else {
-                        minValue = maxValue;
-                        minRange.value = String(Math.round(minValue));
-                    }
-                }
-
-                syncPriceSlider();
-                applyCombinedFilter();
-            };
-
-            const syncFromInput = (source, commit = false) => {
-                let minValue = parseInputNumber(minInput.value);
-                let maxValue = parseInputNumber(maxInput.value);
-
-                if (!commit) {
-                    if (minValue === null || maxValue === null) return;
-                    if (minValue < priceConfig.range[0] || minValue > priceConfig.range[1]) return;
-                    if (maxValue < priceConfig.range[0] || maxValue > priceConfig.range[1]) return;
-                }
-
-                minValue = minValue === null ? priceConfig.range[0] : clampValue(minValue, priceConfig.range[0], priceConfig.range[1]);
-                maxValue = maxValue === null ? priceConfig.range[1] : clampValue(maxValue, priceConfig.range[0], priceConfig.range[1]);
-
-                if (minValue > maxValue) {
-                    if (source === 'min') {
-                        maxValue = minValue;
-                    } else {
-                        minValue = maxValue;
-                    }
-                }
-
-                minRange.value = String(Math.round(minValue));
-                maxRange.value = String(Math.round(maxValue));
-                syncPriceSlider();
-                applyCombinedFilter();
-            };
-
-            minRange.value = String(priceConfig.range[0]);
-            maxRange.value = String(priceConfig.range[1]);
-
-            minRange.addEventListener('input', syncFromRange);
-            maxRange.addEventListener('input', syncFromRange);
-            minInput.addEventListener('input', () => syncFromInput('min', false));
-            maxInput.addEventListener('input', () => syncFromInput('max', false));
-            minInput.addEventListener('blur', () => syncFromInput('min', true));
-            maxInput.addEventListener('blur', () => syncFromInput('max', true));
-
-            syncPriceSlider();
-        }
-
-        function buildScaleLabels(containerId, values) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            container.innerHTML = '';
-
-            values.forEach((value, index) => {
-                const label = document.createElement('span');
-                label.textContent = value;
-                const percent = values.length > 1 ? (index / (values.length - 1)) * 100 : 0;
-                label.style.left = `${percent}%`;
-                container.appendChild(label);
-            });
-        }
-
-        function setupOrdinalRangeSlider(prefix, values, defaultState) {
-            const minRange = document.getElementById(`${prefix}_min_range`);
-            const maxRange = document.getElementById(`${prefix}_max_range`);
-            const fill = document.getElementById(`${prefix}_slider_fill`);
-
-            if (!minRange || !maxRange || !fill || !values.length) {
-                return;
-            }
-
-            const sync = () => {
-                let minValue = Math.max(0, Math.min(Number(minRange.value), values.length - 1));
-                let maxValue = Math.max(0, Math.min(Number(maxRange.value), values.length - 1));
-
-                if (minValue > maxValue) {
-                    if (document.activeElement === minRange) {
-                        maxValue = minValue;
-                        maxRange.value = String(maxValue);
-                    } else {
-                        minValue = maxValue;
-                        minRange.value = String(minValue);
-                    }
-                }
-
-                const startPercent = values.length > 1 ? (minValue / (values.length - 1)) * 100 : 0;
-                const endPercent = values.length > 1 ? (maxValue / (values.length - 1)) * 100 : 100;
-                fill.style.left = `${startPercent}%`;
-                fill.style.width = `${endPercent - startPercent}%`;
-
-                defaultState.min = minValue;
-                defaultState.max = maxValue;
-                applyCombinedFilter();
-            };
-
-            minRange.max = String(values.length - 1);
-            maxRange.max = String(values.length - 1);
-            minRange.step = '1';
-            maxRange.step = '1';
-            minRange.value = String(defaultState.min);
-            maxRange.value = String(defaultState.max);
-
-            minRange.addEventListener('input', sync);
-            maxRange.addEventListener('input', sync);
-            sync();
-        }
-
-        function setupNumericRangeFilter(prefix, minLimit, maxLimit, step, decimals = 0) {
-            const minRange = document.getElementById(`${prefix}_min_range`);
-            const maxRange = document.getElementById(`${prefix}_max_range`);
-            const minInput = document.getElementById(`${prefix}_min`);
-            const maxInput = document.getElementById(`${prefix}_max`);
-            const fill = document.getElementById(`${prefix}_slider_fill`);
-            const minBubble = document.getElementById(`${prefix}_min_bubble`);
-            const maxBubble = document.getElementById(`${prefix}_max_bubble`);
-
-            if (!minRange || !maxRange || !minInput || !maxInput || !fill) {
-                return;
-            }
-
-            const formatValue = (value) => Number(value).toFixed(decimals);
-            const suffix = (prefix === 'table' || prefix === 'depth') ? '%' : '';
-
-            const updateUI = () => {
-                const minValue = Number(minRange.value);
-                const maxValue = Number(maxRange.value);
-                const startPercent = ((minValue - minLimit) / (maxLimit - minLimit)) * 100;
-                const endPercent = ((maxValue - minLimit) / (maxLimit - minLimit)) * 100;
-
-                fill.style.left = `${startPercent}%`;
-                fill.style.width = `${endPercent - startPercent}%`;
-
-                // Keep typing natural: do not overwrite the field currently being edited.
-                if (document.activeElement !== minInput) {
-                    minInput.value = formatValue(minValue);
-                }
-                if (document.activeElement !== maxInput) {
-                    maxInput.value = formatValue(maxValue);
-                }
-
-                if (minBubble) {
-                    minBubble.style.left = `${startPercent}%`;
-                    minBubble.textContent = `${formatValue(minValue)}${suffix}`;
-                }
-                if (maxBubble) {
-                    maxBubble.style.left = `${endPercent}%`;
-                    maxBubble.textContent = `${formatValue(maxValue)}${suffix}`;
-                }
-            };
-
-            const syncFromRange = () => {
-                let minValue = clampValue(Number(minRange.value), minLimit, maxLimit);
-                let maxValue = clampValue(Number(maxRange.value), minLimit, maxLimit);
-
-                if (minValue > maxValue) {
-                    if (document.activeElement === minRange) {
-                        maxValue = minValue;
-                        maxRange.value = formatValue(maxValue);
-                    } else {
-                        minValue = maxValue;
-                        minRange.value = formatValue(minValue);
-                    }
-                }
-
-                updateUI();
-                applyCombinedFilter();
-            };
-
-            const syncFromInput = (source, commit = false) => {
-                let minValue = parseInputNumber(minInput.value);
-                let maxValue = parseInputNumber(maxInput.value);
-
-                if (!commit) {
-                    // Keep typing flow natural: sync only once value is valid.
-                    if (minValue === null || maxValue === null) return;
-                    if (minValue < minLimit || minValue > maxLimit) return;
-                    if (maxValue < minLimit || maxValue > maxLimit) return;
-                }
-
-                minValue = minValue === null ? minLimit : clampValue(minValue, minLimit, maxLimit);
-                maxValue = maxValue === null ? maxLimit : clampValue(maxValue, minLimit, maxLimit);
-
-                if (minValue > maxValue) {
-                    if (source === 'min') {
-                        maxValue = minValue;
-                    } else {
-                        minValue = maxValue;
-                    }
-                }
-
-                minRange.value = formatValue(minValue);
-                maxRange.value = formatValue(maxValue);
-                updateUI();
-                applyCombinedFilter();
-            };
-
-            minRange.value = formatValue(minLimit);
-            maxRange.value = formatValue(maxLimit);
-            minInput.value = formatValue(minLimit);
-            maxInput.value = formatValue(maxLimit);
-            minRange.step = String(step);
-            maxRange.step = String(step);
-
-            minRange.addEventListener('input', syncFromRange);
-            maxRange.addEventListener('input', syncFromRange);
-            minInput.addEventListener('input', () => syncFromInput('min', false));
-            maxInput.addEventListener('input', () => syncFromInput('max', false));
-            minInput.addEventListener('blur', () => syncFromInput('min', true));
-            maxInput.addEventListener('blur', () => syncFromInput('max', true));
-
-            updateUI();
-        }
-
-        async function loadProductData() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/products/women-rings`);
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-
-                const result = await response.json();
-                const data = Array.isArray(result.data) ? result.data : [];
-                const maxPriceFromData = data.reduce((max, product) => {
-                    const value = Number(product.price) || 0;
-                    return value > max ? value : max;
-                }, 0);
-                if (maxPriceFromData > 0) {
-                    priceConfig.range[1] = Math.ceil(maxPriceFromData / 1000) * 1000;
-                }
-                const productContainer = document.querySelector(".product-container");
-                productContainer.innerHTML = "";
-
-                const newRings = []; // 👈 ใส่ชื่อแหวนใหม่ได้ที่นี่
-
-                const sortedProducts = data.sort((a, b) => {
-                    const nameA = (a.name || "").trim();
-                    const nameB = (b.name || "").trim();
-                    const isNewA = newRings.includes(nameA) ? -1 : 1;
-                    const isNewB = newRings.includes(nameB) ? -1 : 1;
-                    return isNewA - isNewB;
-                });
-
-                sortedProducts.forEach(product => {
-                    const folder = (product.folder || "").trim();
-                    const productName = (product.name || "").trim();
-                    const productPrice = product.price || 0;
-                    const productCarat = Number(product.carat || product.carat_weight || 0) || 0;
-                    const productDiamondColor = normalizeText(product.color || product.color_grade);
-                    const productClarity = normalizeText(product.clarity);
-                    const formattedPrice = formatPrice(productPrice);
-                    const isNew = newRings.includes(productName);
-
-                    const shape = (product.shape || "").trim() || shapeList.find(shape => productName.includes(shape));
-                    const shapeClass = shape ? `filter-shape-${shape}` : '';
-
-                    const fallbackBase = `../assets/img/product/Jewelry/Women_s Rings/${folder}`;
-                    const primaryTop = product.images?.Yellow?.top || product.images?.White?.top || product.images?.Rose?.top || `${fallbackBase}/Top_Yellow.webp`;
-                    const primaryFront = product.images?.Yellow?.front || product.images?.White?.front || product.images?.Rose?.front || `${fallbackBase}/Front_Yellow.webp`;
-
-                    const productItem = document.createElement("div");
-                    productItem.className = `col-md-6 col-lg-3 product-item isotope-item ${shapeClass}`;
-                    productItem.setAttribute('data-shape', normalizeText(shape));
-                    productItem.setAttribute('data-price', String(productPrice));
-                    productItem.setAttribute('data-carat', String(productCarat));
-                    productItem.setAttribute('data-diamond-color', productDiamondColor);
-                    productItem.setAttribute('data-clarity', productClarity);
-                    productItem.setAttribute('data-cut', normalizeText(product.cut || ''));
-                    productItem.setAttribute('data-certificate', normalizeText(product.certificate || product.cert || ''));
-                    productItem.setAttribute('data-polish', normalizeText(product.polish || ''));
-                    productItem.setAttribute('data-symmetry', normalizeText(product.symmetry || ''));
-                    productItem.setAttribute('data-fluorescence', normalizeText(product.fluorescence || ''));
-                    const itemTable = parseInputNumber(product.table ?? product.table_pct ?? product.table_percent ?? '');
-                    const itemDepth = parseInputNumber(product.depth ?? product.depth_pct ?? product.depth_percent ?? '');
-                    const itemLwRatio = parseInputNumber(product.length_width_ratio ?? product.lengthWidthRatio ?? product.lw_ratio ?? '');
-                    productItem.setAttribute('data-table', itemTable === null ? '' : String(itemTable));
-                    productItem.setAttribute('data-depth', itemDepth === null ? '' : String(itemDepth));
-                    productItem.setAttribute('data-lw-ratio', itemLwRatio === null ? '' : String(itemLwRatio));
-
-                    productItem.innerHTML = `
-                    <div class="product-card">
-                        <div class="product-image" data-name="${productName}" data-folder="${folder}">
-                         ${isNew ? `<span class="badge">New</span>` : ""}
-                            <img src="${primaryTop}" alt="Product" class="img-fluid main-img">
-                            <img src="${primaryFront}" alt="Product Hover" class="img-fluid hover-img">
-                        </div>
-                        <div class="product-info">
-                            <h5 class="product-title">
-                                <a href="#" class="go-detail" data-name="${productName}" data-folder="${folder}">${productName}</a>
-                            </h5>
-                            <div class="product-price">
-                                <span class="tm-text-gray-light">From ${formattedPrice} B</span>
-                            </div>
-                            <div class="small text-muted">Carat: ${productCarat || '-'} | Color: ${productDiamondColor || '-'} | Clarity: ${productClarity || '-'}</div>
-                        </div>
-                    </div>
-                    `;
-
-                    productContainer.appendChild(productItem);
-
-                    // Event: เมื่อคลิกแหวนเพื่อดูรายละเอียด
-                    productItem.querySelectorAll('.go-detail, .product-image').forEach(el => {
-                        el.addEventListener('click', () => {
-                            const folder = el.getAttribute('data-folder');
-                            const name = el.getAttribute('data-name');
-
-                            localStorage.setItem('selectedProduct', JSON.stringify({
-                                name,
-                                folder,
-                                color: 'Yellow',
-                                price: productPrice,  // ✅ เพิ่มราคา
-                                fullData: folder      // ✅ เพิ่มข้อมูลเต็มสำหรับ backup
-                            }));
-
-                            // ไปหน้ารายละเอียด
-                            window.location.href = "../Setting_Custom.html";
-                        });
-                    });
-
-                });
-            } catch (err) {
-                console.error("Error loading product data:", err);
-            }
-        }
-
-        function addFilterEvents() {
-            document.querySelectorAll('.diamond-type-tab').forEach((btn) => {
-                btn.addEventListener('click', function () {
-                    document.querySelectorAll('.diamond-type-tab').forEach((tab) => tab.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-
-            document.querySelectorAll('#shape_filter .shape-option').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    document.querySelector('#shape_filter .shape-option.active')?.classList.remove('active');
-                    this.classList.add('active');
-                    selectedShape = this.getAttribute('data-shape');
-                    applyCombinedFilter();
-
-                    const shapeName = selectedShape === '*' ? 'All Shapes' : selectedShape;
-                    document.getElementById('shape_setting').textContent = shapeName;
-                });
-            });
-
-            document.getElementById('shape_all')?.addEventListener('click', function () {
-                document.querySelector('#shape_filter .shape-option.active')?.classList.remove('active');
-                this.classList.add('active');
-                selectedShape = '*';
-                document.getElementById('shape_setting').textContent = 'All Shapes';
-                applyCombinedFilter();
-            });
-
-            // Use one numeric filter engine so Carat/Price/Table/Depth/LW Ratio behave consistently.
-            setupNumericRangeFilter('carat', caratConfig.range[0], caratConfig.range[1], caratConfig.step, 2);
-            setupNumericRangeFilter('price', priceConfig.range[0], priceConfig.range[1], priceConfig.step, 0);
-            buildScaleLabels('color_scale_labels', diamondColorScale);
-            buildScaleLabels('clarity_scale_labels', defaultClarityScale);
-            buildScaleLabels('cut_scale_labels', defaultCutScale);
-            buildScaleLabels('polish_scale_labels', defaultPolishScale);
-            buildScaleLabels('symmetry_scale_labels', defaultSymmetryScale);
-            buildScaleLabels('fluorescence_scale_labels', defaultFluorescenceScale);
-            setupOrdinalRangeSlider('color', diamondColorScale, selectedColorRange);
-            setupOrdinalRangeSlider('clarity', defaultClarityScale, selectedClarityRange);
-            setupOrdinalRangeSlider('cut', defaultCutScale, selectedCutRange);
-            setupOrdinalRangeSlider('polish', defaultPolishScale, selectedPolishRange);
-            setupOrdinalRangeSlider('symmetry', defaultSymmetryScale, selectedSymmetryRange);
-            setupOrdinalRangeSlider('fluorescence', defaultFluorescenceScale, selectedFluorescenceRange);
-            setupNumericRangeFilter('table', tableConfig.range[0], tableConfig.range[1], tableConfig.step, 0);
-            setupNumericRangeFilter('depth', depthConfig.range[0], depthConfig.range[1], depthConfig.step, 0);
-            setupNumericRangeFilter('lw_ratio', lwRatioConfig.range[0], lwRatioConfig.range[1], lwRatioConfig.step, 2);
-
-            document.querySelectorAll('.cert-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    document.querySelectorAll('.cert-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    selectedCertificate = this.getAttribute('data-value');
-                    applyCombinedFilter();
-                });
-            });
-
-            const detailToggleBtn = document.getElementById('more_detail_btn');
-            const advancedFilters = document.getElementById('advanced_filters');
-            const detailToggleText = document.getElementById('more_detail_text');
-            if (detailToggleBtn && advancedFilters && detailToggleText) {
-                detailToggleBtn.addEventListener('click', function () {
-                    const isOpen = advancedFilters.classList.toggle('is-open');
-                    detailToggleBtn.classList.toggle('is-open', isOpen);
-                    detailToggleBtn.setAttribute('aria-expanded', String(isOpen));
-                    detailToggleText.textContent = isOpen ? 'Less Detail' : 'More Detail';
-                });
-            }
-        }
-
-        function applyCombinedFilter() {
-            const caratMin = parseInputNumber(document.getElementById('carat_min')?.value);
-            const caratMax = parseInputNumber(document.getElementById('carat_max')?.value);
-            const priceMin = parseInputNumber(document.getElementById('price_min')?.value);
-            const priceMax = parseInputNumber(document.getElementById('price_max')?.value);
-            const tableMin = parseInputNumber(document.getElementById('table_min')?.value);
-            const tableMax = parseInputNumber(document.getElementById('table_max')?.value);
-            const depthMin = parseInputNumber(document.getElementById('depth_min')?.value);
-            const depthMax = parseInputNumber(document.getElementById('depth_max')?.value);
-            const lwRatioMin = parseInputNumber(document.getElementById('lw_ratio_min')?.value);
-            const lwRatioMax = parseInputNumber(document.getElementById('lw_ratio_max')?.value);
-
-            if (initIsotope) {
-                initIsotope.arrange({
-                    filter: function (itemElem) {
-                        const itemShape = normalizeText(itemElem.getAttribute('data-shape'));
-                        const itemPrice = Number(itemElem.getAttribute('data-price')) || 0;
-                        const itemCarat = Number(itemElem.getAttribute('data-carat')) || 0;
-                        const itemColor = normalizeText(itemElem.getAttribute('data-diamond-color'));
-                        const itemClarity = normalizeText(itemElem.getAttribute('data-clarity'));
-                        const itemCut = normalizeText(itemElem.getAttribute('data-cut'));
-                        const itemPolish = normalizeText(itemElem.getAttribute('data-polish'));
-                        const itemSymmetry = normalizeText(itemElem.getAttribute('data-symmetry'));
-                        const itemFluorescence = normalizeText(itemElem.getAttribute('data-fluorescence'));
-                        const itemTable = parseInputNumber(itemElem.getAttribute('data-table'));
-                        const itemDepth = parseInputNumber(itemElem.getAttribute('data-depth'));
-                        const itemLwRatio = parseInputNumber(itemElem.getAttribute('data-lw-ratio'));
-
-                        const colorIndex = diamondColorScale.indexOf(itemColor);
-                        const clarityIndex = defaultClarityScale.indexOf(itemClarity);
-                        const cutIndex = defaultCutScale.indexOf(itemCut);
-                        const polishIndex = defaultPolishScale.indexOf(itemPolish);
-                        const symmetryIndex = defaultSymmetryScale.indexOf(itemSymmetry);
-                        const fluorescenceIndex = defaultFluorescenceScale.indexOf(itemFluorescence);
-
-                        const shapePass = selectedShape === '*' || itemShape === normalizeText(selectedShape);
-                        const caratMinPass = caratMin === null || itemCarat >= caratMin;
-                        const caratMaxPass = caratMax === null || itemCarat <= caratMax;
-                        const priceMinPass = priceMin === null || itemPrice >= priceMin;
-                        const priceMaxPass = priceMax === null || itemPrice <= priceMax;
-                        const colorPass = colorIndex === -1 ? false : colorIndex >= selectedColorRange.min && colorIndex <= selectedColorRange.max;
-                        const clarityPass = clarityIndex === -1 ? false : clarityIndex >= selectedClarityRange.min && clarityIndex <= selectedClarityRange.max;
-                        const cutPass = cutIndex === -1 ? false : cutIndex >= selectedCutRange.min && cutIndex <= selectedCutRange.max;
-                        const itemCertificate = normalizeText(itemElem.getAttribute('data-certificate'));
-                        const certificatePass = selectedCertificate === 'ANY' || itemCertificate === selectedCertificate;
-                        const polishPass = polishIndex === -1 ? true : polishIndex >= selectedPolishRange.min && polishIndex <= selectedPolishRange.max;
-                        const symmetryPass = symmetryIndex === -1 ? true : symmetryIndex >= selectedSymmetryRange.min && symmetryIndex <= selectedSymmetryRange.max;
-                        const fluorescencePass = fluorescenceIndex === -1 ? true : fluorescenceIndex >= selectedFluorescenceRange.min && fluorescenceIndex <= selectedFluorescenceRange.max;
-                        const tablePass = itemTable === null ? true : (tableMin === null || itemTable >= tableMin) && (tableMax === null || itemTable <= tableMax);
-                        const depthPass = itemDepth === null ? true : (depthMin === null || itemDepth >= depthMin) && (depthMax === null || itemDepth <= depthMax);
-                        const lwRatioPass = itemLwRatio === null ? true : (lwRatioMin === null || itemLwRatio >= lwRatioMin) && (lwRatioMax === null || itemLwRatio <= lwRatioMax);
-
-                        return shapePass && caratMinPass && caratMaxPass && priceMinPass && priceMaxPass && colorPass && clarityPass && cutPass && certificatePass
-                            && polishPass && symmetryPass && fluorescencePass && tablePass && depthPass && lwRatioPass;
-                    }
-                });
-            }
-        }
-
-        window.onload = async function () {
-            await loadProductData();
-
-            const container = document.querySelector(".product-container");
-
-            imagesLoaded(container, function () {
-                initIsotope = new Isotope(container, {
-                    itemSelector: ".product-item",
-                    layoutMode: "fitRows",
-                    filter: '*'
-                });
-
-                initIsotope.layout();
-                addFilterEvents();
-
-                document.getElementById('shape_setting').textContent = 'All Shapes';
-                applyCombinedFilter();
-            });
-        };
-    </script>
 
     <main class="main">
          <!-- Page Title -->
@@ -751,12 +73,12 @@
             <div class="container isotope-layout" data-aos="fade-up" data-aos-delay="100" data-default-filter="*"
                 data-layout="masonry" data-sort="original-order">
                 <div class="row my-4 g-4">
-                    <div class="col-12">
+                    <!--<div class="col-12">
                         <div class="diamond-type-tabs">
                             <button type="button" class="diamond-type-tab active">Natural</button>
                             <button type="button" class="diamond-type-tab">Lab Grown</button>
                         </div>
-                    </div>
+                    </div>-->
 
                     <div class="col-12">
                         <div class="filter-card">
@@ -812,19 +134,19 @@
                                     <div id="carat_slider_fill" class="range-slider__fill"></div>
                                 </div>
                                 <div class="range-slider__inputs">
-                                    <input id="carat_min_range" type="range" min="0" max="12" step="0.01" value="0">
-                                    <input id="carat_max_range" type="range" min="0" max="12" step="0.01" value="12">
+                                    <input id="carat_min_range" type="range">
+                                    <input id="carat_max_range" type="range">
                                 </div>
                             </div>
                             <div class="minmax-row">
                                 <div class="minmax-field">
                                     <label for="carat_min">Min</label>
-                                    <input id="carat_min" type="number" min="0" max="12" step="0.01" value="0.00">
+                                    <input id="carat_min" type="number">
                                 </div>
                                 <div class="minmax-separator">&#8212;</div>
                                 <div class="minmax-field">
                                     <label for="carat_max">Max</label>
-                                    <input id="carat_max" type="number" min="0" max="12" step="0.01" value="12.00">
+                                    <input id="carat_max" type="number">
                                 </div>
                             </div>
                         </div>
@@ -841,8 +163,8 @@
                                     <div id="price_slider_fill" class="range-slider__fill"></div>
                                 </div>
                                 <div class="range-slider__inputs">
-                                    <input id="price_min_range" type="range" min="0" max="100000" step="1" value="0">
-                                    <input id="price_max_range" type="range" min="0" max="100000" step="1" value="100000">
+                                    <input id="price_min_range" type="range">
+                                    <input id="price_max_range" type="range">
                                 </div>
                             </div>
                             <div class="minmax-row mb-0">
@@ -850,7 +172,7 @@
                                     <label for="price_min">From</label>
                                     <div class="input-currency-wrapper">
                                         <span class="input-currency-prefix">THB</span>
-                                        <input id="price_min" type="number" min="0" step="1" value="0" placeholder="0">
+                                        <input id="price_min" type="number" placeholder="0">
                                     </div>
                                 </div>
                                 <div class="minmax-separator">&#8212;</div>
@@ -858,7 +180,7 @@
                                     <label for="price_max">To</label>
                                     <div class="input-currency-wrapper">
                                         <span class="input-currency-prefix">THB</span>
-                                        <input id="price_max" type="number" min="0" step="1" value="100000">
+                                        <input id="price_max" type="number">
                                     </div>
                                 </div>
                             </div>
@@ -1020,8 +342,8 @@
                                         <div id="table_slider_fill" class="range-slider__fill"></div>
                                     </div>
                                     <div class="range-slider__inputs">
-                                        <input id="table_min_range" type="range" min="50" max="90" step="1" value="50">
-                                        <input id="table_max_range" type="range" min="50" max="90" step="1" value="90">
+                                        <input id="table_min_range" type="range">
+                                        <input id="table_max_range" type="range">
                                     </div>
                                     <span id="table_min_bubble" class="range-slider__bubble">50%</span>
                                     <span id="table_max_bubble" class="range-slider__bubble">90%</span>
@@ -1036,12 +358,12 @@
                                 <div class="minmax-row">
                                     <div class="minmax-field">
                                         <label for="table_min">Min %</label>
-                                        <input id="table_min" type="number" min="50" max="90" step="1" value="50">
+                                        <input id="table_min" type="number">
                                     </div>
                                     <div class="minmax-separator">&#8212;</div>
                                     <div class="minmax-field">
                                         <label for="table_max">Max %</label>
-                                        <input id="table_max" type="number" min="50" max="90" step="1" value="90">
+                                        <input id="table_max" type="number">
                                     </div>
                                 </div>
                             </div>
@@ -1058,8 +380,8 @@
                                         <div id="depth_slider_fill" class="range-slider__fill"></div>
                                     </div>
                                     <div class="range-slider__inputs">
-                                        <input id="depth_min_range" type="range" min="40" max="90" step="1" value="40">
-                                        <input id="depth_max_range" type="range" min="40" max="90" step="1" value="90">
+                                        <input id="depth_min_range" type="range">
+                                        <input id="depth_max_range" type="range">
                                     </div>
                                     <span id="depth_min_bubble" class="range-slider__bubble">40%</span>
                                     <span id="depth_max_bubble" class="range-slider__bubble">90%</span>
@@ -1074,12 +396,12 @@
                                 <div class="minmax-row">
                                     <div class="minmax-field">
                                         <label for="depth_min">Min %</label>
-                                        <input id="depth_min" type="number" min="40" max="90" step="1" value="40">
+                                        <input id="depth_min" type="number">
                                     </div>
                                     <div class="minmax-separator">&#8212;</div>
                                     <div class="minmax-field">
                                         <label for="depth_max">Max %</label>
-                                        <input id="depth_max" type="number" min="40" max="90" step="1" value="90">
+                                        <input id="depth_max" type="number">
                                     </div>
                                 </div>
                             </div>
@@ -1096,8 +418,8 @@
                                         <div id="lw_ratio_slider_fill" class="range-slider__fill"></div>
                                     </div>
                                     <div class="range-slider__inputs">
-                                        <input id="lw_ratio_min_range" type="range" min="0.80" max="2.20" step="0.01" value="0.80">
-                                        <input id="lw_ratio_max_range" type="range" min="0.80" max="2.20" step="0.01" value="2.20">
+                                        <input id="lw_ratio_min_range" type="range">
+                                        <input id="lw_ratio_max_range" type="range">
                                     </div>
                                     <span id="lw_ratio_min_bubble" class="range-slider__bubble">0.80</span>
                                     <span id="lw_ratio_max_bubble" class="range-slider__bubble">2.20</span>
@@ -1116,12 +438,12 @@
                                 <div class="minmax-row">
                                     <div class="minmax-field">
                                         <label for="lw_ratio_min">Min</label>
-                                        <input id="lw_ratio_min" type="number" min="0.80" max="2.20" step="0.01" value="0.80">
+                                        <input id="lw_ratio_min" type="number">
                                     </div>
                                     <div class="minmax-separator">&#8212;</div>
                                     <div class="minmax-field">
                                         <label for="lw_ratio_max">Max</label>
-                                        <input id="lw_ratio_max" type="number" min="0.80" max="2.20" step="0.01" value="2.20">
+                                        <input id="lw_ratio_max" type="number">
                                     </div>
                                 </div>
                             </div>
@@ -1129,19 +451,11 @@
                     </div>
                 </div>
 
-                <!--<div class="row">
+                <div class="row mt-5 mb-3">
                     <div class="col-12">
-                        <div class="product-filters isotope-filters mb-5 d-flex justify-content-center"
-                            data-aos="fade-up">
-                            <ul class="d-flex flex-wrap gap-2 list-unstyled">
-                                <li class="filter-active" data-filter="*">All</li>
-                                <li data-filter=".filter-clothing">Clothing</li>
-                                <li data-filter=".filter-accessories">Accessories</li>
-                                <li data-filter=".filter-electronics">Electronics</li>
-                            </ul>
-                        </div>
+                        <div id="result_count_text" class="small text-muted">พบรูปทั้งหมด 0 รูป</div>
                     </div>
-                </div>-->
+                </div>
 
                 <div class="row product-container isotope-container" data-aos="fade-up" data-aos-delay="200">
                     <div class="col-md-6 col-lg-3">
@@ -1150,6 +464,12 @@
                         </div>
                     </div>
 
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12 text-center">
+                        <button id="load_more_btn" type="button" class="btn btn-dark px-4 py-2" hidden>Load More</button>
+                        <div id="load_more_meta" class="small text-muted mt-2"></div>
+                    </div>
                 </div>
 
         </section><!-- /Product List Section -->
@@ -1160,11 +480,6 @@
 
     <!-- footer section -->
   <div id="footer">
-    <script>
-      fetch("Footer.html")
-        .then(response => response.text())
-        .then(data => document.getElementById("footer").innerHTML = data);
-    </script>
   </div>
     <!-- footer section -->
 
@@ -1188,11 +503,669 @@
 
     <!-- Main JS File -->
     <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/yaniga-diamond-api.js"></script>
+    <script>
+        function formatPrice(price) {
+            return Number(price).toLocaleString('en-US');
+        }
+
+        function parsePriceNumber(value) {
+            if (value === null || value === undefined || value === '') return 0;
+            if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+            const normalized = String(value).replace(/,/g, '').trim();
+            const numberValue = Number(normalized);
+            return Number.isFinite(numberValue) ? numberValue : 0;
+        }
+
+        function parseInputNumber(value) {
+            if (value === null || value === undefined || value === '') return null;
+            const num = Number(value);
+            return Number.isFinite(num) ? num : null;
+        }
+
+        function clampValue(value, min, max) {
+            return Math.min(Math.max(value, min), max);
+        }
+
+        const diamondColorScale = ['N','M','L','K', 'J', 'I', 'H', 'G', 'F', 'E', 'D'];
+        const defaultClarityScale = ['I2','I1', 'SI3','SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF', 'FL'];
+        const defaultCutScale = ['FAIR', 'GOOD', 'VERY GOOD', 'EXCELLENT', 'IDEAL'];
+        const defaultPolishScale = ['GOOD', 'VERY GOOD', 'EXCELLENT'];
+        const defaultSymmetryScale = ['GOOD', 'VERY GOOD', 'EXCELLENT'];
+        const defaultFluorescenceScale = ['VERY STRONG', 'STRONG', 'MEDIUM', 'FAINT', 'NONE'];
+
+        const caratConfig = { range: [0, 12], step: 0.01 };
+        const priceConfig = { range: [0, 2000000], step: 1 };
+        const tableConfig = { range: [50, 90], step: 1 };
+        const depthConfig = { range: [40, 90], step: 1 };
+        const lwRatioConfig = { range: [0.8, 2.2], step: 0.01 };
+
+        let selectedShape = '*';
+        let selectedColorRange = { min: 0, max: diamondColorScale.length - 1 };
+        let selectedClarityRange = { min: 0, max: defaultClarityScale.length - 1 };
+        let selectedCutRange = { min: 0, max: defaultCutScale.length - 1 };
+        let selectedPolishRange = { min: 0, max: defaultPolishScale.length - 1 };
+        let selectedSymmetryRange = { min: 0, max: defaultSymmetryScale.length - 1 };
+        let selectedFluorescenceRange = { min: 0, max: defaultFluorescenceScale.length - 1 };
+        let selectedCertificate = 'ANY';
+
+        let initIsotope;
+        let filterApplyTimer = null;
+        let activeFilterAbortController = null;
+        let isInitializingFilters = true;
+        let filteredProducts = [];
+        let renderedProductCount = 0;
+        let autoLoadObserver = null;
+        let autoLoadInProgress = false;
+        let backendPage = 0;
+        let backendTotalPages = 0;
+        let backendTotalCount = 0;
+        let backendHasNextPage = false;
+        let currentFilterRequestBody = null;
+        let loadingNextServerPage = false;
+        let activeRequestToken = 0;
+
+        const PRODUCT_BATCH_SIZE = 20;
+        const API_PAGE_SIZE = 50;
+
+        function createProductItem(product) {
+            const diamondId = String(product.id || '').trim();
+            //const productShape = String(product.shape || '').toLowerCase();
+            const productName = product.carat + ' ct - ' + product.shape;
+            const productPriceNumber = parsePriceNumber(product.price);
+            const primaryImage = product.media?.image || '../assets/img/favicon.png';
+
+            const productItem = document.createElement('div');
+            productItem.className = 'col-md-6 col-lg-3 product-item isotope-item';
+            productItem.innerHTML = `
+                <div class="product-card">
+                    <div class="product-image" data-name="${productName}" data-id="${diamondId}">
+                        <img src="${primaryImage}" alt="Diamond ${productName} ct" class="img-fluid main-img" loading="lazy" decoding="async">
+                    </div>
+                    <div class="product-info">
+                        <h5 class="product-title">
+                            <a href="#" class="go-detail" data-name="${productName}" data-id="${diamondId}">${productName}</a>
+                        </h5>
+                        <div class="product-price">
+                            <span class="tm-text-gray-light">THB ${formatPrice(productPriceNumber)}</span>
+                        </div>
+                        <div class="small text-muted">Color: ${product.color || '-'} | Clarity: ${product.clarity || '-'} | Cut: ${product.cut || '-'}</div>
+                    </div>
+                </div>
+            `;
+
+            productItem.querySelectorAll('.go-detail, .product-image').forEach((el) => {
+                el.addEventListener('click', () => {
+                    const selectedId = el.getAttribute('data-id');
+                    const selectedName = el.getAttribute('data-name');
+
+                    localStorage.setItem('selectedProduct', JSON.stringify({
+                        name: selectedName,
+                        id: selectedId,
+                        price: productPriceNumber,
+                        fullData: product
+                    }));
+
+                    window.location.href = '../Setting_Custom.html';
+                });
+            });
+
+            return productItem;
+        }
+
+        function renderNextProductBatch(productContainer) {
+            if (!productContainer || renderedProductCount >= filteredProducts.length) {
+                return 0;
+            }
+
+            const nextItems = filteredProducts.slice(renderedProductCount, renderedProductCount + PRODUCT_BATCH_SIZE);
+            if (!nextItems.length) return 0;
+
+            const fragment = document.createDocumentFragment();
+            nextItems.forEach((product) => {
+                fragment.appendChild(createProductItem(product));
+            });
+
+            const sentinel = productContainer.querySelector('.product-load-sentinel');
+            if (sentinel) {
+                productContainer.insertBefore(fragment, sentinel);
+            } else {
+                productContainer.appendChild(fragment);
+            }
+
+            renderedProductCount += nextItems.length;
+
+            if (initIsotope) {
+                initIsotope.reloadItems();
+                initIsotope.arrange({ filter: '*' });
+                initIsotope.layout();
+            }
+
+            if (renderedProductCount >= filteredProducts.length) {
+                sentinel?.remove();
+            }
+
+            updateLoadMoreUI();
+            return nextItems.length;
+        }
+
+        function resetPaginationState() {
+            filteredProducts = [];
+            renderedProductCount = 0;
+            autoLoadInProgress = false;
+            backendPage = 0;
+            backendTotalPages = 0;
+            backendTotalCount = 0;
+            backendHasNextPage = false;
+            loadingNextServerPage = false;
+        }
+
+        async function fetchDiamondPage(page, requestSignal, requestToken = activeRequestToken) {
+            const response = await window.YanigaDiamondApi.fetchDiamondsByShape(getShapeRouteParam(), currentFilterRequestBody, {
+                page,
+                limit: API_PAGE_SIZE,
+                signal: requestSignal
+            });
+
+            if (requestToken !== activeRequestToken) {
+                return response;
+            }
+
+            backendPage = response.page;
+            backendTotalPages = response.totalPages;
+            backendTotalCount = response.total;
+            backendHasNextPage = response.hasNextPage;
+
+            if (Array.isArray(response.data) && response.data.length) {
+                filteredProducts = filteredProducts.concat(response.data);
+            }
+
+            return response;
+        }
+
+        async function loadMoreProducts() {
+            const productContainer = document.querySelector('.product-container');
+            if (!productContainer) return;
+
+            if (renderedProductCount < filteredProducts.length) {
+                renderNextProductBatch(productContainer);
+                return;
+            }
+
+            if (!backendHasNextPage || loadingNextServerPage) {
+                updateLoadMoreUI();
+                return;
+            }
+
+            loadingNextServerPage = true;
+            updateLoadMoreUI();
+
+            try {
+                await fetchDiamondPage(backendPage + 1, undefined, activeRequestToken);
+                renderNextProductBatch(productContainer);
+            } catch (err) {
+                if (err?.name !== 'AbortError') {
+                    console.error('Error loading next page:', err);
+                }
+            } finally {
+                loadingNextServerPage = false;
+                updateLoadMoreUI();
+            }
+        }
+
+        function setupAutoLoadObserver() {
+            if (autoLoadObserver) {
+                autoLoadObserver.disconnect();
+                autoLoadObserver = null;
+            }
+
+            const triggerEl = document.getElementById('load_more_meta');
+            if (!triggerEl) return;
+
+            autoLoadObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting || autoLoadInProgress) return;
+                    if (renderedProductCount >= filteredProducts.length && !backendHasNextPage) return;
+
+                    autoLoadInProgress = true;
+                    loadMoreProducts();
+
+                    setTimeout(() => {
+                        autoLoadInProgress = false;
+                    }, 120);
+                });
+            }, {
+                root: null,
+                rootMargin: '900px 0px',
+                threshold: 0
+            });
+
+            autoLoadObserver.observe(triggerEl);
+        }
+
+        function updateLoadMoreUI() {
+            const loadMoreBtn = document.getElementById('load_more_btn');
+            const loadMoreMeta = document.getElementById('load_more_meta');
+            const resultCountText = document.getElementById('result_count_text');
+            const knownTotal = backendTotalCount || filteredProducts.length;
+
+            if (resultCountText) {
+                resultCountText.textContent = `found ${knownTotal} diamonds`;
+            }
+
+            if (loadMoreMeta) {
+                if (knownTotal > 0) {
+                    const loadingText = loadingNextServerPage ? ' (loading next page...)' : '';
+                    loadMoreMeta.textContent = `${renderedProductCount} / ${knownTotal} diamonds loaded (auto-load on scroll)${loadingText}`;
+                } else {
+                    loadMoreMeta.textContent = '0 diamonds';
+                }
+            }
+            if (!loadMoreBtn) return;
+
+            const hasMore = renderedProductCount < filteredProducts.length || backendHasNextPage;
+            loadMoreBtn.hidden = !hasMore;
+            loadMoreBtn.disabled = !hasMore || loadingNextServerPage;
+        }
+
+        function setupLoadMoreButton() {
+            const loadMoreBtn = document.getElementById('load_more_btn');
+            if (!loadMoreBtn) return;
+
+            loadMoreBtn.addEventListener('click', async () => {
+                await loadMoreProducts();
+            });
+        }
+
+        function buildScaleLabels(containerId, values) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            container.innerHTML = '';
+            values.forEach((value, index) => {
+                const label = document.createElement('span');
+                label.textContent = value;
+                const percent = values.length > 1 ? (index / (values.length - 1)) * 100 : 0;
+                label.style.left = `${percent}%`;
+                container.appendChild(label);
+            });
+        }
+
+        function setupOrdinalRangeSlider(prefix, values, defaultState) {
+            const minRange = document.getElementById(`${prefix}_min_range`);
+            const maxRange = document.getElementById(`${prefix}_max_range`);
+            const fill = document.getElementById(`${prefix}_slider_fill`);
+
+            if (!minRange || !maxRange || !fill || !values.length) {
+                return;
+            }
+
+            const sync = () => {
+                let minValue = Math.max(0, Math.min(Number(minRange.value), values.length - 1));
+                let maxValue = Math.max(0, Math.min(Number(maxRange.value), values.length - 1));
+
+                if (minValue > maxValue) {
+                    if (document.activeElement === minRange) {
+                        maxValue = minValue;
+                        maxRange.value = String(maxValue);
+                    } else {
+                        minValue = maxValue;
+                        minRange.value = String(minValue);
+                    }
+                }
+
+                const startPercent = values.length > 1 ? (minValue / (values.length - 1)) * 100 : 0;
+                const endPercent = values.length > 1 ? (maxValue / (values.length - 1)) * 100 : 100;
+                fill.style.left = `${startPercent}%`;
+                fill.style.width = `${endPercent - startPercent}%`;
+
+                defaultState.min = minValue;
+                defaultState.max = maxValue;
+                applyCombinedFilter();
+            };
+
+            minRange.max = String(values.length - 1);
+            maxRange.max = String(values.length - 1);
+            minRange.step = '1';
+            maxRange.step = '1';
+            minRange.value = String(defaultState.min);
+            maxRange.value = String(defaultState.max);
+
+            minRange.addEventListener('input', sync);
+            maxRange.addEventListener('input', sync);
+            sync();
+        }
+
+        function setupNumericRangeFilter(prefix, minLimit, maxLimit, step, decimals) {
+            const minRange = document.getElementById(`${prefix}_min_range`);
+            const maxRange = document.getElementById(`${prefix}_max_range`);
+            const minInput = document.getElementById(`${prefix}_min`);
+            const maxInput = document.getElementById(`${prefix}_max`);
+            const fill = document.getElementById(`${prefix}_slider_fill`);
+            const minBubble = document.getElementById(`${prefix}_min_bubble`);
+            const maxBubble = document.getElementById(`${prefix}_max_bubble`);
+
+            if (!minRange || !maxRange || !minInput || !maxInput || !fill) {
+                return;
+            }
+
+            const formatValue = (value) => Number(value).toFixed(decimals);
+            const suffix = prefix === 'table' || prefix === 'depth' ? '%' : '';
+
+            const updateUI = () => {
+                const minValue = Number(minRange.value);
+                const maxValue = Number(maxRange.value);
+                const startPercent = ((minValue - minLimit) / (maxLimit - minLimit)) * 100;
+                const endPercent = ((maxValue - minLimit) / (maxLimit - minLimit)) * 100;
+
+                fill.style.left = `${startPercent}%`;
+                fill.style.width = `${endPercent - startPercent}%`;
+
+                if (document.activeElement !== minInput) {
+                    minInput.value = formatValue(minValue);
+                }
+                if (document.activeElement !== maxInput) {
+                    maxInput.value = formatValue(maxValue);
+                }
+
+                if (minBubble) {
+                    minBubble.style.left = `${startPercent}%`;
+                    minBubble.textContent = `${formatValue(minValue)}${suffix}`;
+                }
+                if (maxBubble) {
+                    maxBubble.style.left = `${endPercent}%`;
+                    maxBubble.textContent = `${formatValue(maxValue)}${suffix}`;
+                }
+            };
+
+            const syncFromRange = () => {
+                let minValue = clampValue(Number(minRange.value), minLimit, maxLimit);
+                let maxValue = clampValue(Number(maxRange.value), minLimit, maxLimit);
+
+                if (minValue > maxValue) {
+                    if (document.activeElement === minRange) {
+                        maxValue = minValue;
+                        maxRange.value = formatValue(maxValue);
+                    } else {
+                        minValue = maxValue;
+                        minRange.value = formatValue(minValue);
+                    }
+                }
+
+                updateUI();
+                applyCombinedFilter();
+            };
+
+            const syncFromInput = (source, commit) => {
+                let minValue = parseInputNumber(minInput.value);
+                let maxValue = parseInputNumber(maxInput.value);
+
+                if (!commit) {
+                    if (minValue === null || maxValue === null) return;
+                    if (minValue < minLimit || minValue > maxLimit) return;
+                    if (maxValue < minLimit || maxValue > maxLimit) return;
+                }
+
+                minValue = minValue === null ? minLimit : clampValue(minValue, minLimit, maxLimit);
+                maxValue = maxValue === null ? maxLimit : clampValue(maxValue, minLimit, maxLimit);
+
+                if (minValue > maxValue) {
+                    if (source === 'min') {
+                        maxValue = minValue;
+                    } else {
+                        minValue = maxValue;
+                    }
+                }
+
+                minRange.value = formatValue(minValue);
+                maxRange.value = formatValue(maxValue);
+                updateUI();
+                applyCombinedFilter();
+            };
+
+            minRange.min = String(minLimit);
+            minRange.max = String(maxLimit);
+            minRange.step = String(step);
+            maxRange.min = String(minLimit);
+            maxRange.max = String(maxLimit);
+            maxRange.step = String(step);
+            minInput.min = String(minLimit);
+            minInput.max = String(maxLimit);
+            minInput.step = String(step);
+            maxInput.min = String(minLimit);
+            maxInput.max = String(maxLimit);
+            maxInput.step = String(step);
+
+            minRange.value = formatValue(minLimit);
+            maxRange.value = formatValue(maxLimit);
+            minInput.value = formatValue(minLimit);
+            maxInput.value = formatValue(maxLimit);
+
+            minRange.addEventListener('input', syncFromRange);
+            maxRange.addEventListener('input', syncFromRange);
+            minInput.addEventListener('input', () => syncFromInput('min', false));
+            maxInput.addEventListener('input', () => syncFromInput('max', false));
+            minInput.addEventListener('blur', () => syncFromInput('min', true));
+            maxInput.addEventListener('blur', () => syncFromInput('max', true));
+
+            updateUI();
+        }
+
+        function getScaleValuesFromRange(scale, selectedRange) {
+            const start = Math.max(0, Math.min(selectedRange.min, selectedRange.max));
+            const end = Math.min(scale.length - 1, Math.max(selectedRange.min, selectedRange.max));
+            return scale.slice(start, end + 1);
+        }
+
+        function toAllOrValues(scale, selectedRange) {
+            const values = getScaleValuesFromRange(scale, selectedRange);
+            return values.length === scale.length ? 'ALL' : { values };
+        }
+
+        function getShapeRouteParam() {
+            if (selectedShape === '*') {
+                return 'ROUND';
+            }
+            return String(selectedShape || 'ROUND').trim().toUpperCase();
+        }
+
+        function readNumberPair(prefix, fallbackRange) {
+            const min = parseInputNumber(document.getElementById(`${prefix}_min`)?.value) ?? fallbackRange[0];
+            const max = parseInputNumber(document.getElementById(`${prefix}_max`)?.value) ?? fallbackRange[1];
+            return { min: Number(min), max: Number(max) };
+        }
+
+        function buildFilterRequestBody() {
+            return {
+                carat: readNumberPair('carat', caratConfig.range),
+                price: readNumberPair('price', priceConfig.range),
+                color: { values: getScaleValuesFromRange(diamondColorScale, selectedColorRange) },
+                clarity: toAllOrValues(defaultClarityScale, selectedClarityRange),
+                cut: toAllOrValues(defaultCutScale, selectedCutRange),
+                polish: toAllOrValues(defaultPolishScale, selectedPolishRange),
+                symmetry: toAllOrValues(defaultSymmetryScale, selectedSymmetryRange),
+                fluorescence: toAllOrValues(defaultFluorescenceScale, selectedFluorescenceRange),
+                certificate: selectedCertificate === 'ANY' ? 'ALL' : selectedCertificate,
+                table: readNumberPair('table', tableConfig.range),
+                depth: readNumberPair('depth', depthConfig.range),
+                lwRatio: readNumberPair('lw_ratio', lwRatioConfig.range)
+            };
+        }
+
+        async function loadProductData(requestBody, requestSignal) {
+            try {
+                const productContainer = document.querySelector('.product-container');
+                if (!productContainer) return;
+
+                const requestToken = activeRequestToken + 1;
+                activeRequestToken = requestToken;
+                currentFilterRequestBody = requestBody;
+                productContainer.innerHTML = '';
+                resetPaginationState();
+                await fetchDiamondPage(1, requestSignal, requestToken);
+
+                if (requestToken !== activeRequestToken) {
+                    return;
+                }
+
+                if (!filteredProducts.length) {
+                    productContainer.innerHTML = '<div class="col-12"><div class="alert alert-light border text-center mb-0">No diamonds found for current filters.</div></div>';
+                    updateLoadMoreUI();
+                    return;
+                }
+
+                renderNextProductBatch(productContainer);
+            } catch (err) {
+                if (err?.name !== 'AbortError') {
+                    console.error('Error loading product data:', err);
+                }
+            }
+        }
+
+        function addFilterEvents() {
+            document.querySelectorAll('.diamond-type-tab').forEach((btn) => {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.diamond-type-tab').forEach((tab) => tab.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            document.querySelectorAll('#shape_filter .shape-option').forEach((btn) => {
+                btn.addEventListener('click', function () {
+                    document.querySelector('#shape_filter .shape-option.active')?.classList.remove('active');
+                    this.classList.add('active');
+                    selectedShape = this.getAttribute('data-shape');
+                    applyCombinedFilter();
+
+                    const shapeName = selectedShape === '*' ? 'All Shapes' : selectedShape;
+                    const setting = document.getElementById('shape_setting');
+                    if (setting) {
+                        setting.textContent = shapeName;
+                    }
+                });
+            });
+
+            document.getElementById('shape_all')?.addEventListener('click', function () {
+                document.querySelector('#shape_filter .shape-option.active')?.classList.remove('active');
+                this.classList.add('active');
+                selectedShape = '*';
+                const setting = document.getElementById('shape_setting');
+                if (setting) {
+                    setting.textContent = 'All Shapes';
+                }
+                applyCombinedFilter();
+            });
+
+            setupNumericRangeFilter('carat', caratConfig.range[0], caratConfig.range[1], caratConfig.step, 2);
+            setupNumericRangeFilter('price', priceConfig.range[0], priceConfig.range[1], priceConfig.step, 0);
+
+            buildScaleLabels('color_scale_labels', diamondColorScale);
+            buildScaleLabels('clarity_scale_labels', defaultClarityScale);
+            buildScaleLabels('cut_scale_labels', defaultCutScale);
+            buildScaleLabels('polish_scale_labels', defaultPolishScale);
+            buildScaleLabels('symmetry_scale_labels', defaultSymmetryScale);
+            buildScaleLabels('fluorescence_scale_labels', defaultFluorescenceScale);
+
+            setupOrdinalRangeSlider('color', diamondColorScale, selectedColorRange);
+            setupOrdinalRangeSlider('clarity', defaultClarityScale, selectedClarityRange);
+            setupOrdinalRangeSlider('cut', defaultCutScale, selectedCutRange);
+            setupOrdinalRangeSlider('polish', defaultPolishScale, selectedPolishRange);
+            setupOrdinalRangeSlider('symmetry', defaultSymmetryScale, selectedSymmetryRange);
+            setupOrdinalRangeSlider('fluorescence', defaultFluorescenceScale, selectedFluorescenceRange);
+
+            setupNumericRangeFilter('table', tableConfig.range[0], tableConfig.range[1], tableConfig.step, 0);
+            setupNumericRangeFilter('depth', depthConfig.range[0], depthConfig.range[1], depthConfig.step, 0);
+            setupNumericRangeFilter('lw_ratio', lwRatioConfig.range[0], lwRatioConfig.range[1], lwRatioConfig.step, 2);
+
+            document.querySelectorAll('.cert-btn').forEach((btn) => {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.cert-btn').forEach((b) => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedCertificate = this.getAttribute('data-value');
+                    applyCombinedFilter();
+                });
+            });
+
+            const detailToggleBtn = document.getElementById('more_detail_btn');
+            const advancedFilters = document.getElementById('advanced_filters');
+            const detailToggleText = document.getElementById('more_detail_text');
+            if (detailToggleBtn && advancedFilters && detailToggleText) {
+                detailToggleBtn.addEventListener('click', function () {
+                    const isOpen = advancedFilters.classList.toggle('is-open');
+                    detailToggleBtn.classList.toggle('is-open', isOpen);
+                    detailToggleBtn.setAttribute('aria-expanded', String(isOpen));
+                    detailToggleText.textContent = isOpen ? 'Less Detail' : 'More Detail';
+                });
+            }
+
+            isInitializingFilters = false;
+        }
+
+        function applyCombinedFilter() {
+            if (isInitializingFilters) {
+                return;
+            }
+
+            if (filterApplyTimer) {
+                clearTimeout(filterApplyTimer);
+            }
+
+            filterApplyTimer = setTimeout(async () => {
+                const requestBody = buildFilterRequestBody();
+
+                if (activeFilterAbortController) {
+                    activeFilterAbortController.abort();
+                }
+
+                activeFilterAbortController = new AbortController();
+                await loadProductData(requestBody, activeFilterAbortController.signal);
+            }, 220);
+        }
+
+        async function initEngagementRingPage() {
+            window.YanigaDiamondApi.loadPartial('header', 'Header.html');
+            window.YanigaDiamondApi.loadPartial('footer', 'Footer.html', () => {
+                const yearEl = document.getElementById('displayYear');
+                if (yearEl) {
+                    yearEl.textContent = new Date().getFullYear();
+                }
+            });
+
+            await loadProductData(buildFilterRequestBody());
+
+            const container = document.querySelector('.product-container');
+            if (!container) return;
+
+            initIsotope = new Isotope(container, {
+                itemSelector: '.product-item',
+                layoutMode: 'fitRows',
+                filter: '*'
+            });
+
+            initIsotope.layout();
+            imagesLoaded(container).on('progress', () => {
+                if (initIsotope) {
+                    initIsotope.layout();
+                }
+            });
+
+            addFilterEvents();
+            setupLoadMoreButton();
+            setupAutoLoadObserver();
+
+            const setting = document.getElementById('shape_setting');
+            if (setting) {
+                setting.textContent = 'All Shapes';
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEngagementRingPage);
+        } else {
+            initEngagementRingPage();
+        }
+    </script>
 
 </body>
 
 </html>
-<script>
-    // Update the year in the footer
-    document.getElementById("displayYear").textContent = new Date().getFullYear();
-</script>
