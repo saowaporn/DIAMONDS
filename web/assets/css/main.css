@@ -30,7 +30,7 @@
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
 :root {
-  --background-color: #EDEDED;
+  --background-color: #f6f6f6;
   /* Background color for the entire website, including individual sections */
   --default-color: #212529;
   /* ตัวหนังสือ ข้อความทั่วไป ตัวเล็ก*/
@@ -12020,11 +12020,457 @@ font-family: var(--bellefair-font);
   .privacy .privacy-content .content-section h2 {
     font-size: 1.6rem;
   }
+}
+
+/*--------------------------------------------------------------
+# Engagement Ring — Diamond Selection Filter UI
+# ใช้สำหรับหน้าเลือกเม็ดเพชรใน Engagement Ring (EngagementRing.html)
+--------------------------------------------------------------*/
+
+/* ── Filter Card ────────────────────────────────────────────
+   White card container shared by all filter sections
+   (Carat, Price, Color, Clarity, Cut, Certificate).
+   ──────────────────────────────────────────────────────────── */
+.filter-card {
+  background: #fff;
+  border: 1px solid rgba(80, 16, 34, 0.08);
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: 0 12px 30px rgba(80, 16, 34, 0.06);
+  height: 100%;
+}
+
+.filter-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #3e1020;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.filter-card__header i {
+  color: #8f203b;
+  font-size: 0.95rem;
+}
+
+/* ── Range Slider ────────────────────────────────────────────
+   Dual-thumb slider used for Carat, Color, Clarity, and Cut.
+   ──────────────────────────────────────────────────────────── */
+.range-slider {
+  position: relative;
+  padding: 8px 8px 0;
+}
+
+.range-slider__track {
+  position: relative;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(80, 16, 34, 0.14);
+}
+
+.range-slider__fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: #8f203b;
+}
+
+.range-slider__inputs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.range-slider__inputs input[type="range"] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -6px;
+  width: 100%;
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+  margin: 0;
+}
+
+.range-slider__inputs input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #d8d0d3;
+  box-shadow: 0 4px 12px rgba(80, 16, 34, 0.12);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.range-slider__inputs input[type="range"]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #d8d0d3;
+  box-shadow: 0 4px 12px rgba(80, 16, 34, 0.12);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.range-slider__inputs input[type="range"]::-webkit-slider-runnable-track {
+  height: 24px;
+  background: transparent;
+}
+
+.range-slider__inputs input[type="range"]::-moz-range-track {
+  height: 24px;
+  background: transparent;
+}
+
+/* ── Slider Scale Labels ─────────────────────────────────────
+   Tick labels rendered below ordinal range sliders
+   (Color, Clarity, Cut).
+   ──────────────────────────────────────────────────────────── */
+.slider-labels {
+  position: relative;
+  min-height: 28px;
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.slider-labels span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: #3f3f3f;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.slider-labels span:first-child {
+  transform: translateX(0);
+}
+
+.slider-labels span:last-child {
+  transform: translateX(-100%);
+}
+
+/* ── Min/Max Input Row ───────────────────────────────────────
+   3-column grid: [min input] [—] [max input].
+   Used inside the Carat and Price filter cards.
+   ──────────────────────────────────────────────────────────── */
+.minmax-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: end;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.minmax-field label {
+  display: block;
+  color: #7d6f75;
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+}
+
+.minmax-field input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #dfd5d9;
+  border-radius: 8px;
+  background: #fff;
+  padding: 8px 10px;
+  color: #3e1020;
+  font-weight: 500;
+}
+
+.minmax-separator {
+  color: #c9c0c4;
+  font-size: 1.4rem;
+  line-height: 1;
+  padding-bottom: 8px;
+}
+
+/* ── Currency Prefix Input (THB / B prefix inside minmax inputs) ─
+   Used in the Price filter to show "THB" before the number.
+   ──────────────────────────────────────────────────────────── */
+.input-currency-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-currency-prefix {
+  position: absolute;
+  left: 10px;
+  color: #7d6f75;
+  font-size: 0.8rem;
+  font-weight: 500;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.input-currency-wrapper input[type="number"] {
+  padding-left: 40px;
+}
+
+/* ── Diamond Type Tabs (Natural / Lab Grown) ─────────────────
+   Tab switcher at the top of the filter UI.
+   ──────────────────────────────────────────────────────────── */
+.diamond-type-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.diamond-type-tab {
+  border-radius: 10px 10px 0 0;
+  border: 1px solid #d7d7d7;
+  border-bottom: 3px solid #cfcfcf;
+  background: #f7f7f7;
+  color: #5f5f5f;
+  text-align: center;
+  font-family: var(--heading-font);
+  font-size: 1.85rem;
+  font-weight: 400;
+  line-height: 1.2;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.diamond-type-tab.active {
+  border-color: #8f203b;
+  border-bottom-color: #8f203b;
+  background: #fff;
+  color: #8f203b;
+}
+
+/* ── Shape Selector ──────────────────────────────────────────
+   Grid row of diamond shape buttons that fills full width.
+   ──────────────────────────────────────────────────────────── */
+.shape-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.shape-option {
+  flex: 1 1 0;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  background: #f6f6f6;
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 72px;
+}
+
+.shape-option img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  margin-bottom: 4px;
+  filter: grayscale(1);
+}
+
+.shape-option span {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5b5b5b;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.shape-option.active {
+  background: #fff;
+  border-color: #8f203b;
+}
+
+.shape-option.active span {
+  color: #8f203b;
+}
+
+.shape-option.active img {
+  filter: none;
+}
+
+/* ── Certificate Filter ──────────────────────────────────────
+   Button grid for selecting certificate type (GIA/IGI/HRD/ANY).
+   ──────────────────────────────────────────────────────────── */
+.cert-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.cert-btn {
+  flex: 1 1 calc(50% - 5px);
+  padding: 10px 0;
+  border: 1.5px solid rgba(80, 16, 34, 0.18);
+  border-radius: 10px;
+  background: #fff;
+  color: #3e1020;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cert-btn:hover {
+  border-color: #8f203b;
+  background: rgba(143, 32, 59, 0.06);
+}
+
+.cert-btn.active {
+  background: #8f203b;
+  border-color: #8f203b;
+  color: #fff;
+}
+
+/* ── Filter Placeholder ──────────────────────────────────────
+   Dashed placeholder for empty / upcoming filter slots.
+   ──────────────────────────────────────────────────────────── */
+.filter-placeholder {
+  min-height: 200px;
+  border: 1px dashed rgba(143, 32, 59, 0.28);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+/* ── More/Less Detail Toggle ──────────────────────────────── */
+.more-detail-toggle {
+  display: flex;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.more-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(143, 32, 59, 0.35);
+  border-radius: 999px;
+  background: #fff;
+  color: #8f203b;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.more-detail-btn:hover {
+  border-color: #8f203b;
+  background: rgba(143, 32, 59, 0.06);
+}
+
+.more-detail-btn i {
+  transition: transform 0.25s ease;
+}
+
+.more-detail-btn.is-open i {
+  transform: rotate(180deg);
+}
+
+/* ── Advanced Filters Panel (More Detail) ───────────────────
+   Collapsible section revealed by the More Detail toggle.
+   ──────────────────────────────────────────────────────────── */
+.advanced-filters {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+
+.advanced-filters.is-open {
+  max-height: 1800px;
+  opacity: 1;
+}
+
+/* ── Numeric Slider with Bubbles ────────────────────────────
+   Variant of range-slider used in Table / Depth / LW Ratio.
+   ──────────────────────────────────────────────────────────── */
+.range-slider--with-bubbles {
+  padding-top: 8px;
+}
+
+.range-slider--with-bubbles .range-slider__inputs input[type="range"] {
+  top: -6px;
+}
+
+.range-slider__bubble {
+  display: none;
+}
+
+.range-slider__bubble::after {
+  display: none;
+}
+
+/* ── Numeric Scale (tick marks & labels under sliders) ──────── */
+.numeric-scale {
+  position: relative;
+  min-height: 22px;
+  margin-top: 12px;
+  color: #3f3f3f;
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.numeric-scale span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.numeric-scale span.start {
+  left: 0;
+  transform: translateX(0);
+}
+
+.numeric-scale span.end {
+  left: 100%;
+  transform: translateX(-100%);
+}
+
+.numeric-scale span.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #bfb6ba;
+  top: 7px;
+}
+
+/* ── Column auto-height (prevents Bootstrap stretch for slider-only cards) ── */
+.filter-col--auto {
+  align-self: flex-start;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 576px) {
+  .minmax-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .minmax-separator {
+    display: none;
+  }
+}
 
   .privacy .privacy-content .content-section h3 {
     font-size: 1.3rem;
   }
-}
+
 
 /*--------------------------------------------------------------
 # Retun Policy Section
