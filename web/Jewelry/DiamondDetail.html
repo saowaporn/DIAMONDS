@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Diamond Details</title>
+
+    <link href="../assets/img/favicon.png" rel="icon">
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/drift-zoom/drift-basic.css" rel="stylesheet">
+    <link href="../assets/css/main.css" rel="stylesheet">
+
+    <style>
+        .diamond-overview-card {
+            border: 0;
+            border-radius: 0;
+            padding: 0;
+            background: transparent;
+        }
+
+        .diamond-overview-title {
+            display: none;
+        }
+
+        .diamond-overview-grid {
+            background: #fff;
+            border: 1px solid #d4d4d4;
+            border-radius: 12px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .diamond-cell {
+            min-height: 86px;
+            border-right: 1px solid #d4d4d4;
+            border-bottom: 1px solid #d4d4d4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .diamond-overview-grid .diamond-cell:nth-child(3n) {
+            border-right: 0;
+        }
+
+        .diamond-overview-grid .diamond-cell:nth-child(n+4) {
+            border-bottom: 0;
+        }
+
+        .diamond-label {
+            font-size: 13px;
+            color: #6b6b6b;
+        }
+
+        .diamond-value {
+            font-size: 20px;
+            color: #111;
+            line-height: 1.1;
+            margin-top: 8px;
+            word-break: break-word;
+        }
+
+        .diamond-raw-payload {
+            margin-top: 12px;
+            background: #fafafa;
+            border: 1px solid #d4d4d4;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 12px;
+            max-height: 240px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .diamond-section-card {
+            border: 1px solid #d4d4d4;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 12px;
+            background: #fff;
+        }
+
+        .diamond-section-grid {
+            border: 1px solid #d4d4d4;
+            border-radius: 12px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .diamond-section-grid .diamond-cell:nth-child(3n) {
+            border-right: 0;
+        }
+
+        .diamond-section-grid .diamond-cell:nth-child(n+4) {
+            border-bottom: 0;
+        }
+
+        .diamond-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #202020;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .diamond-kv-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .diamond-kv-table td {
+            border-top: 1px solid #ececec;
+            padding: 8px 4px;
+            font-size: 13px;
+            vertical-align: top;
+        }
+
+        .diamond-kv-table tr:first-child td {
+            border-top: 0;
+        }
+
+        .diamond-kv-key {
+            color: #6b6b6b;
+            width: 42%;
+        }
+
+        .diamond-kv-value {
+            color: #141414;
+            font-weight: 500;
+        }
+
+        .diamond-cell--clickable {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .diamond-cell--clickable:hover {
+            background-color: #f7f7f7;
+        }
+
+        .diamond-cell--clickable:active {
+            background-color: #efefef;
+        }
+
+        .certificate-link-indicator {
+            font-size: 12px;
+            margin-left: 6px;
+            color: #444;
+            vertical-align: middle;
+        }
+
+        .other-info-wrap {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background: #fff;
+            padding: 18px;
+        }
+
+        .other-info-title {
+            font-family: "Playfair Display", serif;
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+            color: #141414;
+        }
+
+        .other-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0 32px;
+        }
+
+        .other-info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 12px 0;
+            border-top: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .other-info-key {
+            color: #1b1b1b;
+        }
+
+        .other-info-value {
+            color: #666;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .promise-wrap {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background: #fff;
+            padding: 18px;
+            height: 100%;
+        }
+
+        .promise-title {
+            font-family: "Playfair Display", serif;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+
+        .promise-sub {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .promise-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-top: 1px solid #ddd;
+            color: #1b1b1b;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .promise-link:last-child {
+            border-bottom: 1px solid #ddd;
+        }
+
+        @media (max-width: 576px) {
+            .diamond-overview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .diamond-section-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .diamond-overview-grid .diamond-cell:nth-child(3n) {
+                border-right: 1px solid #d4d4d4;
+            }
+
+            .diamond-overview-grid .diamond-cell:nth-child(2n) {
+                border-right: 0;
+            }
+
+            .diamond-overview-grid .diamond-cell:nth-child(n+4) {
+                border-bottom: 1px solid #d4d4d4;
+            }
+
+            .diamond-overview-grid .diamond-cell:nth-child(n+5) {
+                border-bottom: 0;
+            }
+
+            .diamond-section-grid .diamond-cell:nth-child(3n) {
+                border-right: 1px solid #d4d4d4;
+            }
+
+            .diamond-section-grid .diamond-cell:nth-child(2n) {
+                border-right: 0;
+            }
+
+            .diamond-section-grid .diamond-cell:nth-child(n+4) {
+                border-bottom: 1px solid #d4d4d4;
+            }
+
+            .diamond-section-grid .diamond-cell:nth-child(n+5) {
+                border-bottom: 0;
+            }
+
+            .other-info-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="product-details-page setting-custom-page">
+    <div id="header"></div>
+
+    <main class="main">
+        <div class="page-title light-background">
+            <div class="container d-lg-flex justify-content-between align-items-center">
+                <h1 class="mb-2 mb-lg-0">Diamond Details</h1>
+                <nav class="breadcrumbs">
+                    <ol>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="EngagementRing.html">Engagement Rings</a></li>
+                        <li class="current">Diamond Detail</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <section class="step-navigation-section">
+            <div class="container">
+                <div class="step-navigation">
+                    <div class="step active">
+                        <span>1. FIND YOUR DIAMOND</span>
+                    </div>
+                    <div class="step">
+                        <span>2. CUSTOMISE YOUR SETTING</span>
+                    </div>
+                    <div class="step">
+                        <span>3. BESPOKE CUSTOMISATIONS</span>
+                    </div>
+                    <div class="step">
+                        <span>4. SUMMARY YOUR SETTING</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="product-details" class="product-details section">
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+                <div class="row">
+                    <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="200">
+                        <div class="product-images">
+                            <div class="main-image-container mb-3">
+                                <div class="image-zoom-container">
+                                    <img id="main-product-image" class="img-fluid main-image drift-zoom"
+                                        src="../assets/img/favicon.png" alt="Diamond Image" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+                        <div class="product-info">
+                            <h1 class="product-title" id="detail-name">Diamond</h1>
+
+                            <div class="product-price-container mb-4">
+                                <span class="current-price">THB 0</span>
+                            </div>
+
+                            <div id="diamond_overview_card" class="diamond-overview-card mb-4" hidden>
+                                <div id="diamond_overview_title" class="diamond-overview-title"></div>
+
+                                <div class="diamond-overview-grid">
+                                    <div class="diamond-cell">
+                                        <div class="diamond-label">Carat</div>
+                                        <div id="ov_carat" class="diamond-value">-</div>
+                                    </div>
+                                    <div class="diamond-cell">
+                                        <div class="diamond-label">Color</div>
+                                        <div id="ov_color" class="diamond-value">-</div>
+                                    </div>
+                                    <div class="diamond-cell">
+                                        <div class="diamond-label">Clarity</div>
+                                        <div id="ov_clarity" class="diamond-value">-</div>
+                                    </div>
+                                    <div class="diamond-cell">
+                                        <div class="diamond-label">Cut</div>
+                                        <div id="ov_cut" class="diamond-value">-</div>
+                                    </div>
+                                    <div class="diamond-cell">
+                                        <div class="diamond-label">Origin</div>
+                                        <div id="ov_origin" class="diamond-value">Natural</div>
+                                    </div>
+                                    <div id="ov_certificate_cell" class="diamond-cell">
+                                        <div class="diamond-label">Certificate</div>
+                                        <div class="diamond-value">
+                                            <span id="ov_certificate">-</span>
+                                            <i id="ov_certificate_icon" class="bi bi-box-arrow-up-right certificate-link-indicator d-none" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-actions">
+                                    <a href="EngagementRing.html" class="btn btn-outline-primary buy-now-btn">Back</a>
+                                    <button id="nextButton"
+                                        class="btn btn-outline-primary buy-now-btn Next-Button">Select this diamond</button>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="diamond_extra_sections_row" class="row mt-3 g-3" hidden>
+                    <div class="col-lg-12 col-12">
+                        <div class="other-info-wrap">
+                            <div class="other-info-title">Other Info</div>
+                            <div class="other-info-grid">
+                                <div id="other_info_col_left"></div>
+                                <div id="other_info_col_right"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--<div class="col-lg-4 col-12">
+                        <div class="promise-wrap">
+                            <div class="promise-title">Our Promise</div>
+                            <p class="promise-sub">Crafted to perfection - guaranteed to satisfy.</p>
+                            <a class="promise-link" href="#">Checked by expert gemologists <i class="bi bi-chevron-right"></i></a>
+                            <a class="promise-link" href="#">Responsibly sourced natural diamonds <i class="bi bi-chevron-right"></i></a>
+                            <a class="promise-link" href="#">We match the best price <i class="bi bi-chevron-right"></i></a>
+                        </div>
+                    </div>-->
+                </div>
+        </section>
+    </main>
+
+    <div id="footer"></div>
+
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+    <div id="preloader"></div>
+
+    <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/vendor/php-email-form/validate.js"></script>
+    <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="../assets/vendor/aos/aos.js"></script>
+    <script src="../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="../assets/vendor/drift-zoom/Drift.min.js"></script>
+    <script src="../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+    <script src="../assets/js/main.js"></script>
+
+    <script>
+        let globalBasePrice = 0;
+
+        function parsePriceNumber(value) {
+            if (value === null || value === undefined || value === '') return 0;
+            if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+            const normalized = String(value).replace(/,/g, '').trim();
+            const numberValue = Number(normalized);
+            return Number.isFinite(numberValue) ? numberValue : 0;
+        }
+
+        function getDiamondImages(apiData) {
+            const images = [];
+            const add = (value) => {
+                if (typeof value !== 'string') return;
+                const trimmed = value.trim();
+                if (!trimmed) return;
+                if (!images.includes(trimmed)) images.push(trimmed);
+            };
+
+            add(apiData?.media?.image);
+            if (Array.isArray(apiData?.media?.images)) apiData.media.images.forEach(add);
+            if (Array.isArray(apiData?.images)) apiData.images.forEach(add);
+            add(apiData?.image);
+
+            return images;
+        }
+
+        function updateTotalPrice() {
+            let totalPrice = globalBasePrice || 0;
+
+            const gemstoneDropdown = document.querySelector('#gemstone .dropdown-selected');
+            if (gemstoneDropdown && !gemstoneDropdown.textContent.includes('Select')) {
+                const selectedOption = Array.from(document.querySelectorAll('#gemstone .dropdown-option'))
+                    .find((option) => option.textContent === gemstoneDropdown.textContent);
+
+                if (selectedOption) {
+                    const gemstoneData = selectedOption.dataset.value.split(' ');
+                    if (gemstoneData.length >= 2) {
+                        totalPrice += parsePriceNumber(gemstoneData[1]);
+                    }
+                }
+            }
+
+            const formatted = `THB ${Number(totalPrice).toLocaleString('th-TH')}`;
+            const priceEl = document.querySelector('.current-price');
+            if (priceEl) priceEl.textContent = formatted;
+
+            const ovPrice = document.getElementById('ov_price');
+            if (ovPrice) ovPrice.textContent = `THB ${Number(totalPrice).toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+        }
+
+        function renderOtherInfoColumns(apiData) {
+            const leftCol = document.getElementById('other_info_col_left');
+            const rightCol = document.getElementById('other_info_col_right');
+            if (!leftCol || !rightCol) return;
+
+            const createRow = (label, value) => {
+                const row = document.createElement('div');
+                row.className = 'other-info-row';
+
+                const key = document.createElement('div');
+                key.className = 'other-info-key';
+                key.textContent = label;
+
+                const val = document.createElement('div');
+                val.className = 'other-info-value';
+                val.textContent = value === null || value === undefined || String(value).trim() === '' ? '-' : String(value);
+
+                row.appendChild(key);
+                row.appendChild(val);
+                return row;
+            };
+
+            const leftRows = [
+                ['Stock number', apiData?.id],
+                ['Polish', apiData?.quality?.polish],
+                ['Symmetry', apiData?.quality?.symmetry],
+                ['Fluorescence', apiData?.quality?.fluorescence],
+                ['Comment', apiData?.notes?.comment]
+            ];
+
+            const rightRows = [
+                ['Measurements', apiData?.details?.measurement],
+                ['L / W Ratio', apiData?.quality?.['l/w ratio']],
+                ['Table', apiData?.quality?.table],
+                ['Depth', apiData?.quality?.td],
+                ['Certificate No', apiData?.certificate?.certificateNo]
+            ];
+
+            leftCol.innerHTML = '';
+            rightCol.innerHTML = '';
+
+            leftRows.forEach(([label, value]) => leftCol.appendChild(createRow(label, value)));
+            rightRows.forEach(([label, value]) => rightCol.appendChild(createRow(label, value)));
+        }
+
+        function initCustomDropdowns() {
+            document.querySelectorAll('.custom-dropdown').forEach((dropdown) => {
+                const selected = dropdown.querySelector('.dropdown-selected');
+                const options = dropdown.querySelector('.dropdown-options');
+                const dropdownId = dropdown.id;
+
+                selected.addEventListener('click', () => {
+                    document.querySelectorAll('.custom-dropdown').forEach((d) => {
+                        if (d !== dropdown) d.classList.remove('open');
+                    });
+                    dropdown.classList.toggle('open');
+                });
+
+                options.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('dropdown-option')) return;
+
+                    options.querySelectorAll('.dropdown-option').forEach((opt) => opt.classList.remove('selected'));
+                    e.target.classList.add('selected');
+                    selected.classList.add('has-selection');
+                    selected.textContent = e.target.textContent;
+                    dropdown.classList.remove('open');
+
+                    const selectedRing = JSON.parse(localStorage.getItem('selectedRing') || '{}');
+                    selectedRing[dropdownId] = e.target.dataset.value;
+                    localStorage.setItem('selectedRing', JSON.stringify(selectedRing));
+
+                    if (dropdownId === 'gemstone') {
+                        updateTotalPrice();
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove('open');
+                    }
+                });
+            });
+        }
+
+        function loadLayoutPartials() {
+            fetch('./Header.html')
+                .then((response) => response.text())
+                .then((data) => {
+                    document.getElementById('header').innerHTML = data;
+                    setTimeout(() => {
+                        if (typeof initMobileNavigation === 'function') {
+                            initMobileNavigation();
+                        }
+                    }, 100);
+                });
+
+            fetch('./Footer.html')
+                .then((response) => response.text())
+                .then((data) => {
+                    document.getElementById('footer').innerHTML = data;
+                });
+        }
+
+        function renderSelectedDiamondData() {
+            const selected = JSON.parse(localStorage.getItem('selectedProduct') || 'null');
+            if (!selected) return;
+
+            const apiData = selected.fullData && typeof selected.fullData === 'object' ? selected.fullData : null;
+            const fallbackImage = '../assets/img/favicon.png';
+            const isApiDiamond = Boolean(apiData);
+
+            const title = isApiDiamond
+                ? `${apiData.carat || '-'} Carat ${String(apiData.shape || 'Diamond').toUpperCase()} Diamond`
+                : (selected.name || 'Diamond');
+
+            const detailName = document.getElementById('detail-name');
+            if (detailName) detailName.textContent = title;
+
+            globalBasePrice = isApiDiamond
+                ? parsePriceNumber(apiData.price ?? selected.price)
+                : parsePriceNumber(selected.price);
+
+            const images = isApiDiamond ? getDiamondImages(apiData) : [];
+            const primaryImage = images[0] || selected.image || fallbackImage;
+            const mainImg = document.getElementById('main-product-image');
+            if (mainImg) {
+                mainImg.src = primaryImage;
+                mainImg.setAttribute('data-zoom', primaryImage);
+            }
+
+            if (isApiDiamond) {
+                const card = document.getElementById('diamond_overview_card');
+                if (card) card.hidden = false;
+                const extraRow = document.getElementById('diamond_extra_sections_row');
+                if (extraRow) extraRow.hidden = false;
+
+                document.getElementById('diamond_overview_title').textContent = 'Info';
+                document.getElementById('ov_carat').textContent = `${apiData.carat || '-'} ct`;
+                document.getElementById('ov_color').textContent = apiData.color || '-';
+                document.getElementById('ov_clarity').textContent = apiData.clarity || '-';
+                document.getElementById('ov_cut').textContent = apiData.cut || '-';
+                document.getElementById('ov_origin').textContent = apiData.origin || 'Natural';
+                document.getElementById('ov_certificate').textContent = apiData?.certificate?.lab || '-';
+
+                const certCell = document.getElementById('ov_certificate_cell');
+                const certIcon = document.getElementById('ov_certificate_icon');
+                const certUrl = apiData?.certificate?.certificate;
+                if (certCell) {
+                    if (typeof certUrl === 'string' && certUrl.trim()) {
+                        certCell.classList.add('diamond-cell--clickable');
+                        certCell.setAttribute('role', 'button');
+                        certCell.setAttribute('tabindex', '0');
+                        certCell.onclick = () => window.open(certUrl, '_blank', 'noopener,noreferrer');
+                        certCell.onkeydown = (event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                                event.preventDefault();
+                                window.open(certUrl, '_blank', 'noopener,noreferrer');
+                            }
+                        };
+                        certIcon?.classList.remove('d-none');
+                    } else {
+                        certCell.classList.remove('diamond-cell--clickable');
+                        certCell.removeAttribute('role');
+                        certCell.removeAttribute('tabindex');
+                        certCell.onclick = null;
+                        certCell.onkeydown = null;
+                        certIcon?.classList.add('d-none');
+                    }
+                }
+
+                renderOtherInfoColumns(apiData);
+
+                const rawPre = document.getElementById('diamond_api_raw');
+                if (rawPre) {
+                    rawPre.textContent = JSON.stringify(apiData, null, 2);
+                }
+
+                localStorage.setItem('selectedDiamondApiData', JSON.stringify(apiData));
+            } else {
+                const extraRow = document.getElementById('diamond_extra_sections_row');
+                if (extraRow) extraRow.hidden = true;
+            }
+
+            updateTotalPrice();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLayoutPartials();
+            initCustomDropdowns();
+            renderSelectedDiamondData();
+
+            const nextButton = document.getElementById('nextButton');
+            if (nextButton) {
+                nextButton.addEventListener('click', () => {
+                    const selectedProduct = JSON.parse(localStorage.getItem('selectedProduct') || 'null');
+                    const apiData = selectedProduct?.fullData && typeof selectedProduct.fullData === 'object'
+                        ? selectedProduct.fullData
+                        : JSON.parse(localStorage.getItem('selectedDiamondApiData') || 'null');
+
+                    if (apiData) {
+                        localStorage.setItem('selectedDiamondApiData', JSON.stringify(apiData));
+                        localStorage.setItem('selectedDiamondApiDataForSettingSummary', JSON.stringify(apiData));
+                    }
+
+                    window.location.href = 'Summary.html';
+                });
+            }
+
+            document.querySelectorAll('.color-option').forEach((option) => {
+                option.addEventListener('click', function () {
+                    document.querySelectorAll('.color-option').forEach((opt) => opt.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const currentColor = this.dataset.color;
+                    const selectedColorText = document.querySelector('.product-colors .selected-option');
+                    if (selectedColorText) {
+                        selectedColorText.textContent = ` ${currentColor} Gold`;
+                    }
+
+                    const selectedRing = JSON.parse(localStorage.getItem('selectedRing') || '{}');
+                    selectedRing.color = currentColor;
+                    localStorage.setItem('selectedRing', JSON.stringify(selectedRing));
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -569,11 +569,13 @@
         const API_PAGE_SIZE = 50;
 
         function createProductItem(product) {
+             console.log("product", product);
             const diamondId = String(product.id || '').trim();
             //const productShape = String(product.shape || '').toLowerCase();
             const productName = product.carat + ' ct - ' + product.shape;
             const productPriceNumber = parsePriceNumber(product.price);
-            const primaryImage = product.media?.image || '../assets/img/favicon.png';
+            const primaryImage = product.media?.image;
+            console.log("primaryImage", primaryImage, product.media);
 
             const productItem = document.createElement('div');
             productItem.className = 'col-md-6 col-lg-3 product-item isotope-item';
@@ -603,10 +605,12 @@
                         name: selectedName,
                         id: selectedId,
                         price: productPriceNumber,
+                        image: primaryImage,
+                        source: 'engagement-diamond-api',
                         fullData: product
                     }));
 
-                    window.location.href = '../Setting_Custom.html';
+                    window.location.href = 'DiamondDetail.html';
                 });
             });
 
