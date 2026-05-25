@@ -1,7 +1,10 @@
+const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const YANIGA_API_BASE_URL = window.YANIGA_API_BASE_URL || (isLocalHost ? 'http://localhost:3000/api' : 'https://diamonds-dusky.vercel.app/api');
+
 // Guest Session Management
 class GuestSessionManager {
   constructor() {
-    this.apiBaseUrl = 'http://localhost:3000/api';
+    this.apiBaseUrl = YANIGA_API_BASE_URL;
     this.sessionId = null;
     this.init();
   }
@@ -92,7 +95,7 @@ class GuestSessionManager {
 class OrderManager {
   constructor(sessionManager) {
     this.sessionManager = sessionManager;
-    this.apiBaseUrl = 'http://localhost:3000/api';
+    this.apiBaseUrl = YANIGA_API_BASE_URL;
   }
 
   async createOrder(orderData) {
