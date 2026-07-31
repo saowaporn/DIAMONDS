@@ -1,0 +1,226 @@
+<main class="main">
+  <div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+      <h1 class="mb-2 mb-lg-0">Summary Your Setting</h1>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a routerLink="/">Home</a></li>
+          <li class="current">Setting Summary</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section class="step-navigation-section">
+    <div class="container">
+      <div class="step-navigation">
+        <div class="step completed clickable" (click)="goTo('/setting/custom')"><span>1. SELECT YOUR SETTING</span></div>
+        <div class="step completed clickable" (click)="goTo('/setting/custom')"><span>2. CUSTOMISE YOUR SETTING</span></div>
+        <div class="step completed clickable" (click)="goTo('/setting/bespoke')"><span>3. BESPOKE CUSTOMISATIONS</span></div>
+        <div class="step active"><span>4. SUMMARY YOUR SETTING</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="product-details" class="product-details section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row">
+        <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="200">
+          <div class="product-images">
+            <div class="main-image-container mb-3">
+              <div class="image-zoom-container">
+                <img #mainImage id="main-product-image" class="img-fluid main-image drift-zoom" src="" alt="Product Image">
+              </div>
+            </div>
+
+            <div class="product-thumbnails">
+              <div class="product-thumbnails-slider" #thumbSwiper>
+                <div class="swiper-wrapper">
+                  @for (thumb of thumbnails(); track thumb.image) {
+                    <div class="swiper-slide thumbnail-item" [class.active]="thumb.image === activeThumbImage()"
+                      (click)="onThumbnailClick(thumb)">
+                      <img [src]="thumb.image" [alt]="thumb.position + ' ' + thumb.color" class="img-fluid">
+                    </div>
+                  }
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+          <div class="product-info">
+            <div class="settings-summary mb-4">
+              <div class="option-title text-start mb-3"><h5 class="mb-0">Setting Summary</h5></div>
+              <div class="setting-item mb-3 d-flex align-items-center border-bottom pb-2">
+                <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Ring Setting</strong>
+                <span class="text-muted" style="width: 50%; text-align: left; padding-left: 40px;">{{ settingName() }}</span>
+              </div>
+              <div class="setting-item mb-3 d-flex align-items-center border-bottom pb-2">
+                <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Precious Metal Type</strong>
+                <span class="text-muted" style="width: 50%; text-align: left; padding-left: 40px;">{{ metalType() }}</span>
+              </div>
+              <div class="setting-item mb-3 d-flex align-items-center border-bottom pb-2">
+                <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Metal Karat</strong>
+                <span class="text-muted" style="width: 50%; text-align: left; padding-left: 40px;">{{ metalKarat() }}</span>
+              </div>
+              <div class="setting-item mb-3 d-flex align-items-center border-bottom pb-2">
+                <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Ring Size</strong>
+                <span class="text-muted" style="width: 50%; text-align: left; padding-left: 40px;">{{ ringSize() }}</span>
+              </div>
+              <div class="setting-item mb-3 d-flex align-items-center">
+                <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Bespoke Customisations</strong>
+                <span class="text-muted" style="width: 50%; text-align: left; padding-left: 40px;">{{ bespokeOptions() }}</span>
+              </div>
+            </div>
+
+            <div class="gemstone-summary mb-4">
+              <div class="option-title text-start mb-3"><h5 class="mb-0">Gemstone Summary</h5></div>
+              <div class="gemstone-item mb-3 d-flex align-items-center border-bottom pb-2">
+                <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Diamond</strong>
+                <span class="text-muted" style="width: 50%; text-align: left; padding-left: 40px;">{{ gemstoneName() }}</span>
+              </div>
+              <div class="gemstone-item mb-3 d-flex align-items-center border-bottom pb-2">
+                <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Shape</strong>
+                <span class="text-muted" style="width: 50%; text-align: left; padding-left: 40px;">{{ gemstoneShape() }}</span>
+              </div>
+              <div class="gemstone-item mb-3 d-flex align-items-center border-bottom pb-2">
+                <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Carat Weight</strong>
+                <span class="text-muted" style="width: 50%; text-align: left; padding-left: 40px;">{{ gemstoneCarat() }}</span>
+              </div>
+              <div class="gemstone-item mb-3 d-flex align-items-center border-bottom pb-2">
+                <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Type</strong>
+                <span class="text-muted" style="width: 50%; text-align: left; padding-left: 40px;">{{ gemstoneType() }}</span>
+              </div>
+              <div class="gemstone-item mb-3 d-flex align-items-center">
+                <strong class="text-start" style="width: 50%; flex-shrink: 0; font-weight: 400;">Clarity</strong>
+                <span class="text-muted" style="width: 50%; text-align: left; padding-left: 40px;">{{ gemstoneClarity() }}</span>
+              </div>
+            </div>
+
+            <div class="price-breakdown mb-4">
+              <div class="option-title"><h5>Price Breakdown:</h5><hr></div>
+              <div class="price-item d-flex justify-content-between mb-2">
+                <span>Base Setting Price:</span><span>฿{{ basePrice().toLocaleString('th-TH') }}</span>
+              </div>
+              <div class="price-item d-flex justify-content-between mb-2">
+                <span>Gemstone Price:</span><span>฿{{ gemstonePrice().toLocaleString('th-TH') }}</span>
+              </div>
+              <div class="price-item d-flex justify-content-between mb-2">
+                <span>Bespoke Options:</span><span>฿{{ bespokePrice().toLocaleString('th-TH') }}</span>
+              </div>
+              <hr>
+              <div class="price-total d-flex justify-content-between">
+                <strong>Total Price:</strong><strong>฿{{ totalPrice().toLocaleString('th-TH') }}</strong>
+              </div>
+            </div>
+
+            <div class="customer-notice mt-3 mb-4 w-100">
+              <p class="text-muted text-start small mb-0 d-flex align-items-start" style="width: 100%; padding-right: 0;">
+                <i class="bi bi-info-circle me-2 flex-shrink-0"></i>
+                <span>Please review the shipping, warranty, and refund details below before adding items to your cart.</span>
+              </p>
+            </div>
+
+            <div class="product-actions">
+              <a routerLink="/setting/bespoke" class="btn btn-outline-primary buy-now-btn">Back</a>
+              <a routerLink="/cart" class="btn btn-outline-primary buy-now-btn">Add to Cart</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="product-details-tabs">
+            <ul class="nav nav-tabs" id="productTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description"
+                  type="button" role="tab" aria-controls="description" aria-selected="true">Shipping & Delivery</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" data-bs-target="#specifications"
+                  type="button" role="tab" aria-controls="specifications" aria-selected="false">Warranty & After-Sales Care</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button"
+                  role="tab" aria-controls="reviews" aria-selected="false">Refund & Exchange Policy</button>
+              </li>
+            </ul>
+            <div class="tab-content" id="productTabsContent">
+              <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                <div class="product-description">
+                  <h4>Domestic Delivery (Thailand)</h4>
+                  <ul style="padding-left: 2.5rem;">
+                    <li>Free insured shipping nationwide for all orders</li>
+                    <li>Bangkok area: Premium messenger service (delivery within 2 hours available)</li>
+                    <li>Same-day or next-day delivery depending on order confirmation time</li>
+                    <li>Outside Bangkok: Estimated delivery 2-3 business days</li>
+                  </ul>
+                  <h4>International Delivery</h4>
+                  <ul style="padding-left: 2.5rem;">
+                    <li>We ship worldwide via DHL or FedEx</li>
+                    <li>Fully insured shipments</li>
+                    <li>Estimated delivery time: 3-7 business days depending on destination</li>
+                    <li>Customers are responsible for any import duties, taxes, or customs fee</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="specifications" role="tabpanel" aria-labelledby="specifications-tab">
+                <div class="product-specifications">
+                  <div class="product-description">
+                    <h4>Warranty Coverage</h4>
+                    <p class="mb-2"><span style="font-weight: 500; color: var(--heading-color);">Yaniga Diamond</span> offers a complimentary 3-year limited warranty on all fine jewelry purchases. This warranty covers quality issues resulting from manufacturing defects, including:</p>
+                    <ul style="padding-left: 2.5rem;">
+                      <li>Loose or misaligned stones caused by faulty settings</li>
+                      <li>Defective prongs or mountings</li>
+                      <li>Broken clasps, soldering issues, or structural flaws</li>
+                    </ul>
+                    <h4>What's Not Covered</h4>
+                    <ul style="padding-left: 2.5rem;">
+                      <li>Normal wear and tear (e.g., scratches, dents, fading, tarnishing)</li>
+                      <li>Damage caused by accidents, improper care, or unauthorized third-party repairs</li>
+                    </ul>
+                    <h4>After-Sales Service</h4>
+                    <p class="mb-2">To keep your jewelry looking as beautiful as the day you received it, <span style="font-weight: 500; color: var(--heading-color);">Yaniga Diamond</span> provides the following complimentary services:</p>
+                    <ul style="padding-left: 2.5rem;" class="mb-2">
+                      <li>Deep Cleaning (includes setting inspection)</li>
+                      <li>Free Prong Tightening (up to 2 times)</li>
+                      <li>Free Polishing (up to 2 times)</li>
+                      <li>Free Resizing (up to 2 times)</li>
+                      <li>Free Rhodium Plating for white gold (up to 2 times)</li>
+                    </ul>
+                    <p class="mb-2"><span style="font-weight: 500; color: var(--heading-color);">Note:</span> Customers are responsible for the shipping cost of sending items to <span style="font-weight: 500; color: var(--heading-color);">Yaniga Diamond</span>. Any applicable customs duties or taxes upon arrival in Thailand are also the customer's responsibility.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                <div class="product-reviews">
+                  <p>At <span style="font-weight: 500; color: var(--heading-color);">Yaniga Diamond</span>, we are committed to delivering high-quality diamond jewelry and a smooth shopping experience. While we do <span style="font-weight: 500; color: var(--heading-color);">not offer refunds</span>, we do provide an <span style="font-weight: 500; color: var(--heading-color);">exchange policy within 7 days</span> of purchase for eligible items.</p>
+                  <h4>Exchange Policy</h4>
+                  <ul>
+                    <li>Exchanges must be requested within 7 days of the original purchase date.</li>
+                    <li><span style="font-weight: 500; color: var(--heading-color);">Custom-made items are not eligible</span> for exchange</li>
+                  </ul>
+                  <h4>Conditions for Exchange</h4>
+                  <p class="mb-2">To be eligible for an exchange, the item must meet the following conditions:</p>
+                  <ul>
+                    <li>The <span style="font-weight: 500; color: var(--heading-color);">original packaging</span> must be included and in like-new condition.</li>
+                    <li><span style="font-weight: 500; color: var(--heading-color);">All tags, stickers, and identifying labels</span> must be intact and undamaged.</li>
+                    <li><span style="font-weight: 500; color: var(--heading-color);">All accompanying documentation</span> (certificates, invoices, etc.) must be included and in pristine condition.</li>
+                    <li>The product itself must be <span style="font-weight: 500; color: var(--heading-color);">undamaged and in like-new condition</span>.</li>
+                    <li>A <span style="font-weight: 500; color: var(--heading-color);">valid receipt</span> must be presented as proof of purchase.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

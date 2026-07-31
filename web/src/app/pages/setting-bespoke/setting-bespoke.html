@@ -1,0 +1,121 @@
+<main class="main">
+  <div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+      <h1 class="mb-2 mb-lg-0">Bespoke Customisations</h1>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a routerLink="/">Home</a></li>
+          <li class="current">Setting Bespoke</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section class="step-navigation-section">
+    <div class="container">
+      <div class="step-navigation">
+        <div class="step completed clickable" (click)="goTo('/setting/custom')"><span>1. SELECT YOUR SETTING</span></div>
+        <div class="step completed clickable" (click)="goTo('/setting/custom')"><span>2. CUSTOMISE YOUR SETTING</span></div>
+        <div class="step active"><span>3. BESPOKE CUSTOMISATIONS</span></div>
+        <div class="step"><span>4. SUMMARY YOUR SETTING</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="product-details" class="product-details section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row">
+        <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="200">
+          <div class="product-images">
+            <div class="main-image-container mb-3">
+              <div class="image-zoom-container">
+                <img #mainImage id="main-product-image" class="img-fluid main-image drift-zoom" src="" alt="Product Image">
+              </div>
+            </div>
+
+            <div class="product-thumbnails">
+              <div class="product-thumbnails-slider" #thumbSwiper>
+                <div class="swiper-wrapper">
+                  @for (thumb of thumbnails(); track thumb.image) {
+                    <div class="swiper-slide thumbnail-item" [class.active]="thumb.image === activeThumbImage()"
+                      (click)="onThumbnailClick(thumb)">
+                      <img [src]="thumb.image" [alt]="thumb.position + ' ' + thumb.color" class="img-fluid">
+                    </div>
+                  } @empty {
+                    <div class="swiper-slide thumbnail-item active" data-image="/assets/img/product/product-details-1.webp">
+                      <img src="/assets/img/product/product-details-1.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                  }
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+          <div class="product-info">
+            <h1 class="product-title" id="detail-name">{{ productName() }}</h1>
+
+            <div class="product-price-container mb-4">
+              <span class="current-price">{{ priceDisplay() }}</span>
+            </div>
+
+            <div class="option-title selector">
+              <h6>
+                <span>
+                  Bespoke Customisations
+                  <button type="button" class="bespoke-info-btn" (click)="showBespokeInfo()" title="View details about Bespoke options"></button>
+                </span>
+                <span class="right" (click)="removeSelection()">Remove Selection</span>
+              </h6>
+              <form class="ring-selection" id="bespoke">
+                @for (option of bespokeOptions; track option.value) {
+                  <label class="ring-option" [class.selected]="option.value === bespokeValue()">
+                    <input type="radio" name="ring" [value]="option.value" [checked]="option.value === bespokeValue()"
+                      (change)="selectBespoke(option.value)">
+                    <div class="ring-content">
+                      <img [src]="option.image" [alt]="option.name">
+                      <span>{{ option.label }}</span>
+                    </div>
+                  </label>
+                }
+              </form>
+            </div>
+
+            <div class="product-actions">
+              <a routerLink="/setting/custom" class="btn btn-outline-primary buy-now-btn">Back</a>
+              <button id="nextButton" class="btn btn-outline-primary buy-now-btn Next-Button" (click)="onNext()">Next</button>
+            </div>
+
+            <div class="additional-info mt-4">
+              <div class="info-item"><i class="bi bi-truck"></i><span>Free shipping on orders over $50</span></div>
+              <div class="info-item"><i class="bi bi-arrow-repeat"></i><span>30-day return policy</span></div>
+              <div class="info-item"><i class="bi bi-shield-check"></i><span>2-year warranty</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+@if (showModal()) {
+  <div class="bespoke-modal active">
+    <div class="bespoke-modal-content">
+      <div class="bespoke-modal-header">
+        <h3>Bespoke Customisation Options</h3>
+        <button class="bespoke-modal-close" (click)="closeBespokeInfo()"><i class="bi bi-x"></i></button>
+      </div>
+      <div class="bespoke-modal-body">
+        @for (detail of infoOptions; track detail.key) {
+          <div class="bespoke-option-detail" [class.selected]="detail.key === selectedInfoKey()">
+            <h4>{{ detail.title }}</h4>
+            <p>{{ detail.body }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

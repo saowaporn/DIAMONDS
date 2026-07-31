@@ -1,0 +1,141 @@
+<main class="main">
+  <div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+      <h1 class="mb-2 mb-lg-0">Diamond Details</h1>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a routerLink="/">Home</a></li>
+          <li><a routerLink="/jewelry/engagement-ring">Engagement Rings</a></li>
+          <li class="current">Diamond Detail</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section class="step-navigation-section">
+    <div class="container">
+      <div class="step-navigation">
+        <div class="step active"><span>1. FIND YOUR DIAMOND</span></div>
+        <div class="step"><span>2. CUSTOMISE YOUR SETTING</span></div>
+        <div class="step"><span>3. BESPOKE CUSTOMISATIONS</span></div>
+        <div class="step"><span>4. SUMMARY YOUR SETTING</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="product-details" class="product-details section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row">
+        <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="200">
+          <div class="product-images">
+            <div class="main-image-container mb-3">
+              <div class="image-zoom-container">
+                <img #mainImage id="main-product-image" class="img-fluid main-image drift-zoom"
+                  src="/assets/img/favicon.png" alt="Diamond Image">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+          <div class="product-info">
+            <h1 class="product-title">{{ title() }}</h1>
+
+            <div class="product-price-container mb-4">
+              <span class="current-price">{{ priceDisplay() }}</span>
+            </div>
+
+            @if (apiData(); as data) {
+              <div class="diamond-overview-card mb-4">
+                <div class="diamond-overview-grid">
+                  <div class="diamond-cell">
+                    <div class="diamond-label">Carat</div>
+                    <div class="diamond-value">{{ data['carat'] || '-' }} ct</div>
+                  </div>
+                  <div class="diamond-cell">
+                    <div class="diamond-label">Color</div>
+                    <div class="diamond-value">{{ data['color'] || '-' }}</div>
+                  </div>
+                  <div class="diamond-cell">
+                    <div class="diamond-label">Clarity</div>
+                    <div class="diamond-value">{{ data['clarity'] || '-' }}</div>
+                  </div>
+                  <div class="diamond-cell">
+                    <div class="diamond-label">Cut</div>
+                    <div class="diamond-value">{{ data['cut'] || '-' }}</div>
+                  </div>
+                  <div class="diamond-cell">
+                    <div class="diamond-label">Origin</div>
+                    <div class="diamond-value">{{ data['origin'] || 'Natural' }}</div>
+                  </div>
+                  <div class="diamond-cell">
+                    <div class="diamond-label">Certificate</div>
+                    <div class="diamond-value">{{ certificateLab() || '-' }}</div>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <div class="product-actions">
+              <a routerLink="/jewelry/engagement-ring" class="btn btn-outline-primary buy-now-btn">Back</a>
+              <button id="nextButton" class="btn btn-outline-primary buy-now-btn Next-Button"
+                (click)="selectThisDiamond()">Select this diamond</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      @if (apiData(); as data) {
+        <div class="row mt-3 g-3">
+          <div class="col-lg-12 col-12">
+            <div class="other-info-wrap">
+              <div class="other-info-title">Other Info</div>
+              <div class="other-info-grid">
+                <div>
+                  <div class="other-info-row">
+                    <div class="other-info-key">Stock number</div>
+                    <div class="other-info-value">{{ formatOther(data['id']) }}</div>
+                  </div>
+                  <div class="other-info-row">
+                    <div class="other-info-key">Polish</div>
+                    <div class="other-info-value">{{ formatOther(quality()?.['polish']) }}</div>
+                  </div>
+                  <div class="other-info-row">
+                    <div class="other-info-key">Symmetry</div>
+                    <div class="other-info-value">{{ formatOther(quality()?.['symmetry']) }}</div>
+                  </div>
+                  <div class="other-info-row">
+                    <div class="other-info-key">Fluorescence</div>
+                    <div class="other-info-value">{{ formatOther(quality()?.['fluorescence']) }}</div>
+                  </div>
+                  <div class="other-info-row">
+                    <div class="other-info-key">Comment</div>
+                    <div class="other-info-value">{{ formatOther(notes()?.['comment']) }}</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="other-info-row">
+                    <div class="other-info-key">Measurements</div>
+                    <div class="other-info-value">{{ formatOther(details()?.['measurement']) }}</div>
+                  </div>
+                  <div class="other-info-row">
+                    <div class="other-info-key">L / W Ratio</div>
+                    <div class="other-info-value">{{ formatOther(quality()?.['l/w ratio']) }}</div>
+                  </div>
+                  <div class="other-info-row">
+                    <div class="other-info-key">Table</div>
+                    <div class="other-info-value">{{ formatOther(quality()?.['table']) }}</div>
+                  </div>
+                  <div class="other-info-row">
+                    <div class="other-info-key">Depth</div>
+                    <div class="other-info-value">{{ formatOther(quality()?.['td']) }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+</main>

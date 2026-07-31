@@ -1,0 +1,356 @@
+<main class="main">
+  <!-- Page Title -->
+  <div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+      <h1 class="mb-2 mb-lg-0">Engagement Rings</h1>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a routerLink="/">Home</a></li>
+          <li class="current">Engagement Rings</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section class="step-navigation-section">
+    <div class="container">
+      <div class="step-navigation">
+        <div class="step active"><span>1. FIND YOUR DIAMOND</span></div>
+        <div class="step"><span>2. CUSTOMISE YOUR SETTING</span></div>
+        <div class="step"><span>3. BESPOKE CUSTOMISATIONS</span></div>
+        <div class="step"><span>4. SUMMARY YOUR SETTING</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="product-list" class="product-list section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row my-4 g-4">
+        <div class="col-12">
+          <div class="filter-card">
+            <div class="filter-card__header">
+              <span>Shape</span>
+              <i class="bi bi-question-circle"></i>
+            </div>
+            <div class="shape-selector" id="shape_filter">
+              <button id="shape_all" type="button" class="shape-option active" data-shape="*">
+                <img src="/assets/img/product/jewelry_icon/Round.avif" alt="All Shape">
+                <span>Any</span>
+              </button>
+              <button type="button" class="shape-option" data-shape="Round">
+                <img src="/assets/img/product/jewelry_icon/Round.avif" alt="Round Shape Button">
+                <span>Round</span>
+              </button>
+              <button type="button" class="shape-option" data-shape="Oval">
+                <img src="/assets/img/product/jewelry_icon/Oval.avif" alt="Oval Shape Button">
+                <span>Oval</span>
+              </button>
+              <button type="button" class="shape-option" data-shape="Pear">
+                <img src="/assets/img/product/jewelry_icon/Pear.avif" alt="Pear Shape Button">
+                <span>Pear</span>
+              </button>
+              <button type="button" class="shape-option" data-shape="Emerald">
+                <img src="/assets/img/product/jewelry_icon/Emerald.webp" alt="Emerald Shape Button">
+                <span>Emerald</span>
+              </button>
+              <button type="button" class="shape-option" data-shape="Marquise">
+                <img src="/assets/img/product/jewelry_icon/Marquise.avif" alt="Marquise Shape Button">
+                <span>Marquise</span>
+              </button>
+              <button type="button" class="shape-option" data-shape="Radiant">
+                <img src="/assets/img/product/jewelry_icon/Radiant.avif" alt="Radiant Shape Button">
+                <span>Radiant</span>
+              </button>
+              <button type="button" class="shape-option" data-shape="Cushion">
+                <img src="/assets/img/product/jewelry_icon/Cushion.avif" alt="Cushion Shape Button">
+                <span>Cushion</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="filter-card">
+            <div class="filter-card__header"><span>Carat</span><i class="bi bi-question-circle"></i></div>
+            <div class="range-slider">
+              <div class="range-slider__track">
+                <div id="carat_slider_fill" class="range-slider__fill"></div>
+              </div>
+              <div class="range-slider__inputs">
+                <input id="carat_min_range" type="range">
+                <input id="carat_max_range" type="range">
+              </div>
+            </div>
+            <div class="minmax-row">
+              <div class="minmax-field"><label for="carat_min">Min</label><input id="carat_min" type="number"></div>
+              <div class="minmax-separator">&#8212;</div>
+              <div class="minmax-field"><label for="carat_max">Max</label><input id="carat_max" type="number"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="filter-card">
+            <div class="filter-card__header"><span>Price</span><i class="bi bi-question-circle"></i></div>
+            <div class="range-slider">
+              <div class="range-slider__track">
+                <div id="price_slider_fill" class="range-slider__fill"></div>
+              </div>
+              <div class="range-slider__inputs">
+                <input id="price_min_range" type="range">
+                <input id="price_max_range" type="range">
+              </div>
+            </div>
+            <div class="minmax-row mb-0">
+              <div class="minmax-field">
+                <label for="price_min">From</label>
+                <div class="input-currency-wrapper">
+                  <span class="input-currency-prefix">THB</span>
+                  <input id="price_min" type="number" placeholder="0">
+                </div>
+              </div>
+              <div class="minmax-separator">&#8212;</div>
+              <div class="minmax-field">
+                <label for="price_max">To</label>
+                <div class="input-currency-wrapper">
+                  <span class="input-currency-prefix">THB</span>
+                  <input id="price_max" type="number">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-12 col-12">
+          <div class="filter-card">
+            <div class="filter-card__header"><span>Certificate</span><i class="bi bi-question-circle"></i></div>
+            <div class="cert-grid">
+              <button class="cert-btn active" data-value="ANY">ANY</button>
+              <button class="cert-btn" data-value="GIA">GIA</button>
+              <button class="cert-btn" data-value="IGI">IGI</button>
+              <button class="cert-btn" data-value="HRD">HRD</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-12 filter-col--auto">
+          <div class="filter-card">
+            <div class="filter-card__header"><span>Clarity</span><i class="bi bi-question-circle"></i></div>
+            <div class="range-slider">
+              <div class="range-slider__track">
+                <div id="clarity_slider_fill" class="range-slider__fill"></div>
+              </div>
+              <div class="range-slider__inputs">
+                <input id="clarity_min_range" type="range" min="0" max="8" step="1" value="0">
+                <input id="clarity_max_range" type="range" min="0" max="8" step="1" value="8">
+              </div>
+            </div>
+            <div id="clarity_scale_labels" class="slider-labels"></div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="filter-card">
+            <div class="filter-card__header"><span>Cut</span><i class="bi bi-question-circle"></i></div>
+            <div class="range-slider">
+              <div class="range-slider__track">
+                <div id="cut_slider_fill" class="range-slider__fill"></div>
+              </div>
+              <div class="range-slider__inputs">
+                <input id="cut_min_range" type="range" min="0" max="4" step="1" value="0">
+                <input id="cut_max_range" type="range" min="0" max="4" step="1" value="4">
+              </div>
+            </div>
+            <div id="cut_scale_labels" class="slider-labels"></div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-12 col-12 filter-col--auto">
+          <div class="filter-card">
+            <div class="filter-card__header"><span>Color</span><i class="bi bi-question-circle"></i></div>
+            <div class="range-slider">
+              <div class="range-slider__track">
+                <div id="color_slider_fill" class="range-slider__fill"></div>
+              </div>
+              <div class="range-slider__inputs">
+                <input id="color_min_range" type="range" min="0" max="7" step="1" value="0">
+                <input id="color_max_range" type="range" min="0" max="7" step="1" value="7">
+              </div>
+            </div>
+            <div id="color_scale_labels" class="slider-labels"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 more-detail-toggle">
+          <button id="more_detail_btn" class="more-detail-btn" type="button" aria-expanded="false"
+            aria-controls="advanced_filters">
+            <span id="more_detail_text">More Detail</span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="advanced_filters" class="advanced-filters">
+        <div class="row mt-2 g-4">
+          <div class="col-lg-3 col-md-6 col-12">
+            <div class="filter-card">
+              <div class="filter-card__header"><span>Polish</span><i class="bi bi-question-circle"></i></div>
+              <div class="range-slider">
+                <div class="range-slider__track">
+                  <div id="polish_slider_fill" class="range-slider__fill"></div>
+                </div>
+                <div class="range-slider__inputs">
+                  <input id="polish_min_range" type="range" min="0" max="2" step="1" value="0">
+                  <input id="polish_max_range" type="range" min="0" max="2" step="1" value="2">
+                </div>
+              </div>
+              <div id="polish_scale_labels" class="slider-labels"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-12">
+            <div class="filter-card">
+              <div class="filter-card__header"><span>Symmetry</span><i class="bi bi-question-circle"></i></div>
+              <div class="range-slider">
+                <div class="range-slider__track">
+                  <div id="symmetry_slider_fill" class="range-slider__fill"></div>
+                </div>
+                <div class="range-slider__inputs">
+                  <input id="symmetry_min_range" type="range" min="0" max="2" step="1" value="0">
+                  <input id="symmetry_max_range" type="range" min="0" max="2" step="1" value="2">
+                </div>
+              </div>
+              <div id="symmetry_scale_labels" class="slider-labels"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-md-12 col-12">
+            <div class="filter-card">
+              <div class="filter-card__header"><span>Fluorescence</span><i class="bi bi-question-circle"></i></div>
+              <div class="range-slider">
+                <div class="range-slider__track">
+                  <div id="fluorescence_slider_fill" class="range-slider__fill"></div>
+                </div>
+                <div class="range-slider__inputs">
+                  <input id="fluorescence_min_range" type="range" min="0" max="4" step="1" value="0">
+                  <input id="fluorescence_max_range" type="range" min="0" max="4" step="1" value="4">
+                </div>
+              </div>
+              <div id="fluorescence_scale_labels" class="slider-labels"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-2 g-4">
+          <div class="col-lg-3 col-md-6 col-12">
+            <div class="filter-card">
+              <div class="filter-card__header"><span>Table %</span><i class="bi bi-question-circle"></i></div>
+              <div class="range-slider range-slider--with-bubbles">
+                <div class="range-slider__track">
+                  <div id="table_slider_fill" class="range-slider__fill"></div>
+                </div>
+                <div class="range-slider__inputs">
+                  <input id="table_min_range" type="range">
+                  <input id="table_max_range" type="range">
+                </div>
+                <span id="table_min_bubble" class="range-slider__bubble">50%</span>
+                <span id="table_max_bubble" class="range-slider__bubble">90%</span>
+              </div>
+              <div class="numeric-scale">
+                <span class="start">50%</span>
+                <span class="dot" style="left:25%"></span>
+                <span style="left:50%">70%</span>
+                <span class="dot" style="left:75%"></span>
+                <span class="end">90%</span>
+              </div>
+              <div class="minmax-row">
+                <div class="minmax-field"><label for="table_min">Min %</label><input id="table_min" type="number"></div>
+                <div class="minmax-separator">&#8212;</div>
+                <div class="minmax-field"><label for="table_max">Max %</label><input id="table_max" type="number"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-12">
+            <div class="filter-card">
+              <div class="filter-card__header"><span>Depth %</span><i class="bi bi-question-circle"></i></div>
+              <div class="range-slider range-slider--with-bubbles">
+                <div class="range-slider__track">
+                  <div id="depth_slider_fill" class="range-slider__fill"></div>
+                </div>
+                <div class="range-slider__inputs">
+                  <input id="depth_min_range" type="range">
+                  <input id="depth_max_range" type="range">
+                </div>
+                <span id="depth_min_bubble" class="range-slider__bubble">40%</span>
+                <span id="depth_max_bubble" class="range-slider__bubble">90%</span>
+              </div>
+              <div class="numeric-scale">
+                <span class="start">40%</span>
+                <span class="dot" style="left:25%"></span>
+                <span style="left:50%">65%</span>
+                <span class="dot" style="left:75%"></span>
+                <span class="end">90%</span>
+              </div>
+              <div class="minmax-row">
+                <div class="minmax-field"><label for="depth_min">Min %</label><input id="depth_min" type="number"></div>
+                <div class="minmax-separator">&#8212;</div>
+                <div class="minmax-field"><label for="depth_max">Max %</label><input id="depth_max" type="number"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-md-12 col-12">
+            <div class="filter-card">
+              <div class="filter-card__header"><span>Length / Width Ratio</span><i class="bi bi-question-circle"></i></div>
+              <div class="range-slider range-slider--with-bubbles">
+                <div class="range-slider__track">
+                  <div id="lw_ratio_slider_fill" class="range-slider__fill"></div>
+                </div>
+                <div class="range-slider__inputs">
+                  <input id="lw_ratio_min_range" type="range">
+                  <input id="lw_ratio_max_range" type="range">
+                </div>
+                <span id="lw_ratio_min_bubble" class="range-slider__bubble">0.80</span>
+                <span id="lw_ratio_max_bubble" class="range-slider__bubble">2.20</span>
+              </div>
+              <div class="numeric-scale">
+                <span class="start">0.80</span>
+                <span class="dot" style="left:12.5%"></span>
+                <span style="left:25%">1.15</span>
+                <span class="dot" style="left:37.5%"></span>
+                <span style="left:50%">1.50</span>
+                <span class="dot" style="left:62.5%"></span>
+                <span style="left:75%">1.85</span>
+                <span class="dot" style="left:87.5%"></span>
+                <span class="end">2.20</span>
+              </div>
+              <div class="minmax-row">
+                <div class="minmax-field"><label for="lw_ratio_min">Min</label><input id="lw_ratio_min" type="number"></div>
+                <div class="minmax-separator">&#8212;</div>
+                <div class="minmax-field"><label for="lw_ratio_max">Max</label><input id="lw_ratio_max" type="number"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-5 mb-3">
+        <div class="col-12">
+          <div id="result_count_text" class="small text-muted">found 0 diamonds</div>
+        </div>
+      </div>
+
+      <div class="row product-container isotope-container" data-aos="fade-up" data-aos-delay="200"></div>
+
+      <div class="row mt-4">
+        <div class="col-12 text-center">
+          <button id="load_more_btn" type="button" class="btn btn-dark px-4 py-2" hidden>Load More</button>
+          <div id="load_more_meta" class="small text-muted mt-2"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

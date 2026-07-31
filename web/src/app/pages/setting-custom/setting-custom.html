@@ -1,0 +1,169 @@
+<main class="main">
+  <div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+      <h1 class="mb-2 mb-lg-0">Customise Your Setting</h1>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a routerLink="/">Home</a></li>
+          <li class="current">Setting Custom</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section class="step-navigation-section">
+    <div class="container">
+      <div class="step-navigation">
+        <div class="step completed"><span>1. SELECT YOUR SETTING</span></div>
+        <div class="step active"><span>2. CUSTOMISE YOUR SETTING</span></div>
+        <div class="step"><span>3. BESPOKE CUSTOMISATIONS</span></div>
+        <div class="step"><span>4. SUMMARY YOUR SETTING</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="product-details" class="product-details section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row">
+        <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="200">
+          <div class="product-images">
+            <div class="main-image-container mb-3">
+              <div class="image-zoom-container">
+                <img #mainImage id="main-product-image" class="img-fluid main-image drift-zoom" src="" alt="Product Image">
+              </div>
+            </div>
+
+            <div class="product-thumbnails">
+              <div class="product-thumbnails-slider" #thumbSwiper>
+                <div class="swiper-wrapper">
+                  @for (thumb of thumbnails(); track thumb.image) {
+                    <div class="swiper-slide thumbnail-item" [class.active]="thumb.image === activeThumbImage()"
+                      (click)="onThumbnailClick(thumb)">
+                      <img [src]="thumb.image" [alt]="thumb.position + ' ' + thumb.color" class="img-fluid">
+                    </div>
+                  } @empty {
+                    <div class="swiper-slide thumbnail-item active" data-image="/assets/img/product/product-details-1.webp">
+                      <img src="/assets/img/product/product-details-1.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide thumbnail-item" data-image="/assets/img/product/product-details-2.webp">
+                      <img src="/assets/img/product/product-details-2.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide thumbnail-item" data-image="/assets/img/product/product-details-3.webp">
+                      <img src="/assets/img/product/product-details-3.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide thumbnail-item" data-image="/assets/img/product/product-details-4.webp">
+                      <img src="/assets/img/product/product-details-4.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide thumbnail-item" data-image="/assets/img/product/product-details-5.webp">
+                      <img src="/assets/img/product/product-details-5.webp" alt="Product Thumbnail" class="img-fluid">
+                    </div>
+                  }
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+          <div class="product-info">
+            <h1 class="product-title" id="detail-name">{{ productName() }}</h1>
+
+            <div class="product-price-container mb-4">
+              <span class="current-price">{{ priceDisplay() }}</span>
+            </div>
+
+            <div class="product-colors mb-4">
+              <h6 class="option-title">Precious Metal Type :<span class="selected-option"> {{ currentColor() }} Gold</span></h6>
+              <div class="color-options">
+                <div class="color-option" [class.active]="currentColor() === 'Yellow'" data-color="Yellow"
+                  style="background-color:#D5C19A;" (click)="selectColor('Yellow')">
+                  <i class="bi bi-check"></i>
+                </div>
+                <div class="color-option" [class.active]="currentColor() === 'White'" data-color="White"
+                  style="background-color:#e5e4e2; border: 1px solid #ddd;" (click)="selectColor('White')">
+                  <i class="bi bi-check"></i>
+                </div>
+                <div class="color-option" [class.active]="currentColor() === 'Rose'" data-color="Rose"
+                  style="background-color:#E7C7AF;" (click)="selectColor('Rose')">
+                  <i class="bi bi-check"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="option-title selector">
+              <h6><span>Metal Karat</span><span class="info-btn" (click)="showInfo('metal')"></span></h6>
+              <div class="custom-dropdown" [class.open]="openDropdown() === 'metal'" id="metal">
+                <h6 class="dropdown-selected" [class.has-selection]="karat()" (click)="toggleDropdown('metal')">
+                  {{ karat() || 'Select Your Metal Type' }}
+                </h6>
+                <div class="dropdown-options" id="karat-selector">
+                  @for (opt of karatOptions; track opt) {
+                    <div class="dropdown-option" [class.selected]="opt === karat()" (click)="selectKarat(opt)">{{ opt }}</div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div class="option-title selector">
+              <h6><span>Ring Size</span><span class="info-btn" (click)="showInfo('ringsize')"></span></h6>
+              <div class="custom-dropdown" [class.open]="openDropdown() === 'ringsize'" id="ringsize">
+                <h6 class="dropdown-selected" [class.has-selection]="ringSize()" (click)="toggleDropdown('ringsize')">
+                  {{ ringSize() || 'Select Your Ring Size' }}
+                </h6>
+                <div class="dropdown-options" id="size-selector">
+                  @for (opt of ringSizeOptions; track opt) {
+                    <div class="dropdown-option" [class.selected]="opt === ringSize()" (click)="selectRingSize(opt)">{{ opt }}</div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div class="option-title selector">
+              <h6>
+                <span>Gemstone</span>
+                <span class="info-btn" (click)="showInfo('gemstone')"></span>
+                <span class="price-note">* price varies</span>
+              </h6>
+              <div class="custom-dropdown" [class.open]="openDropdown() === 'gemstone'" id="gemstone">
+                <h6 class="dropdown-selected" [class.has-selection]="gemstoneLabel()" (click)="toggleDropdown('gemstone')">
+                  {{ gemstoneLabel() || 'Select Your Gemstone' }}
+                </h6>
+                <div class="dropdown-options" id="gemstone-selector">
+                  @for (opt of gemstoneOptions; track opt.value) {
+                    <div class="dropdown-option" [class.selected]="opt.value === gemstoneValue()"
+                      (click)="selectGemstone(opt)">{{ opt.label }}</div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div class="product-actions">
+              <a routerLink="/" class="btn btn-outline-primary buy-now-btn">Back</a>
+              <button id="nextButton" class="btn btn-outline-primary buy-now-btn Next-Button" (click)="onNext()">Next</button>
+            </div>
+
+            <div class="additional-info mt-4">
+              <div class="info-item"><i class="bi bi-truck"></i><span>Free shipping on orders over $50</span></div>
+              <div class="info-item"><i class="bi bi-arrow-repeat"></i><span>30-day return policy</span></div>
+              <div class="info-item"><i class="bi bi-shield-check"></i><span>2-year warranty</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+@if (infoModal(); as modal) {
+  <div class="info-modal active">
+    <div class="info-modal-content">
+      <div class="info-modal-header">
+        <h3>{{ modal.title }}</h3>
+        <button class="info-modal-close" (click)="closeInfo()"><i class="bi bi-x"></i></button>
+      </div>
+      <div class="info-modal-body" [innerHTML]="modal.body"></div>
+    </div>
+  </div>
+}

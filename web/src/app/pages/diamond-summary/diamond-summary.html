@@ -1,0 +1,97 @@
+<main class="main">
+  <div class="summary-wrap">
+    <div class="summary-hero">
+      <h1 class="summary-title">{{ title() }}</h1>
+      <div class="summary-sub">{{ subtitle() }}</div>
+    </div>
+
+    @if (apiData) {
+      <div class="row g-3">
+        <div class="col-lg-5">
+          <img class="summary-image" [src]="image()" alt="Diamond image">
+          <div class="d-grid mt-3">
+            <a routerLink="/jewelry/engagement-ring" class="btn btn-outline-dark">Back to Diamond List</a>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="summary-card">
+            <h3>General</h3>
+            <table class="summary-table">
+              <tbody>
+                @for (row of generalRows(); track row.key) {
+                  <tr>
+                    <td class="summary-key">{{ row.key }}</td>
+                    <td class="summary-value">{{ row.value }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          @if (qualityRows().length) {
+            <div class="summary-card">
+              <h3>Quality</h3>
+              <table class="summary-table">
+                <tbody>
+                  @for (row of qualityRows(); track row.key) {
+                    <tr><td class="summary-key">{{ row.key }}</td><td class="summary-value">{{ row.value }}</td></tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+
+          @if (detailsRows().length) {
+            <div class="summary-card">
+              <h3>Details</h3>
+              <table class="summary-table">
+                <tbody>
+                  @for (row of detailsRows(); track row.key) {
+                    <tr><td class="summary-key">{{ row.key }}</td><td class="summary-value">{{ row.value }}</td></tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+
+          @if (notesRows().length) {
+            <div class="summary-card">
+              <h3>Notes</h3>
+              <table class="summary-table">
+                <tbody>
+                  @for (row of notesRows(); track row.key) {
+                    <tr><td class="summary-key">{{ row.key }}</td><td class="summary-value">{{ row.value }}</td></tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+
+          @if (certificateRows().length) {
+            <div class="summary-card">
+              <h3>Certificate</h3>
+              <table class="summary-table">
+                <tbody>
+                  @for (row of certificateRows(); track row.key) {
+                    <tr><td class="summary-key">{{ row.key }}</td><td class="summary-value">{{ row.value }}</td></tr>
+                  }
+                </tbody>
+              </table>
+              @if (certificateUrl(); as certUrl) {
+                <a class="btn btn-sm btn-outline-dark mt-2" [href]="certUrl" target="_blank" rel="noopener noreferrer">
+                  Open Certificate Link
+                </a>
+              }
+            </div>
+          }
+
+          <details class="summary-card mb-0">
+            <summary>Full API Payload</summary>
+            <pre class="summary-raw">{{ rawPayload() }}</pre>
+          </details>
+        </div>
+      </div>
+    }
+  </div>
+</main>
