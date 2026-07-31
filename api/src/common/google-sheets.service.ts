@@ -3,6 +3,23 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { google, sheets_v4 } from 'googleapis';
 
+function normalizePrivateKey(rawKey: string): string {
+  let key = rawKey.trim();
+
+  // Some env var UIs (including Vercel's) preserve literal wrapping quotes
+  // if they were included when the value was pasted in.
+  if ((key.startsWith('"') && key.endsWith('"')) || (key.startsWith("'") && key.endsWith("'"))) {
+    key = key.slice(1, -1).trim();
+  }
+
+  // .env files with dotenv already unescape \n inside double-quoted values,
+  // but plain env var stores (Vercel dashboard, shell exports) do not — so
+  // the key can arrive as either literal "\n" sequences or real newlines.
+  key = key.replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n').replace(/\r\n/g, '\n');
+
+  return key;
+}
+
 @Injectable()
 export class GoogleSheetsService {
   private async getGoogleAuthClient() {
@@ -14,8 +31,8 @@ export class GoogleSheetsService {
     if (clientEmail && privateKey) {
       const auth = new google.auth.GoogleAuth({
         credentials: {
-          client_email: clientEmail,
-          private_key: privateKey.replace(/\\n/g, '\n'),
+          client_email: clientEmail.trim(),
+          private_key: normalizePrivateKey(privateKey),
         },
         scopes,
       });
