@@ -10,7 +10,8 @@
     "start:prod": "node dist/main.js",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix",
     "test": "jest",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "vercel-build": "npm run build"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.6",
