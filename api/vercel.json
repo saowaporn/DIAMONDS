@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "functions": {
-    "dist/src/vercel-entry.js": {
-      "runtime": "@vercel/node"
+  "builds": [
+    {
+      "src": "dist/src/vercel-entry.js",
+      "use": "@vercel/node"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/(.*)",
