@@ -32,12 +32,12 @@ export class DiamondApiService {
 
   private resolveApiBaseUrl(): string {
     if (!isPlatformBrowser(this.platformId)) {
-      return 'https://diamonds-dusky.vercel.app/api';
+      return 'https://diamonds-api.vercel.app/api';
     }
 
     const win = window as typeof window & { YANIGA_API_BASE_URL?: string };
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    return win.YANIGA_API_BASE_URL || (isLocal ? 'http://localhost:3001/api' : 'https://diamonds-dusky.vercel.app/api');
+    return win.YANIGA_API_BASE_URL || (isLocal ? 'http://localhost:3001/api' : 'https://diamonds-api.vercel.app/api');
   }
 
   getCacheVersion(): string {
