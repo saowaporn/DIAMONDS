@@ -102,7 +102,7 @@ export class DiamondDetail implements AfterViewInit {
   }
 
   continueButtonLabel(): string {
-    return this.inEngagementFlow && this.settingSelection.getSelectedSetting() ? 'Continue' : 'Select this diamond';
+    return this.inEngagementFlow && this.settingSelection.getSelectedSetting() ? 'Select this diamond' : 'Continue' ;
   }
 
   selectThisDiamond(): void {

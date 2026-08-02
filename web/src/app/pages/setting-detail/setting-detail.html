@@ -23,10 +23,10 @@
           </div>
           <div style="display: flex; gap: 10px; justify-content: center;">
             @for (angle of angles; track angle.key) {
-              @if (angleImage(angle.key)) {
-                <button type="button" class="tr-chip" [class.active]="activeAngle() === angle.key"
-                  (click)="activeAngle.set(angle.key)">
-                  {{ angle.label }}
+              @if (angleImage(angle.key); as thumbSrc) {
+                <button type="button" class="tr-thumb" [class.active]="activeAngle() === angle.key"
+                  [attr.aria-label]="angle.label" (click)="activeAngle.set(angle.key)">
+                  <img [src]="thumbSrc" [alt]="angle.label">
                 </button>
               }
             }
@@ -36,31 +36,139 @@
         <div class="col-lg-6">
           <div class="tr-eyebrow">{{ setting.settingType }}</div>
           <h1>{{ setting.name }}</h1>
+          <div class="tr-card-price" style="font-size: 22px; margin-bottom: 24px;">THB {{ formattedPrice() }}</div>
 
           <div class="tr-card" style="padding: 20px; margin: 24px 0;">
-            <div class="row gy-3">
-              <div class="col-6">
-                <div class="tr-eyebrow">Shape</div>
-                <div>{{ setting.shape }}</div>
+            <div style="margin-bottom: 16px;">
+              <div class="tr-eyebrow" style="margin-bottom: 10px;">Shape</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                @for (shape of availableShapes(); track shape) {
+                  <button type="button" class="tr-chip"
+                    [class.active]="setting.shape.toLowerCase() === shape.toLowerCase()"
+                    (click)="setShape(shape)">
+                    {{ shape }}
+                  </button>
+                }
               </div>
-              <div class="col-6">
-                <div class="tr-eyebrow">Material</div>
-                <div>{{ materialLabelText() }}</div>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+              <div class="tr-eyebrow" style="margin-bottom: 10px; display: flex; align-items: center;">
+                Material
+                <app-hint-button label="Material guide">
+                  <dl>
+                    @for (m of materialGuide; track m.key) {
+                      <dt>{{ m.label }}</dt>
+                      <dd>{{ m.description }}</dd>
+                    }
+                  </dl>
+                </app-hint-button>
               </div>
-              <div class="col-6">
-                <div class="tr-eyebrow">Color</div>
-                <div>{{ colorLabelText() }}</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                @for (material of materials; track material.value) {
+                  <button type="button" class="tr-chip" [class.active]="setting.material === material.value"
+                    (click)="setMaterial(material.value)">
+                    {{ material.label }}
+                  </button>
+                }
               </div>
-              <div class="col-6">
-                <div class="tr-eyebrow">Price</div>
-                <div>THB {{ formattedPrice() }}</div>
+            </div>
+
+            @if (setting.material !== 'platinum') {
+              <div>
+                <div class="tr-eyebrow" style="margin-bottom: 10px; display: flex; align-items: center;">
+                  Color
+                  <app-hint-button label="Color guide">
+                    <dl>
+                      @for (c of colorGuide; track c.key) {
+                        <dt>{{ c.label }}</dt>
+                        <dd>{{ c.description }}</dd>
+                      }
+                    </dl>
+                  </app-hint-button>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                  @for (color of colorOptions(); track color.key) {
+                    <button type="button" class="tr-chip" [class.active]="setting.color === color.key"
+                      (click)="setColor(color.key)">
+                      <span class="tr-swatch" [class]="'tr-swatch-' + color.key" style="width:18px;height:18px;"></span>
+                      {{ color.label }}
+                    </button>
+                  }
+                </div>
               </div>
+            }
+          </div>
+
+          <div class="tr-card" style="padding: 20px; margin: 24px 0;">
+            <div class="tr-eyebrow" style="margin-bottom: 10px; display: flex; align-items: center;">
+              Ring Size
+              <app-hint-button label="How to find your ring size">
+                <p><strong>How to find your ring size</strong></p>
+                <p>Wrap a strip of paper or a piece of string snugly around the base of the finger you'll wear the ring on.</p>
+                <p>Mark where it overlaps, then measure that length with an inch tape or a cm ruler &mdash; either works.</p>
+                <p>Compare your measurement (in cm) to the size chart below and pick the matching number.</p>
+
+                <div class="tr-hint-diagram">
+                  <svg viewBox="0 0 320 110" role="img" aria-label="Steps to measure your ring size: wrap, mark, then measure">
+                    <g>
+                      <circle cx="50" cy="55" r="22" fill="none" style="stroke: var(--tr-outline); stroke-width: 2;"></circle>
+                      <circle cx="50" cy="55" r="30" fill="none" style="stroke: var(--tr-primary); stroke-width: 2; stroke-dasharray: 4 3;"></circle>
+                      <text x="50" y="102" text-anchor="middle" style="font-size: 11px; fill: var(--tr-on-surface-variant);">1. Wrap</text>
+                    </g>
+                    <g>
+                      <line x1="130" y1="55" x2="200" y2="55" style="stroke: var(--tr-outline); stroke-width: 2;"></line>
+                      <circle cx="200" cy="55" r="3.5" style="fill: var(--tr-primary);"></circle>
+                      <text x="165" y="102" text-anchor="middle" style="font-size: 11px; fill: var(--tr-on-surface-variant);">2. Mark</text>
+                    </g>
+                    <g>
+                      <rect x="240" y="45" width="60" height="18" fill="none" style="stroke: var(--tr-outline); stroke-width: 2;"></rect>
+                      <line x1="250" y1="45" x2="250" y2="63" style="stroke: var(--tr-outline); stroke-width: 1;"></line>
+                      <line x1="260" y1="45" x2="260" y2="57" style="stroke: var(--tr-outline); stroke-width: 1;"></line>
+                      <line x1="270" y1="45" x2="270" y2="63" style="stroke: var(--tr-outline); stroke-width: 1;"></line>
+                      <line x1="280" y1="45" x2="280" y2="57" style="stroke: var(--tr-outline); stroke-width: 1;"></line>
+                      <line x1="290" y1="45" x2="290" y2="63" style="stroke: var(--tr-outline); stroke-width: 1;"></line>
+                      <text x="270" y="102" text-anchor="middle" style="font-size: 11px; fill: var(--tr-on-surface-variant);">3. Measure</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <table class="tr-size-table">
+                  <thead>
+                    <tr><th>Size</th><th>Circumference</th></tr>
+                  </thead>
+                  <tbody>
+                    @for (size of ringSizes; track size) {
+                      <tr [class.active]="ringSize() === size">
+                        <td>{{ size }}</td>
+                        <td>{{ circumferenceCm(size) }} cm</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+
+                <p style="margin-top: 12px;">For the most accurate fit &mdash; especially for wider bands &mdash; we recommend having your finger measured in person at a jewelry store.</p>
+              </app-hint-button>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              @for (size of ringSizes; track size) {
+                <button type="button" class="tr-chip" [class.active]="ringSize() === size"
+                  (click)="selectRingSize(size)">
+                  {{ size }}
+                </button>
+              }
             </div>
           </div>
 
-          <button type="button" class="tr-btn tr-btn-primary" style="width: 100%;" (click)="selectDiamond()">
-            Select Diamond &rarr;
+          <button type="button" class="tr-btn tr-btn-primary" style="width: 100%;" [disabled]="!ringSize()"
+            (click)="selectDiamond()">
+            Select This Setting &rarr;
           </button>
+          @if (!ringSize()) {
+            <p class="tr-lede" style="text-align: center; margin-top: 12px; font-size: 13px;">
+              Please select a ring size to continue.
+            </p>
+          }
           <div style="text-align: center; margin-top: 16px;">
             <a routerLink="/jewelry/engagement-ring" class="tr-lede" style="text-decoration: underline; cursor: pointer;">
               &larr; See All Settings

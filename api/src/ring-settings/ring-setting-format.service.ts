@@ -22,7 +22,7 @@ export class RingSettingFormatService {
   formatRow(row: RingSettingRow): FormattedRingSetting {
     return {
       id: row['settingId'],
-      settingType: row['settingType'],
+      settingType: (row['settingType'] || '').trim(),
       shape: row['shape'],
       name: row['name'],
       material: row['material'],

@@ -25,9 +25,6 @@
       <div style="margin-bottom: 20px;">
         <div class="tr-eyebrow" style="margin-bottom: 10px;">Shape</div>
         <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-          <button type="button" class="tr-chip" [class.active]="shapeFilter() === null" (click)="setShape(null)">
-            Any Shape
-          </button>
           @for (shape of shapes; track shape) {
             <button type="button" class="tr-chip" [class.active]="shapeFilter() === shape" (click)="setShape(shape)">
               {{ shape }}
@@ -37,11 +34,18 @@
       </div>
 
       <div style="margin-bottom: 20px;">
-        <div class="tr-eyebrow" style="margin-bottom: 10px;">Material</div>
+        <div class="tr-eyebrow" style="margin-bottom: 10px; display: flex; align-items: center;">
+          Material
+          <app-hint-button label="Material guide">
+            <dl>
+              @for (m of materialGuide; track m.key) {
+                <dt>{{ m.label }}</dt>
+                <dd>{{ m.description }}</dd>
+              }
+            </dl>
+          </app-hint-button>
+        </div>
         <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-          <button type="button" class="tr-chip" [class.active]="materialFilter() === null" (click)="setMaterial(null)">
-            Any Material
-          </button>
           @for (material of materials; track material.value) {
             <button type="button" class="tr-chip" [class.active]="materialFilter() === material.value"
               (click)="setMaterial(material.value)">
@@ -53,11 +57,18 @@
 
       @if (materialFilter() !== 'platinum') {
         <div>
-          <div class="tr-eyebrow" style="margin-bottom: 10px;">Color</div>
+          <div class="tr-eyebrow" style="margin-bottom: 10px; display: flex; align-items: center;">
+            Color
+            <app-hint-button label="Color guide">
+              <dl>
+                @for (c of colorGuide; track c.key) {
+                  <dt>{{ c.label }}</dt>
+                  <dd>{{ c.description }}</dd>
+                }
+              </dl>
+            </app-hint-button>
+          </div>
           <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-            <button type="button" class="tr-chip" [class.active]="colorFilter() === null" (click)="setColor(null)">
-              Any Color
-            </button>
             @for (color of colorOptions; track color.key) {
               <button type="button" class="tr-chip" [class.active]="colorFilter() === color.key"
                 (click)="setColor(color.key)">
@@ -72,21 +83,21 @@
 
     @if (loading()) {
       <p class="tr-lede">Loading settings...</p>
-    } @else if (filteredSettings().length === 0) {
+    } @else if (cards().length === 0) {
       <p class="tr-lede">No settings found for the current filters.</p>
     } @else {
       <div class="row g-4">
-        @for (setting of filteredSettings(); track setting.id) {
+        @for (card of cards(); track card.row.id) {
           <div class="col-6 col-lg-3">
             <a class="tr-card" style="display: block; text-decoration: none; color: inherit; cursor: pointer;"
-              (click)="selectSetting(setting)">
+              (click)="selectSetting(card.row, card.colorKey)">
               <div class="tr-card-image">
-                <img [src]="previewImage(setting)" [alt]="setting.name" loading="lazy">
+                <img [src]="previewImage(card.row, card.colorKey)" [alt]="card.row.name" loading="lazy">
               </div>
               <div class="tr-card-body">
-                <div class="tr-card-title">{{ setting.name }}</div>
-                <div class="tr-card-meta">{{ materialLabelFor(setting.material) }} &middot; {{ setting.shape }}</div>
-                <div class="tr-card-price">THB {{ formatPrice(setting.price) }}</div>
+                <div class="tr-card-title">{{ card.row.name }}</div>
+                <div class="tr-card-meta">{{ materialLabelFor(card.row.material) }} &middot; {{ card.row.shape }}</div>
+                <div class="tr-card-price">THB {{ formatPrice(card.row.price) }}</div>
               </div>
             </a>
           </div>

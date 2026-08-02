@@ -11,6 +11,7 @@ export interface SelectedSetting {
   color: string;
   price: string;
   images: RingSetting['images'];
+  ringSize?: string;
 }
 
 const SELECTED_SETTING_KEY = 'selectedSetting';
@@ -43,6 +44,12 @@ export class SettingSelectionService {
     const current = this.getSelectedSetting();
     if (!current) return;
     this.setSelectedSetting({ ...current, color });
+  }
+
+  updateRingSize(ringSize: string): void {
+    const current = this.getSelectedSetting();
+    if (!current) return;
+    this.setSelectedSetting({ ...current, ringSize });
   }
 
   clear(): void {

@@ -1,0 +1,9 @@
+<span class="tr-hint">
+  <button type="button" class="tr-hint-btn" [attr.aria-label]="label()" (click)="openDialog()">?</button>
+  <dialog #dialogRef class="tr-hint-dialog" (click)="onBackdropClick($event)">
+    <button type="button" class="tr-hint-close" aria-label="Close" (click)="close()">&times;</button>
+    <div class="tr-hint-body">
+      <ng-content></ng-content>
+    </div>
+  </dialog>
+</span>

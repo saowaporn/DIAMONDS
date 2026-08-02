@@ -2,12 +2,16 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { RingSetting, RingSettingsApiService } from '../../shared/ring-settings-api.service';
 import { SettingSelectionService } from '../../shared/setting-selection.service';
+import { HintButton } from '../../shared/hint-button/hint-button';
 import {
+  COLOR_GUIDE,
+  MATERIAL_GUIDE,
   RING_SETTING_MATERIALS,
   RING_SETTING_SHAPES,
-  filterRingSettings,
   getDefaultColorKey,
+  groupBySettingType,
   materialLabel,
+  resolveGroupRow,
 } from '../../shared/ring-setting-filters';
 
 const COLOR_FILTER_OPTIONS = [
@@ -25,6 +29,7 @@ function parsePrice(price: string): number {
 @Component({
   selector: 'app-setting-selection',
   standalone: true,
+  imports: [HintButton],
   templateUrl: './setting-selection.html',
 })
 export class SettingSelection {
@@ -35,21 +40,32 @@ export class SettingSelection {
   readonly shapes = RING_SETTING_SHAPES;
   readonly materials = RING_SETTING_MATERIALS;
   readonly colorOptions = COLOR_FILTER_OPTIONS;
+  readonly materialGuide = MATERIAL_GUIDE;
+  readonly colorGuide = COLOR_GUIDE;
 
   readonly loading = signal(true);
   readonly allSettings = signal<RingSetting[]>([]);
 
-  readonly shapeFilter = signal<string | null>(null);
-  readonly materialFilter = signal<string | null>(null);
-  readonly colorFilter = signal<string | null>(null);
+  readonly shapeFilter = signal<string>('Asscher');
+  readonly materialFilter = signal<string | null>('silver');
+  readonly colorFilter = signal<string | null>('gold');
 
-  readonly filteredSettings = computed(() =>
-    filterRingSettings(this.allSettings(), {
-      shape: this.shapeFilter(),
-      material: this.materialFilter(),
-      color: this.materialFilter() === 'platinum' ? null : this.colorFilter(),
-    }),
-  );
+  readonly settingGroups = computed(() => groupBySettingType(this.allSettings()));
+
+  readonly cards = computed(() => {
+    const shape = this.shapeFilter();
+    const material = this.materialFilter();
+    const color = this.colorFilter();
+
+    return this.settingGroups()
+      .map((group) => {
+        const row = resolveGroupRow(group, { shape, material });
+        if (!row) return null;
+        const colorKey = material === 'platinum' ? 'platinum' : color || getDefaultColorKey(row);
+        return { row, colorKey };
+      })
+      .filter((card): card is { row: RingSetting; colorKey: string } => card !== null);
+  });
 
   readonly selectedSettingLabel = computed(() => {
     const selected = this.settingSelection.getSelectedSetting();
@@ -64,7 +80,7 @@ export class SettingSelection {
       .finally(() => this.loading.set(false));
   }
 
-  setShape(shape: string | null): void {
+  setShape(shape: string): void {
     this.shapeFilter.set(shape);
   }
 
@@ -87,23 +103,20 @@ export class SettingSelection {
     return parsePrice(price).toLocaleString('th-TH');
   }
 
-  previewImage(setting: RingSetting): string {
-    const colorKey = this.colorFilter() || getDefaultColorKey(setting);
-    return setting.images?.[colorKey]?.front || setting.images?.[getDefaultColorKey(setting)]?.front || '';
+  previewImage(row: RingSetting, colorKey: string): string {
+    return row.images?.[colorKey]?.front || row.images?.[getDefaultColorKey(row)]?.front || '';
   }
 
-  selectSetting(setting: RingSetting): void {
-    const colorKey = this.colorFilter() || getDefaultColorKey(setting);
-
+  selectSetting(row: RingSetting, colorKey: string): void {
     this.settingSelection.setSelectedSetting({
-      settingId: setting.id,
-      settingType: setting.settingType,
-      name: setting.name,
-      shape: setting.shape,
-      material: setting.material,
+      settingId: row.id,
+      settingType: row.settingType,
+      name: row.name,
+      shape: row.shape,
+      material: row.material,
       color: colorKey,
-      price: setting.price,
-      images: setting.images,
+      price: row.price,
+      images: row.images,
     });
 
     this.router.navigateByUrl('/jewelry/setting-detail');
