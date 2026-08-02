@@ -1,0 +1,353 @@
+/*
+  "Timeless Radiance" design system (doc/DESIGN.md), scoped to the setting-first
+  engagement-ring configurator funnel via the .tr-theme wrapper class. Does not
+  affect Home, Knowledge, or the older Setting_* wizard.
+*/
+
+.tr-theme {
+  --tr-surface: #fcf9f8;
+  --tr-surface-dim: #dcd9d9;
+  --tr-surface-bright: #fcf9f8;
+  --tr-surface-container-lowest: #ffffff;
+  --tr-surface-container-low: #f6f3f2;
+  --tr-surface-container: #f0eded;
+  --tr-surface-container-high: #eae7e7;
+  --tr-surface-container-highest: #e5e2e1;
+  --tr-on-surface: #1c1b1b;
+  --tr-on-surface-variant: #524345;
+  --tr-inverse-surface: #313030;
+  --tr-inverse-on-surface: #f3f0ef;
+  --tr-outline: #857374;
+  --tr-outline-variant: #d7c1c3;
+
+  --tr-primary: #340411;
+  --tr-on-primary: #ffffff;
+  --tr-primary-container: #f6e9ea;
+  --tr-secondary: #c8a278;
+  --tr-on-secondary: #1a1a1a;
+  --tr-charcoal: #1a1a1a;
+  --tr-pearl-white: #ffffff;
+
+  --tr-error: #ba1a1a;
+  --tr-on-error: #ffffff;
+
+  --tr-font-display: 'Playfair Display', serif;
+  --tr-font-body: 'Inter', sans-serif;
+
+  --tr-radius-sm: 0.125rem;
+  --tr-radius: 0.25rem;
+  --tr-radius-md: 0.375rem;
+  --tr-radius-lg: 0.5rem;
+  --tr-radius-xl: 0.75rem;
+  --tr-radius-full: 9999px;
+
+  --tr-unit: 8px;
+  --tr-container-max: 1280px;
+  --tr-gutter: 24px;
+  --tr-margin-mobile: 16px;
+  --tr-section-gap: 80px;
+
+  --tr-shadow-card: 0 12px 32px rgba(28, 27, 27, 0.06);
+  --tr-shadow-card-hover: 0 16px 40px rgba(28, 27, 27, 0.1);
+
+  background: var(--tr-surface);
+  color: var(--tr-on-surface);
+  font-family: var(--tr-font-body);
+}
+
+.tr-theme h1,
+.tr-theme h2,
+.tr-theme h3,
+.tr-theme .tr-heading {
+  font-family: var(--tr-font-display);
+  font-weight: 400;
+  color: var(--tr-on-surface);
+  letter-spacing: -0.01em;
+}
+
+.tr-theme h1 {
+  font-size: 40px;
+  line-height: 1.15;
+}
+
+.tr-theme h2 {
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.tr-theme h3 {
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+.tr-theme .tr-eyebrow {
+  font-family: var(--tr-font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tr-on-surface-variant);
+}
+
+.tr-theme .tr-lede {
+  font-family: var(--tr-font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--tr-on-surface-variant);
+}
+
+/* Container */
+.tr-theme .tr-container {
+  max-width: var(--tr-container-max);
+  margin: 0 auto;
+  padding: 0 var(--tr-margin-mobile);
+}
+
+@media (min-width: 992px) {
+  .tr-theme .tr-container {
+    padding: 0 var(--tr-gutter);
+  }
+}
+
+/* Buttons */
+.tr-theme .tr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: var(--tr-radius);
+  font-family: var(--tr-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.tr-theme .tr-btn-primary {
+  background: var(--tr-primary);
+  color: var(--tr-on-primary);
+}
+
+.tr-theme .tr-btn-primary:hover {
+  background: #4a0a1c;
+  color: var(--tr-on-primary);
+}
+
+.tr-theme .tr-btn-primary:disabled {
+  background: var(--tr-outline-variant);
+  color: var(--tr-on-surface-variant);
+  cursor: not-allowed;
+}
+
+.tr-theme .tr-btn-outline {
+  background: transparent;
+  color: var(--tr-charcoal);
+  border-color: var(--tr-secondary);
+}
+
+.tr-theme .tr-btn-outline:hover {
+  background: var(--tr-surface-container-low);
+  color: var(--tr-charcoal);
+}
+
+/* Step progress bar */
+.tr-theme .tr-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  background: var(--tr-surface-container-lowest);
+  border: 1px solid var(--tr-surface-container-high);
+  border-radius: var(--tr-radius-lg);
+  overflow: hidden;
+}
+
+.tr-theme .tr-step {
+  flex: 1 1 0;
+  min-width: 140px;
+  padding: 14px 18px;
+  border-right: 1px solid var(--tr-surface-container-high);
+  font-family: var(--tr-font-body);
+}
+
+.tr-theme .tr-step:last-child {
+  border-right: none;
+}
+
+.tr-theme .tr-step-index {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tr-outline);
+}
+
+.tr-theme .tr-step.active .tr-step-index {
+  color: var(--tr-primary);
+}
+
+.tr-theme .tr-step-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tr-on-surface);
+  margin-top: 2px;
+}
+
+.tr-theme .tr-step-meta {
+  font-size: 12px;
+  color: var(--tr-on-surface-variant);
+  margin-top: 2px;
+}
+
+/* Cards */
+.tr-theme .tr-card {
+  background: var(--tr-surface-container-lowest);
+  border-radius: var(--tr-radius-lg);
+  box-shadow: var(--tr-shadow-card);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.tr-theme .tr-card:hover {
+  box-shadow: var(--tr-shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+.tr-theme .tr-card-image {
+  aspect-ratio: 1 / 1;
+  background: var(--tr-surface-container-low);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.tr-theme .tr-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.tr-theme .tr-card-body {
+  padding: 16px 18px 20px;
+}
+
+.tr-theme .tr-card-title {
+  font-family: var(--tr-font-display);
+  font-size: 18px;
+  color: var(--tr-on-surface);
+  margin-bottom: 4px;
+}
+
+.tr-theme .tr-card-meta {
+  font-size: 13px;
+  color: var(--tr-on-surface-variant);
+}
+
+.tr-theme .tr-card-price {
+  font-family: var(--tr-font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--tr-primary);
+  margin-top: 8px;
+}
+
+/* Chips / filter pills */
+.tr-theme .tr-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: var(--tr-radius-full);
+  border: 1px solid var(--tr-outline-variant);
+  background: var(--tr-surface-container-lowest);
+  color: var(--tr-on-surface);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.tr-theme .tr-chip.active {
+  border-color: var(--tr-primary);
+  background: var(--tr-primary-container);
+  color: var(--tr-primary);
+}
+
+.tr-theme .tr-chip img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/* Swatches for metal color options */
+.tr-theme .tr-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--tr-radius-full);
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease;
+}
+
+.tr-theme .tr-swatch.active {
+  border-color: var(--tr-primary);
+}
+
+.tr-theme .tr-swatch-gold {
+  background: #d5c19a;
+}
+
+.tr-theme .tr-swatch-pink_gold {
+  background: #e7c7af;
+}
+
+.tr-theme .tr-swatch-white_gold {
+  background: #e5e4e2;
+  border-color: #ddd;
+}
+
+.tr-theme .tr-swatch.active.tr-swatch-white_gold {
+  border-color: var(--tr-primary);
+}
+
+.tr-theme .tr-swatch-platinum {
+  background: #cfd2d6;
+}
+
+/* Section title */
+.tr-theme .tr-section-title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.tr-theme .tr-price-breakdown {
+  background: var(--tr-surface-container-low);
+  border-radius: var(--tr-radius-lg);
+  padding: 24px;
+}
+
+.tr-theme .tr-price-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--tr-surface-container-high);
+  font-size: 14px;
+  color: var(--tr-on-surface-variant);
+}
+
+.tr-theme .tr-price-row.tr-total {
+  border-bottom: none;
+  padding-top: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--tr-on-surface);
+}

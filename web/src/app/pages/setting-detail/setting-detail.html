@@ -1,0 +1,77 @@
+<main class="tr-theme">
+  <div class="tr-container" style="padding-top: 32px; padding-bottom: 80px;">
+    <div class="tr-steps" style="margin-bottom: 40px;">
+      <div class="tr-step">
+        <div class="tr-step-index">1 · Choose Setting</div>
+        <div class="tr-step-label">{{ setting()?.name }}</div>
+      </div>
+      <div class="tr-step active">
+        <div class="tr-step-index">2 · Setting Detail</div>
+        <div class="tr-step-meta">&mdash;</div>
+      </div>
+      <div class="tr-step">
+        <div class="tr-step-index">3 · Choose Stone</div>
+        <div class="tr-step-meta">&mdash;</div>
+      </div>
+    </div>
+
+    @if (setting(); as setting) {
+      <div class="row g-5">
+        <div class="col-lg-6">
+          <div class="tr-card tr-card-image" style="aspect-ratio: 1 / 1; margin-bottom: 16px;">
+            <img [src]="activeImage()" [alt]="setting.name">
+          </div>
+          <div style="display: flex; gap: 10px; justify-content: center;">
+            @for (angle of angles; track angle.key) {
+              @if (angleImage(angle.key)) {
+                <button type="button" class="tr-chip" [class.active]="activeAngle() === angle.key"
+                  (click)="activeAngle.set(angle.key)">
+                  {{ angle.label }}
+                </button>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="tr-eyebrow">{{ setting.settingType }}</div>
+          <h1>{{ setting.name }}</h1>
+
+          <div class="tr-card" style="padding: 20px; margin: 24px 0;">
+            <div class="row gy-3">
+              <div class="col-6">
+                <div class="tr-eyebrow">Shape</div>
+                <div>{{ setting.shape }}</div>
+              </div>
+              <div class="col-6">
+                <div class="tr-eyebrow">Material</div>
+                <div>{{ materialLabelText() }}</div>
+              </div>
+              <div class="col-6">
+                <div class="tr-eyebrow">Color</div>
+                <div>{{ colorLabelText() }}</div>
+              </div>
+              <div class="col-6">
+                <div class="tr-eyebrow">Price</div>
+                <div>THB {{ formattedPrice() }}</div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="tr-btn tr-btn-primary" style="width: 100%;" (click)="selectDiamond()">
+            Select Diamond &rarr;
+          </button>
+          <div style="text-align: center; margin-top: 16px;">
+            <a routerLink="/jewelry/engagement-ring" class="tr-lede" style="text-decoration: underline; cursor: pointer;">
+              &larr; See All Settings
+            </a>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <p class="tr-lede">
+        No setting selected yet. <a routerLink="/jewelry/engagement-ring">Choose a setting</a> to continue.
+      </p>
+    }
+  </div>
+</main>

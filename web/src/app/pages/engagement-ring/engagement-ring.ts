@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { AfterViewInit, Component, ElementRef, OnDestroy, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { DiamondApiService, DiamondApiResponse } from '../../shared/diamond-api.service';
 import { ProductSelectionService } from '../../shared/product-selection.service';
+import { SettingSelectionService } from '../../shared/setting-selection.service';
 import { VendorLibsService } from '../../shared/vendor-libs.service';
 import { DiamondFilters, NumberRange } from '../../shared/diamond-filters.model';
 import {
@@ -81,16 +82,33 @@ export class EngagementRing implements AfterViewInit, OnDestroy {
   private loadingNextServerPage = false;
   private activeRequestToken = 0;
 
+  readonly shapeLocked = signal(false);
+
+  lockedShapeLabel(): string {
+    const shape = this.selectedShape;
+    return shape && shape !== '*' ? shape.charAt(0).toUpperCase() + shape.slice(1).toLowerCase() : '';
+  }
+
   constructor(
     private readonly host: ElementRef<HTMLElement>,
     private readonly diamondApi: DiamondApiService,
     private readonly productSelection: ProductSelectionService,
+    private readonly settingSelection: SettingSelectionService,
     private readonly vendorLibs: VendorLibsService,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
   ) {}
 
   async ngAfterViewInit(): Promise<void> {
     if (!this.vendorLibs.isBrowser) return;
+
+    const routeWantsLock = Boolean(this.route.snapshot.data['shapeLocked']);
+    const selectedSetting = this.settingSelection.getSelectedSetting();
+
+    if (routeWantsLock && selectedSetting?.shape) {
+      this.shapeLocked.set(true);
+      this.selectedShape = selectedSetting.shape;
+    }
 
     await this.loadProductData(this.buildFilterRequestBody());
 
@@ -163,7 +181,9 @@ export class EngagementRing implements AfterViewInit, OnDestroy {
           fullData: product,
         });
 
-        this.router.navigateByUrl('/jewelry/diamond-detail');
+        this.router.navigate(['/jewelry/diamond-detail'], {
+          queryParams: this.shapeLocked() ? { flow: 'engagement' } : {},
+        });
       });
     });
 

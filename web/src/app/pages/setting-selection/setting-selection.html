@@ -1,0 +1,97 @@
+<main class="tr-theme">
+  <div class="tr-container" style="padding-top: 32px; padding-bottom: 80px;">
+    <div class="tr-steps" style="margin-bottom: 40px;">
+      <div class="tr-step active">
+        <div class="tr-step-index">1 · Choose Setting</div>
+        <div class="tr-step-label">{{ selectedSettingLabel() }}</div>
+      </div>
+      <div class="tr-step">
+        <div class="tr-step-index">2 · Choose Stone</div>
+        <div class="tr-step-meta">&mdash;</div>
+      </div>
+      <div class="tr-step">
+        <div class="tr-step-index">3 · Complete Ring</div>
+        <div class="tr-step-meta">Size, personalize, payment</div>
+      </div>
+    </div>
+
+    <div class="tr-section-title">
+      <div class="tr-eyebrow">Design Your Ring</div>
+      <h1>Choose Your Setting</h1>
+      <p class="tr-lede">Each setting is a testament to your love story, designed to shine for generations.</p>
+    </div>
+
+    <div class="tr-card" style="padding: 24px; margin-bottom: 32px;">
+      <div style="margin-bottom: 20px;">
+        <div class="tr-eyebrow" style="margin-bottom: 10px;">Shape</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <button type="button" class="tr-chip" [class.active]="shapeFilter() === null" (click)="setShape(null)">
+            Any Shape
+          </button>
+          @for (shape of shapes; track shape) {
+            <button type="button" class="tr-chip" [class.active]="shapeFilter() === shape" (click)="setShape(shape)">
+              {{ shape }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <div class="tr-eyebrow" style="margin-bottom: 10px;">Material</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <button type="button" class="tr-chip" [class.active]="materialFilter() === null" (click)="setMaterial(null)">
+            Any Material
+          </button>
+          @for (material of materials; track material.value) {
+            <button type="button" class="tr-chip" [class.active]="materialFilter() === material.value"
+              (click)="setMaterial(material.value)">
+              {{ material.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      @if (materialFilter() !== 'platinum') {
+        <div>
+          <div class="tr-eyebrow" style="margin-bottom: 10px;">Color</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+            <button type="button" class="tr-chip" [class.active]="colorFilter() === null" (click)="setColor(null)">
+              Any Color
+            </button>
+            @for (color of colorOptions; track color.key) {
+              <button type="button" class="tr-chip" [class.active]="colorFilter() === color.key"
+                (click)="setColor(color.key)">
+                <span class="tr-swatch" [class]="'tr-swatch-' + color.key" style="width:18px;height:18px;"></span>
+                {{ color.label }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (loading()) {
+      <p class="tr-lede">Loading settings...</p>
+    } @else if (filteredSettings().length === 0) {
+      <p class="tr-lede">No settings found for the current filters.</p>
+    } @else {
+      <div class="row g-4">
+        @for (setting of filteredSettings(); track setting.id) {
+          <div class="col-6 col-lg-3">
+            <a class="tr-card" style="display: block; text-decoration: none; color: inherit; cursor: pointer;"
+              (click)="selectSetting(setting)">
+              <div class="tr-card-image">
+                <img [src]="previewImage(setting)" [alt]="setting.name" loading="lazy">
+              </div>
+              <div class="tr-card-body">
+                <div class="tr-card-title">{{ setting.name }}</div>
+                <div class="tr-card-meta">{{ materialLabelFor(setting.material) }} &middot; {{ setting.shape }}</div>
+                <div class="tr-card-price">THB {{ formatPrice(setting.price) }}</div>
+              </div>
+            </a>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</main>

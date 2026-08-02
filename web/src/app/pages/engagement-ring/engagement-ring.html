@@ -26,48 +26,70 @@
   <section id="product-list" class="product-list section">
     <div class="container" data-aos="fade-up" data-aos-delay="100">
       <div class="row my-4 g-4">
-        <div class="col-12">
-          <div class="filter-card">
-            <div class="filter-card__header">
-              <span>Shape</span>
-              <i class="bi bi-question-circle"></i>
-            </div>
-            <div class="shape-selector" id="shape_filter">
-              <button id="shape_all" type="button" class="shape-option active" data-shape="*">
-                <img src="/assets/img/product/jewelry_icon/Round.avif" alt="All Shape">
-                <span>Any</span>
-              </button>
-              <button type="button" class="shape-option" data-shape="Round">
-                <img src="/assets/img/product/jewelry_icon/Round.avif" alt="Round Shape Button">
-                <span>Round</span>
-              </button>
-              <button type="button" class="shape-option" data-shape="Oval">
-                <img src="/assets/img/product/jewelry_icon/Oval.avif" alt="Oval Shape Button">
-                <span>Oval</span>
-              </button>
-              <button type="button" class="shape-option" data-shape="Pear">
-                <img src="/assets/img/product/jewelry_icon/Pear.avif" alt="Pear Shape Button">
-                <span>Pear</span>
-              </button>
-              <button type="button" class="shape-option" data-shape="Emerald">
-                <img src="/assets/img/product/jewelry_icon/Emerald.webp" alt="Emerald Shape Button">
-                <span>Emerald</span>
-              </button>
-              <button type="button" class="shape-option" data-shape="Marquise">
-                <img src="/assets/img/product/jewelry_icon/Marquise.avif" alt="Marquise Shape Button">
-                <span>Marquise</span>
-              </button>
-              <button type="button" class="shape-option" data-shape="Radiant">
-                <img src="/assets/img/product/jewelry_icon/Radiant.avif" alt="Radiant Shape Button">
-                <span>Radiant</span>
-              </button>
-              <button type="button" class="shape-option" data-shape="Cushion">
-                <img src="/assets/img/product/jewelry_icon/Cushion.avif" alt="Cushion Shape Button">
-                <span>Cushion</span>
-              </button>
+        @if (shapeLocked()) {
+          <div class="col-12">
+            <div class="filter-card">
+              <div class="filter-card__header"><span>Diamond Shape</span></div>
+              <p class="small text-muted mb-0">
+                Matched to your setting: <strong>{{ lockedShapeLabel() }}</strong>
+              </p>
             </div>
           </div>
-        </div>
+        } @else {
+          <div class="col-12">
+            <div class="filter-card">
+              <div class="filter-card__header">
+                <span>Shape</span>
+                <i class="bi bi-question-circle"></i>
+              </div>
+              <div class="shape-selector" id="shape_filter">
+                <button id="shape_all" type="button" class="shape-option active" data-shape="*">
+                  <span>All Shape</span>
+                </button>
+                <button type="button" class="shape-option" data-shape="Round">
+                  <img src="/assets/img/product/jewelry_icon/Round.avif" alt="Round Shape Button">
+                  <span>Round</span>
+                </button>
+                <button type="button" class="shape-option" data-shape="Oval">
+                  <img src="/assets/img/product/jewelry_icon/Oval.avif" alt="Oval Shape Button">
+                  <span>Oval</span>
+                </button>
+                <button type="button" class="shape-option" data-shape="Pear">
+                  <img src="/assets/img/product/jewelry_icon/Pear.avif" alt="Pear Shape Button">
+                  <span>Pear</span>
+                </button>
+                <button type="button" class="shape-option" data-shape="Emerald">
+                  <img src="/assets/img/product/jewelry_icon/Emerald.webp" alt="Emerald Shape Button">
+                  <span>Emerald</span>
+                </button>
+                <button type="button" class="shape-option" data-shape="Marquise">
+                  <img src="/assets/img/product/jewelry_icon/Marquise.avif" alt="Marquise Shape Button">
+                  <span>Marquise</span>
+                </button>
+                <button type="button" class="shape-option" data-shape="Radiant">
+                  <img src="/assets/img/product/jewelry_icon/Radiant.avif" alt="Radiant Shape Button">
+                  <span>Radiant</span>
+                </button>
+                <button type="button" class="shape-option" data-shape="Cushion">
+                  <img src="/assets/img/product/jewelry_icon/Cushion.avif" alt="Cushion Shape Button">
+                  <span>Cushion</span>
+                </button>
+                <button type="button" class="shape-option" data-shape="Asscher">
+                  <img src="/assets/img/product/jewelry_icon/Cushion.avif" alt="Asscher Shape Button">
+                  <span>Asscher</span>
+                </button>
+                <button type="button" class="shape-option" data-shape="Heart">
+                  <img src="/assets/img/product/jewelry_icon/Cushion.avif" alt="Heart Shape Button">
+                  <span>Heart</span>
+                </button>
+                <button type="button" class="shape-option" data-shape="Princess">
+                  <img src="/assets/img/product/jewelry_icon/Cushion.avif" alt="Princess Shape Button">
+                  <span>Princess</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
 
         <div class="col-lg-4 col-md-6 col-12">
           <div class="filter-card">

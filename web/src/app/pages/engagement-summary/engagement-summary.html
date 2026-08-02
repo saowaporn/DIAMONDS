@@ -1,0 +1,81 @@
+<main class="tr-theme">
+  <div class="tr-container" style="padding-top: 32px; padding-bottom: 80px;">
+    <div class="tr-steps" style="margin-bottom: 40px;">
+      <div class="tr-step"><div class="tr-step-index">Setting</div></div>
+      <div class="tr-step"><div class="tr-step-index">Diamond</div></div>
+      <div class="tr-step active"><div class="tr-step-index">Summary</div></div>
+    </div>
+
+    <div class="tr-section-title">
+      <div class="tr-eyebrow">Design Your Ring</div>
+      <h1>Your Configuration</h1>
+    </div>
+
+    @if (!setting() && !diamond()) {
+      <p class="tr-lede" style="text-align: center;">
+        No configuration found yet. <a routerLink="/jewelry/engagement-ring">Start by choosing a setting</a>.
+      </p>
+    } @else {
+      <div class="row g-4">
+        @if (setting(); as setting) {
+          <div class="col-lg-6">
+            <div class="tr-card" style="padding: 24px;">
+              <div class="tr-eyebrow" style="margin-bottom: 12px;">Selected Setting</div>
+              <div class="row g-3 align-items-center">
+                <div class="col-5">
+                  <div class="tr-card-image" style="aspect-ratio: 1 / 1;">
+                    <img [src]="settingImage()" [alt]="setting.name">
+                  </div>
+                </div>
+                <div class="col-7">
+                  <div class="tr-card-title">{{ setting.name }}</div>
+                  <div class="tr-card-meta">{{ materialLabelText() }} &middot; {{ colorLabelText() }}</div>
+                  <div class="tr-card-price">THB {{ formatPrice(setting.price) }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (diamond(); as diamond) {
+          <div class="col-lg-6">
+            <div class="tr-card" style="padding: 24px;">
+              <div class="tr-eyebrow" style="margin-bottom: 12px;">Selected Diamond</div>
+              <div class="row g-3 align-items-center">
+                <div class="col-5">
+                  <div class="tr-card-image" style="aspect-ratio: 1 / 1;">
+                    <img [src]="diamondImage()" alt="Selected diamond">
+                  </div>
+                </div>
+                <div class="col-7">
+                  <div class="tr-card-title">{{ diamond['carat'] }} ct {{ diamond['shape'] }}</div>
+                  <div class="tr-card-meta">{{ diamond['color'] }} &middot; {{ diamond['clarity'] }} &middot; {{ diamond['cut'] }}</div>
+                  <div class="tr-card-price">THB {{ formatPrice(diamond['price']) }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="row justify-content-center mt-4">
+        <div class="col-lg-6">
+          <div class="tr-price-breakdown">
+            <div class="tr-price-row">
+              <span>Setting Price</span>
+              <span>THB {{ formatPrice(setting()?.price || '0') }}</span>
+            </div>
+            <div class="tr-price-row">
+              <span>Diamond Price</span>
+              <span>THB {{ formatPrice(diamondPrice()) }}</span>
+            </div>
+            <div class="tr-price-row tr-total">
+              <span>Total Price</span>
+              <span>THB {{ totalPrice() }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</main>

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { DiamondApiData, ProductSelectionService } from '../../shared/product-selection.service';
+import { SettingSelectionService } from '../../shared/setting-selection.service';
 import { VendorLibsService } from '../../shared/vendor-libs.service';
 
 function parsePriceNumber(value: unknown): number {
@@ -38,8 +39,12 @@ function getDiamondImages(apiData: DiamondApiData): string[] {
 export class DiamondDetail implements AfterViewInit {
   private readonly mainImage = viewChild<ElementRef<HTMLImageElement>>('mainImage');
   private readonly productSelection = inject(ProductSelectionService);
+  private readonly settingSelection = inject(SettingSelectionService);
   private readonly vendorLibs = inject(VendorLibsService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
+  private readonly inEngagementFlow = this.route.snapshot.queryParamMap.get('flow') === 'engagement';
 
   private readonly selected = this.productSelection.getSelectedProduct();
 
@@ -96,12 +101,17 @@ export class DiamondDetail implements AfterViewInit {
     return value === null || value === undefined || String(value).trim() === '' ? '-' : String(value);
   }
 
+  continueButtonLabel(): string {
+    return this.inEngagementFlow && this.settingSelection.getSelectedSetting() ? 'Continue' : 'Select this diamond';
+  }
+
   selectThisDiamond(): void {
     const apiData = this.apiData();
     if (apiData) {
       this.productSelection.setSelectedDiamondApiData(apiData);
     }
 
-    this.router.navigateByUrl('/jewelry/diamond-summary');
+    const hasSetting = this.inEngagementFlow && Boolean(this.settingSelection.getSelectedSetting());
+    this.router.navigateByUrl(hasSetting ? '/jewelry/engagement-summary' : '/jewelry/diamond-summary');
   }
 }

@@ -1,6 +1,7 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { DiamondFilters } from './diamond-filters.model';
+import { resolveApiBaseUrl } from './api-base-url';
 
 const CACHE_VERSION_KEY = 'yaniga_diamond_cache_version';
 
@@ -28,17 +29,7 @@ export interface FetchDiamondsOptions {
 export class DiamondApiService {
   private readonly platformId = inject(PLATFORM_ID);
 
-  readonly apiBaseUrl = this.resolveApiBaseUrl();
-
-  private resolveApiBaseUrl(): string {
-    if (!isPlatformBrowser(this.platformId)) {
-      return 'https://diamonds-api.vercel.app/api';
-    }
-
-    const win = window as typeof window & { YANIGA_API_BASE_URL?: string };
-    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    return win.YANIGA_API_BASE_URL || (isLocal ? 'http://localhost:3001/api' : 'https://diamonds-api.vercel.app/api');
-  }
+  readonly apiBaseUrl = resolveApiBaseUrl(isPlatformBrowser(this.platformId));
 
   getCacheVersion(): string {
     if (!isPlatformBrowser(this.platformId)) return '1';
