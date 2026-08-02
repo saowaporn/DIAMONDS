@@ -43,6 +43,18 @@
 
         <!-- Actions -->
         <div class="header-actions d-flex align-items-center justify-content-end">
+          <a routerLink="/favorites" class="header-icon-link" aria-label="Favorites">
+            <i class="bi bi-heart"></i>
+            @if (favorites.count() > 0) {
+              <span class="header-icon-badge">{{ favorites.count() }}</span>
+            }
+          </a>
+          <a routerLink="/cart" class="header-icon-link" aria-label="Shopping bag">
+            <i class="bi bi-bag"></i>
+            @if (cart.count() > 0) {
+              <span class="header-icon-badge">{{ cart.count() }}</span>
+            }
+          </a>
           <!-- Mobile Navigation Toggle -->
           <i class="mobile-nav-toggle d-xl-none bi bi-list me-0"></i>
         </div>

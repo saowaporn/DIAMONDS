@@ -1,0 +1,49 @@
+<main class="tr-theme">
+  <div class="tr-container" style="padding-top: 32px; padding-bottom: 80px;">
+    <div class="tr-section-title">
+      <div class="tr-eyebrow">Your Selections</div>
+      <h1>Shopping Bag</h1>
+    </div>
+
+    @if (cart.items().length === 0) {
+      <p class="tr-lede" style="text-align: center;">
+        Your bag is empty. <a routerLink="/jewelry/engagement-ring">Start designing your ring</a>.
+      </p>
+    } @else {
+      <div class="tr-card" style="padding: 8px; margin-bottom: 24px;">
+        @for (item of cart.items(); track item.id) {
+          <div class="row g-3 align-items-center" style="padding: 16px; border-bottom: 1px solid var(--tr-surface-container-high);">
+            <div class="col-4 col-md-2">
+              <div class="tr-card-image" style="aspect-ratio: 1 / 1;">
+                <img [src]="item.settingImage || item.diamondImage" [alt]="item.settingName">
+              </div>
+            </div>
+            <div class="col-5 col-md-8">
+              <div class="tr-card-title">{{ item.settingName }}</div>
+              <div class="tr-card-meta">
+                {{ item.settingMaterialLabel }} &middot; {{ item.settingColorLabel }}
+                @if (item.ringSize) { &middot; Size {{ item.ringSize }} }
+              </div>
+              <div class="tr-card-meta">{{ item.diamondTitle }}</div>
+              <div class="tr-card-price">THB {{ formatPrice(item.totalPrice) }}</div>
+            </div>
+            <div class="col-3 col-md-2" style="text-align: right;">
+              <button type="button" class="tr-btn tr-btn-outline" (click)="remove(item.id)">Remove</button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="row justify-content-end">
+        <div class="col-lg-4">
+          <div class="tr-price-breakdown">
+            <div class="tr-price-row tr-total">
+              <span>Subtotal</span>
+              <span>THB {{ formatPrice(cart.subtotal()) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</main>

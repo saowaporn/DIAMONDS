@@ -1,0 +1,34 @@
+<dialog #dialogRef class="tr-hint-dialog" style="width: 380px;" (click)="onBackdropClick($event)">
+  <button type="button" class="tr-hint-close" aria-label="Close" (click)="close()">&times;</button>
+  <div class="tr-hint-body">
+    @if (status() === 'sent') {
+      <p><strong>Thank you!</strong></p>
+      <p>Your request has been sent. One of our jewelry specialists will reach out to you shortly.</p>
+      <button type="button" class="tr-btn tr-btn-primary" style="width: 100%; margin-top: 8px;" (click)="close()">
+        Close
+      </button>
+    } @else {
+      <p><strong>Consult a Jewelry Specialist</strong></p>
+      <p style="margin-bottom: 16px;">
+        Share your email and we'll send your selection to our team so they can follow up with you.
+      </p>
+
+      <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Email</label>
+      <input type="email" [value]="email()" (input)="onEmailInput($event)" placeholder="you@example.com"
+        style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
+
+      <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Message (optional)</label>
+      <textarea [value]="message()" (input)="onMessageInput($event)" rows="3" placeholder="Any questions or requests?"
+        style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit; resize: vertical;"></textarea>
+
+      @if (errorMessage()) {
+        <p style="color: var(--tr-error); font-size: 13px; margin-bottom: 12px;">{{ errorMessage() }}</p>
+      }
+
+      <button type="button" class="tr-btn tr-btn-primary" style="width: 100%;" [disabled]="status() === 'sending'"
+        (click)="submit()">
+        {{ status() === 'sending' ? 'Sending...' : 'Send to Specialist' }}
+      </button>
+    }
+  </div>
+</dialog>

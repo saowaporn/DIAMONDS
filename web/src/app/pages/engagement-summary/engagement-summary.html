@@ -1,14 +1,15 @@
 <main class="tr-theme">
   <div class="tr-container" style="padding-top: 32px; padding-bottom: 80px;">
     <div class="tr-steps" style="margin-bottom: 40px;">
-      <div class="tr-step"><div class="tr-step-index">Setting</div></div>
-      <div class="tr-step"><div class="tr-step-index">Diamond</div></div>
-      <div class="tr-step active"><div class="tr-step-index">Summary</div></div>
+      <div class="tr-step"><div class="tr-step-index">1 · Setting</div></div>
+      <div class="tr-step"><div class="tr-step-index">2 · Diamond</div></div>
+      <div class="tr-step active"><div class="tr-step-index">3 · Summary</div></div>
     </div>
 
     <div class="tr-section-title">
       <div class="tr-eyebrow">Design Your Ring</div>
-      <h1>Your Configuration</h1>
+      <h1>Review Your Creation</h1>
+      <p class="tr-lede">A timeless symbol of your unique commitment, handcrafted to perfection.</p>
     </div>
 
     @if (!setting() && !diamond()) {
@@ -16,56 +17,76 @@
         No configuration found yet. <a routerLink="/jewelry/engagement-ring">Start by choosing a setting</a>.
       </p>
     } @else {
-      <div class="row g-4">
-        @if (setting(); as setting) {
-          <div class="col-lg-6">
-            <div class="tr-card" style="padding: 24px;">
-              <div class="tr-eyebrow" style="margin-bottom: 12px;">Selected Setting</div>
+      <div class="row g-5">
+        <div class="col-lg-6">
+          <div class="tr-card tr-card-image" style="aspect-ratio: 1 / 1; margin-bottom: 16px;">
+            <img [src]="activeImage()" [alt]="setting()?.name || 'Selected ring'">
+          </div>
+          <div style="display: flex; gap: 10px; justify-content: center;">
+            @for (angle of angles; track angle.key) {
+              @if (angleImage(angle.key); as thumbSrc) {
+                <button type="button" class="tr-thumb" [class.active]="activeAngle() === angle.key"
+                  [attr.aria-label]="angle.label" (click)="activeAngle.set(angle.key)">
+                  <img [src]="thumbSrc" [alt]="angle.label">
+                </button>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          @if (setting(); as setting) {
+            <div class="tr-card" style="padding: 20px; margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <div class="tr-eyebrow">1 &middot; The Setting</div>
+                <a routerLink="/jewelry/setting-detail" class="tr-lede" style="font-size: 13px; text-decoration: underline; cursor: pointer;">
+                  Change
+                </a>
+              </div>
               <div class="row g-3 align-items-center">
-                <div class="col-5">
+                <div class="col-4">
                   <div class="tr-card-image" style="aspect-ratio: 1 / 1;">
                     <img [src]="settingImage()" [alt]="setting.name">
                   </div>
                 </div>
-                <div class="col-7">
+                <div class="col-8">
                   <div class="tr-card-title">{{ setting.name }}</div>
                   <div class="tr-card-meta">
                     {{ materialLabelText() }} &middot; {{ colorLabelText() }}
-                    @if (setting.ringSize) {
-                      &middot; Size {{ setting.ringSize }}
-                    }
+                    @if (setting.ringSize) { &middot; Size {{ setting.ringSize }} }
                   </div>
                   <div class="tr-card-price">THB {{ formatPrice(setting.price) }}</div>
                 </div>
               </div>
             </div>
-          </div>
-        }
+          }
 
-        @if (diamond(); as diamond) {
-          <div class="col-lg-6">
-            <div class="tr-card" style="padding: 24px;">
-              <div class="tr-eyebrow" style="margin-bottom: 12px;">Selected Diamond</div>
+          @if (diamond(); as diamond) {
+            <div class="tr-card" style="padding: 20px; margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <div class="tr-eyebrow">2 &middot; The Diamond</div>
+                <a routerLink="/jewelry/diamond-selection" class="tr-lede" style="font-size: 13px; text-decoration: underline; cursor: pointer;">
+                  Change
+                </a>
+              </div>
               <div class="row g-3 align-items-center">
-                <div class="col-5">
+                <div class="col-4">
                   <div class="tr-card-image" style="aspect-ratio: 1 / 1;">
                     <img [src]="diamondImage()" alt="Selected diamond">
                   </div>
                 </div>
-                <div class="col-7">
-                  <div class="tr-card-title">{{ diamond['carat'] }} ct {{ diamond['shape'] }}</div>
-                  <div class="tr-card-meta">{{ diamond['color'] }} &middot; {{ diamond['clarity'] }} &middot; {{ diamond['cut'] }}</div>
+                <div class="col-8">
+                  <div class="tr-card-title">{{ diamondTitle() }}</div>
+                  <div class="tr-card-meta">
+                    Color: {{ diamond['color'] }} &middot; Clarity: {{ diamond['clarity'] }} &middot; Cut: {{ diamond['cut'] }}
+                  </div>
                   <div class="tr-card-price">THB {{ formatPrice(diamond['price']) }}</div>
                 </div>
               </div>
             </div>
-          </div>
-        }
-      </div>
+          }
 
-      <div class="row justify-content-center mt-4">
-        <div class="col-lg-6">
-          <div class="tr-price-breakdown">
+          <div class="tr-price-breakdown" style="margin-bottom: 20px;">
             <div class="tr-price-row">
               <span>Setting Price</span>
               <span>THB {{ formatPrice(setting()?.price || '0') }}</span>
@@ -75,12 +96,141 @@
               <span>THB {{ formatPrice(diamondPrice()) }}</span>
             </div>
             <div class="tr-price-row tr-total">
-              <span>Total Price</span>
+              <span>Estimated Total</span>
               <span>THB {{ totalPrice() }}</span>
             </div>
           </div>
+
+          <button type="button" class="tr-btn tr-btn-primary" style="width: 100%;" (click)="addToCart()">
+            {{ addedToCart() ? 'Added to Bag ✓' : 'Add to Shopping Bag' }}
+          </button>
+
+          <div class="row g-2" style="margin-top: 10px;">
+            <div class="col-6">
+              <button type="button" class="tr-btn tr-btn-outline" style="width: 100%;" (click)="addToFavorites()">
+                <i class="bi bi-heart"></i> {{ addedToFavorites() ? 'Saved ✓' : 'Save to Favorites' }}
+              </button>
+            </div>
+            <div class="col-6">
+              <button type="button" class="tr-btn tr-btn-outline" style="width: 100%;" (click)="consultModal.open()">
+                <i class="bi bi-chat-dots"></i> Consult an Expert
+              </button>
+            </div>
+          </div>
+
+          <div class="row g-2" style="margin-top: 24px; text-align: center;">
+            @for (badge of trustBadges; track badge.label) {
+              <div class="col-4">
+                <i class="bi {{ badge.icon }}" style="color: var(--tr-secondary); font-size: 18px;"></i>
+                <div style="font-size: 11px; color: var(--tr-on-surface-variant); margin-top: 4px;">{{ badge.label }}</div>
+              </div>
+            }
+          </div>
         </div>
       </div>
+
+      <section style="margin-top: 64px;">
+        <div class="tr-section-title">
+          <div class="tr-eyebrow">Good to Know</div>
+          <h2>Shipping, Warranty &amp; Returns</h2>
+        </div>
+
+        <div class="tr-card" style="padding: 0; margin-bottom: 12px;">
+          <details style="padding: 20px;">
+            <summary style="cursor: pointer; font-family: var(--tr-font-display); font-size: 18px; color: var(--tr-on-surface);">
+              Shipping &amp; Delivery
+            </summary>
+            <div style="margin-top: 12px; font-size: 14px; line-height: 1.7; color: var(--tr-on-surface-variant);">
+              <p><strong>Domestic Delivery (Thailand):</strong></p>
+              <ul>
+                <li>Free insured shipping nationwide for all orders</li>
+                <li>Bangkok area: Premium messenger service (delivery within 2 hours available)</li>
+                <li>Same-day or next-day delivery depending on order confirmation time</li>
+                <li>Outside Bangkok: Estimated delivery 2&ndash;3 business days</li>
+              </ul>
+              <p><strong>International Delivery:</strong></p>
+              <ul>
+                <li>We ship worldwide via DHL or FedEx</li>
+                <li>Fully insured shipments</li>
+                <li>Estimated delivery time: 3&ndash;7 business days depending on destination</li>
+                <li>Customers are responsible for any import duties, taxes, or customs fees</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+
+        <div class="tr-card" style="padding: 0; margin-bottom: 12px;">
+          <details style="padding: 20px;">
+            <summary style="cursor: pointer; font-family: var(--tr-font-display); font-size: 18px; color: var(--tr-on-surface);">
+              Warranty &amp; After-Sales Care
+            </summary>
+            <div style="margin-top: 12px; font-size: 14px; line-height: 1.7; color: var(--tr-on-surface-variant);">
+              <p><strong>Warranty Coverage</strong></p>
+              <p>
+                YANIGA DIAMOND offers a complimentary 3-year limited warranty on all fine jewelry purchases. This
+                warranty covers quality issues resulting from manufacturing defects, including:
+              </p>
+              <ul>
+                <li>Loose or misaligned stones due to faulty settings</li>
+                <li>Defective prongs or mountings</li>
+                <li>Broken clasps, soldering issues, or structural flaws</li>
+              </ul>
+              <p><strong>What's Not Covered:</strong></p>
+              <ul>
+                <li>Normal wear and tear (e.g., scratches, dents, fading, tarnishing)</li>
+                <li>Damage caused by accidents, improper care, or unauthorized third-party repairs</li>
+              </ul>
+              <p><strong>After-Sales Service</strong></p>
+              <p>
+                To keep your jewelry looking as beautiful as the day you received it, YANIGA DIAMOND provides the
+                following complimentary services:
+              </p>
+              <ul>
+                <li>Deep Cleaning (includes setting inspection)</li>
+                <li>Free Prong Tightening (up to 2 times)</li>
+                <li>Free Polishing (up to 2 times)</li>
+                <li>Free Resizing (up to 2 times)</li>
+                <li>Free Rhodium Plating for white gold (up to 2 times)</li>
+              </ul>
+              <p>
+                Note: Customers are responsible for the shipping cost of sending items to YANIGA DIAMOND. Any
+                applicable customs duties or taxes upon arrival in Thailand are also the customer's responsibility.
+              </p>
+            </div>
+          </details>
+        </div>
+
+        <div class="tr-card" style="padding: 0;">
+          <details style="padding: 20px;">
+            <summary style="cursor: pointer; font-family: var(--tr-font-display); font-size: 18px; color: var(--tr-on-surface);">
+              Refund &amp; Exchange Policy
+            </summary>
+            <div style="margin-top: 12px; font-size: 14px; line-height: 1.7; color: var(--tr-on-surface-variant);">
+              <p>
+                At Yaniga Diamond, we are committed to delivering high-quality diamond jewelry and a smooth shopping
+                experience. While we do not offer refunds, we do provide an exchange policy within 7 days of
+                purchase for eligible items.
+              </p>
+              <p><strong>Exchange Policy</strong></p>
+              <ul>
+                <li>Exchanges must be requested within 7 days of the original purchase date.</li>
+                <li>Custom-made items are not eligible for exchange</li>
+              </ul>
+              <p><strong>Conditions for Exchange</strong></p>
+              <p>To be eligible for an exchange, the item must meet the following conditions:</p>
+              <ul>
+                <li>The original packaging must be included and in like-new condition.</li>
+                <li>All tags, stickers, and identifying labels must be intact and undamaged.</li>
+                <li>All accompanying documentation (certificates, invoices, etc.) must be included and in pristine condition.</li>
+                <li>The product itself must be undamaged and in like-new condition.</li>
+                <li>A valid receipt must be presented as proof of purchase.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <app-consult-modal #consultModal [summaryText]="consultSummaryText()"></app-consult-modal>
     }
   </div>
 </main>

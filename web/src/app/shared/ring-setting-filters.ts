@@ -56,6 +56,24 @@ export function getDefaultColorKey(setting: RingSetting): string {
   return getAvailableColorOptions(setting)[0]?.key || 'gold';
 }
 
+export type RingImageAngle = 'front' | 'side' | 'top1' | 'top2';
+
+export const RING_IMAGE_ANGLES: { key: RingImageAngle; label: string }[] = [
+  { key: 'front', label: 'Front' },
+  { key: 'side', label: 'Side' },
+  { key: 'top1', label: 'Top 1' },
+  { key: 'top2', label: 'Top 2' },
+];
+
+export function resolveAngleImage(
+  images: RingSetting['images'] | undefined,
+  color: string | undefined,
+  angle: string,
+): string | undefined {
+  if (!images || !color) return undefined;
+  return images[color]?.[angle as RingImageAngle];
+}
+
 export interface GuideEntry {
   key: string;
   label: string;

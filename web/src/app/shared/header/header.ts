@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, ElementRef, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { VendorLibsService } from '../vendor-libs.service';
+import { CartService } from '../cart.service';
+import { FavoriteService } from '../favorite.service';
 
 @Component({
   selector: 'app-header',
@@ -10,6 +12,9 @@ import { VendorLibsService } from '../vendor-libs.service';
 })
 export class Header implements AfterViewInit {
   private readonly announcementSlider = viewChild<ElementRef<HTMLElement>>('announcementSlider');
+
+  readonly cart = inject(CartService);
+  readonly favorites = inject(FavoriteService);
 
   constructor(private readonly vendorLibs: VendorLibsService) {}
 

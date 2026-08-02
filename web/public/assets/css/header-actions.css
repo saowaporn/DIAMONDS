@@ -1,0 +1,35 @@
+/* Cart/Favorite icon links in the site header. Kept as its own stylesheet
+   since the header renders outside the .tr-theme wrapper on most pages. */
+
+.header-icon-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-left: 4px;
+  color: #340411;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.header-icon-link:hover {
+  color: #c8a278;
+}
+
+.header-icon-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #340411;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}

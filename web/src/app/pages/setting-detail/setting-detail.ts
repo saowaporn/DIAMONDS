@@ -6,21 +6,17 @@ import { HintButton } from '../../shared/hint-button/hint-button';
 import {
   COLOR_GUIDE,
   MATERIAL_GUIDE,
+  RING_IMAGE_ANGLES,
   RING_SETTING_MATERIALS,
   RING_SETTING_SHAPES,
+  RingImageAngle,
   SettingTypeGroup,
   getAvailableColorOptions,
   getDefaultColorKey,
   groupBySettingType,
+  resolveAngleImage,
   resolveGroupRow,
 } from '../../shared/ring-setting-filters';
-
-const ANGLES: { key: 'front' | 'side' | 'top1' | 'top2'; label: string }[] = [
-  { key: 'front', label: 'Front' },
-  { key: 'side', label: 'Side' },
-  { key: 'top1', label: 'Top 1' },
-  { key: 'top2', label: 'Top 2' },
-];
 
 const RING_SIZES: string[] = Array.from({ length: 59 - 44 + 1 }, (_, i) => String(44 + i));
 
@@ -47,13 +43,13 @@ export class SettingDetail {
 
   private group: SettingTypeGroup | null = null;
 
-  readonly angles = ANGLES;
+  readonly angles = RING_IMAGE_ANGLES;
   readonly ringSizes = RING_SIZES;
   readonly materials = RING_SETTING_MATERIALS;
   readonly materialGuide = MATERIAL_GUIDE;
   readonly colorGuide = COLOR_GUIDE;
   readonly setting = signal<SelectedSetting | null>(this.settingSelection.getSelectedSetting());
-  readonly activeAngle = signal<'front' | 'side' | 'top1' | 'top2'>('front');
+  readonly activeAngle = signal<RingImageAngle>('front');
   readonly ringSize = signal<string | null>(this.setting()?.ringSize ?? null);
   readonly currentRow = signal<RingSetting | null>(null);
   readonly availableShapes = signal<string[]>([]);
@@ -90,7 +86,7 @@ export class SettingDetail {
   angleImage(angle: string): string | undefined {
     const current = this.setting();
     if (!current) return undefined;
-    return current.images?.[current.color]?.[angle as keyof typeof current.images[string]];
+    return resolveAngleImage(current.images, current.color, angle);
   }
 
   circumferenceCm(size: string): string {

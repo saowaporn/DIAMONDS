@@ -10,6 +10,8 @@ import { EngagementSummary } from './pages/engagement-summary/engagement-summary
 import { SettingCustom } from './pages/setting-custom/setting-custom';
 import { SettingBespoke } from './pages/setting-bespoke/setting-bespoke';
 import { SettingSummary } from './pages/setting-summary/setting-summary';
+import { Cart } from './pages/cart/cart';
+import { Favorites } from './pages/favorites/favorites';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -26,6 +28,9 @@ export const routes: Routes = [
 
   { path: 'jewelry/diamond-detail', component: DiamondDetail },
   { path: 'jewelry/diamond-summary', component: DiamondSummary, data: { hideChrome: true } },
+
+  { path: 'cart', component: Cart },
+  { path: 'favorites', component: Favorites },
 
   // Older ring-setting wizard (separate feature, untouched)
   { path: 'setting/custom', component: SettingCustom },
