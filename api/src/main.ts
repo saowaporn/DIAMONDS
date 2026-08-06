@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { resolveCorsOrigin } from './common/utils/cors';
 
 function resolvePort(): number {
   const rawPort = Number(process.env.PORT);
@@ -10,7 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: process.env.ALLOWED_ORIGIN || true,
+    origin: resolveCorsOrigin(process.env.ALLOWED_ORIGIN),
   });
 
   app.setGlobalPrefix('api');
