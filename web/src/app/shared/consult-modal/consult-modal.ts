@@ -16,6 +16,7 @@ export class ConsultModal {
   private readonly dialogRef = viewChild<ElementRef<HTMLDialogElement>>('dialogRef');
 
   readonly email = signal('');
+  readonly phone = signal('');
   readonly message = signal('');
   readonly status = signal<ConsultStatus>('idle');
   readonly errorMessage = signal('');
@@ -40,6 +41,10 @@ export class ConsultModal {
     this.email.set((event.target as HTMLInputElement).value);
   }
 
+  onPhoneInput(event: Event): void {
+    this.phone.set((event.target as HTMLInputElement).value);
+  }
+
   onMessageInput(event: Event): void {
     this.message.set((event.target as HTMLTextAreaElement).value);
   }
@@ -51,6 +56,12 @@ export class ConsultModal {
       return;
     }
 
+    const phoneValue = this.phone().trim();
+    if (!phoneValue) {
+      this.errorMessage.set('Please enter your phone number.');
+      return;
+    }
+
     this.status.set('sending');
     this.errorMessage.set('');
 
@@ -59,7 +70,12 @@ export class ConsultModal {
       const response = await fetch(`${baseUrl}/consult`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: emailValue, message: this.message().trim(), summary: this.summaryText() }),
+        body: JSON.stringify({
+          email: emailValue,
+          phone: phoneValue,
+          message: this.message().trim(),
+          summary: this.summaryText(),
+        }),
       });
 
       if (!response.ok) throw new Error('Request failed');

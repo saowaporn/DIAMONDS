@@ -58,6 +58,8 @@ function clampValue(value: number, min: number, max: number): number {
 })
 export class EngagementRing implements AfterViewInit, OnDestroy {
   private selectedShape = '*';
+  private cartItemId: string | null = null;
+  private favoriteItemId: string | null = null;
   private selectedColorRange: OrdinalRange = { min: 0, max: DIAMOND_COLOR_SCALE.length - 1 };
   private selectedClarityRange: OrdinalRange = { min: 0, max: DIAMOND_CLARITY_SCALE.length - 1 };
   private selectedCutRange: OrdinalRange = { min: 0, max: DIAMOND_CUT_SCALE.length - 1 };
@@ -109,6 +111,9 @@ export class EngagementRing implements AfterViewInit, OnDestroy {
       this.shapeLocked.set(true);
       this.selectedShape = selectedSetting.shape;
     }
+
+    this.cartItemId = this.route.snapshot.queryParamMap.get('cartItemId');
+    this.favoriteItemId = this.route.snapshot.queryParamMap.get('favoriteItemId');
 
     await this.loadProductData(this.buildFilterRequestBody());
 
@@ -181,9 +186,11 @@ export class EngagementRing implements AfterViewInit, OnDestroy {
           fullData: product,
         });
 
-        this.router.navigate(['/jewelry/diamond-detail'], {
-          queryParams: this.shapeLocked() ? { flow: 'engagement' } : {},
-        });
+        const queryParams: Record<string, string> = this.shapeLocked() ? { flow: 'engagement' } : {};
+        if (this.cartItemId) queryParams['cartItemId'] = this.cartItemId;
+        if (this.favoriteItemId) queryParams['favoriteItemId'] = this.favoriteItemId;
+
+        this.router.navigate(['/jewelry/diamond-detail'], { queryParams });
       });
     });
 

@@ -39,9 +39,9 @@
             <div class="tr-card" style="padding: 20px; margin-bottom: 16px;">
               <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
                 <div class="tr-eyebrow">1 &middot; The Setting</div>
-                <a routerLink="/jewelry/setting-detail" class="tr-lede" style="font-size: 13px; text-decoration: underline; cursor: pointer;">
+                <button type="button" (click)="goToChangeSetting()" class="tr-lede" style="font-size: 13px; text-decoration: underline; cursor: pointer; background: none; border: none; padding: 0;">
                   Change
-                </a>
+                </button>
               </div>
               <div class="row g-3 align-items-center">
                 <div class="col-4">
@@ -102,13 +102,13 @@
           </div>
 
           <button type="button" class="tr-btn tr-btn-primary" style="width: 100%;" (click)="addToCart()">
-            {{ addedToCart() ? 'Added to Bag ✓' : 'Add to Shopping Bag' }}
+            {{ addedToCart() ? (isEditingCartItem() ? 'Updated ✓' : 'Added to Bag ✓') : (isEditingCartItem() ? 'Update Shopping Bag' : 'Add to Shopping Bag') }}
           </button>
 
           <div class="row g-2" style="margin-top: 10px;">
             <div class="col-6">
               <button type="button" class="tr-btn tr-btn-outline" style="width: 100%;" (click)="addToFavorites()">
-                <i class="bi bi-heart"></i> {{ addedToFavorites() ? 'Saved ✓' : 'Save to Favorites' }}
+                <i class="bi bi-heart"></i> {{ addedToFavorites() ? (isEditingFavoriteItem() ? 'Updated ✓' : 'Saved ✓') : (isEditingFavoriteItem() ? 'Update Favorites' : 'Save to Favorites') }}
               </button>
             </div>
             <div class="col-6">

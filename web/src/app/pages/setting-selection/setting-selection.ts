@@ -46,25 +46,27 @@ export class SettingSelection {
   readonly loading = signal(true);
   readonly allSettings = signal<RingSetting[]>([]);
 
-  readonly shapeFilter = signal<string>('Asscher');
+  readonly shapeFilter = signal<string | null>(null);
   readonly materialFilter = signal<string | null>('silver');
   readonly colorFilter = signal<string | null>('gold');
 
   readonly settingGroups = computed(() => groupBySettingType(this.allSettings()));
 
   readonly cards = computed(() => {
-    const shape = this.shapeFilter();
+    const shapeFilter = this.shapeFilter();
     const material = this.materialFilter();
     const color = this.colorFilter();
+    const shapesToShow = shapeFilter ? [shapeFilter] : this.shapes;
 
-    return this.settingGroups()
-      .map((group) => {
-        const row = resolveGroupRow(group, { shape, material });
-        if (!row) return null;
-        const colorKey = material === 'platinum' ? 'platinum' : color || getDefaultColorKey(row);
-        return { row, colorKey };
-      })
-      .filter((card): card is { row: RingSetting; colorKey: string } => card !== null);
+    return this.settingGroups().flatMap((group) =>
+      shapesToShow
+        .map((shape) => resolveGroupRow(group, { shape, material }))
+        .filter((row): row is RingSetting => row !== null)
+        .map((row) => {
+          const colorKey = material === 'platinum' ? 'platinum' : color || getDefaultColorKey(row);
+          return { row, colorKey };
+        }),
+    );
   });
 
   readonly selectedSettingLabel = computed(() => {
@@ -80,7 +82,7 @@ export class SettingSelection {
       .finally(() => this.loading.set(false));
   }
 
-  setShape(shape: string): void {
+  setShape(shape: string | null): void {
     this.shapeFilter.set(shape);
   }
 

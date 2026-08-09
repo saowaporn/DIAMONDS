@@ -162,7 +162,7 @@
 
           <button type="button" class="tr-btn tr-btn-primary" style="width: 100%;" [disabled]="!ringSize()"
             (click)="selectDiamond()">
-            Select This Setting &rarr;
+            {{ continueButtonLabel() }} &rarr;
           </button>
           @if (!ringSize()) {
             <p class="tr-lede" style="text-align: center; margin-top: 12px; font-size: 13px;">

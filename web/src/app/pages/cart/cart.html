@@ -5,42 +5,184 @@
       <h1>Shopping Bag</h1>
     </div>
 
-    @if (cart.items().length === 0) {
+    @if (status() === 'success') {
+      <div class="tr-card" style="padding: 32px; text-align: center;">
+        <p class="tr-lede">
+          Thank you for your order. Order Reference: <strong>{{ orderRef() }}</strong>. After receiving your order,
+          our team will send you a secure payment link.
+        </p>
+        <a routerLink="/jewelry/engagement-ring" class="tr-btn tr-btn-primary" style="margin-top: 16px; display: inline-block;">
+          Continue Shopping
+        </a>
+      </div>
+    } @else if (cart.items().length === 0) {
       <p class="tr-lede" style="text-align: center;">
         Your bag is empty. <a routerLink="/jewelry/engagement-ring">Start designing your ring</a>.
       </p>
     } @else {
-      <div class="tr-card" style="padding: 8px; margin-bottom: 24px;">
-        @for (item of cart.items(); track item.id) {
-          <div class="row g-3 align-items-center" style="padding: 16px; border-bottom: 1px solid var(--tr-surface-container-high);">
-            <div class="col-4 col-md-2">
-              <div class="tr-card-image" style="aspect-ratio: 1 / 1;">
-                <img [src]="item.settingImage || item.diamondImage" [alt]="item.settingName">
-              </div>
-            </div>
-            <div class="col-5 col-md-8">
-              <div class="tr-card-title">{{ item.settingName }}</div>
-              <div class="tr-card-meta">
-                {{ item.settingMaterialLabel }} &middot; {{ item.settingColorLabel }}
-                @if (item.ringSize) { &middot; Size {{ item.ringSize }} }
-              </div>
-              <div class="tr-card-meta">{{ item.diamondTitle }}</div>
-              <div class="tr-card-price">THB {{ formatPrice(item.totalPrice) }}</div>
-            </div>
-            <div class="col-3 col-md-2" style="text-align: right;">
-              <button type="button" class="tr-btn tr-btn-outline" (click)="remove(item.id)">Remove</button>
-            </div>
-          </div>
-        }
-      </div>
+      <div class="row g-4">
+        <div class="col-lg-6">
+          <div class="tr-eyebrow" style="margin-bottom: 12px;">Your Setting</div>
 
-      <div class="row justify-content-end">
-        <div class="col-lg-4">
+          <div class="tr-card" style="padding: 8px; margin-bottom: 16px;">
+            @for (item of cart.items(); track item.id) {
+              <div style="display: flex; align-items: center; gap: 12px; padding: 16px; border-bottom: 1px solid var(--tr-surface-container-high);">
+                <button type="button"
+                  style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; background: none; border: none; padding: 0; text-align: left; cursor: pointer;"
+                  [attr.aria-label]="'View or edit ' + item.settingName" (click)="viewOrEdit(item.id)">
+                  <div class="tr-card-image" style="width: 84px; flex-shrink: 0;">
+                    <img [src]="item.settingImage || item.diamondImage" [alt]="item.settingName">
+                  </div>
+                  <div style="flex: 1; min-width: 0;">
+                    <div class="tr-card-title" style="font-size: 16px;">{{ item.settingName }}</div>
+                    <div class="tr-card-meta">
+                      {{ item.settingMaterialLabel }} &middot; {{ item.settingColorLabel }}
+                      @if (item.ringSize) { &middot; Size {{ item.ringSize }} }
+                    </div>
+                    <div class="tr-card-meta">{{ item.diamondTitle }}</div>
+                    <div class="tr-card-price">THB {{ formatPrice(item.totalPrice) }}</div>
+                  </div>
+                </button>
+                <button type="button" class="tr-btn tr-btn-outline" style="flex-shrink: 0; padding: 8px 10px;"
+                  [attr.aria-label]="'Remove ' + item.settingName" (click)="remove(item.id)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            }
+          </div>
+
           <div class="tr-price-breakdown">
             <div class="tr-price-row tr-total">
               <span>Subtotal</span>
               <span>THB {{ formatPrice(cart.subtotal()) }}</span>
             </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="tr-steps" style="margin-bottom: 24px;">
+            <div class="tr-step" [class.active]="step() === 'information'">
+              <div class="tr-step-index">1 &middot; Your Information</div>
+            </div>
+            <div class="tr-step" [class.active]="step() === 'payment'">
+              <div class="tr-step-index">2 &middot; Payment</div>
+            </div>
+          </div>
+
+          <div class="tr-card" style="padding: 24px;">
+            @if (step() === 'information') {
+              <div class="tr-card-title" style="margin-bottom: 16px;">Your Information</div>
+
+              <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">First Name</label>
+              <input type="text" [value]="firstName()" (input)="onFirstNameInput($event)"
+                style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
+
+              <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Last Name</label>
+              <input type="text" [value]="lastName()" (input)="onLastNameInput($event)"
+                style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
+
+              <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Email</label>
+              <input type="email" [value]="email()" (input)="onEmailInput($event)" placeholder="you@example.com"
+                style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
+
+              <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Phone</label>
+              <input type="tel" [value]="phone()" (input)="onPhoneInput($event)"
+                style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
+
+              <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Address</label>
+              <textarea [value]="address()" (input)="onAddressInput($event)" rows="3"
+                style="width: 100%; padding: 10px 12px; margin-bottom: 16px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit; resize: vertical;"></textarea>
+
+              @if (errorMessage()) {
+                <p style="color: var(--tr-error); font-size: 13px; margin-bottom: 12px;">{{ errorMessage() }}</p>
+              }
+
+              <button type="button" class="tr-btn tr-btn-primary" style="width: 100%;" (click)="continueToPayment()">
+                Continue to Payment
+              </button>
+            } @else {
+              <div class="tr-card-title" style="margin-bottom: 16px;">Payment</div>
+
+              <div class="row g-2" style="margin-bottom: 16px;">
+                <div class="col-6">
+                  <div class="tr-card" role="button" tabindex="0"
+                    [style.border]="paymentMethod() === 'bank_transfer' ? '2px solid var(--tr-secondary)' : '1px solid var(--tr-outline-variant)'"
+                    style="padding: 16px; text-align: center; cursor: pointer;"
+                    (click)="selectPaymentMethod('bank_transfer')">
+                    <i class="bi bi-bank" style="font-size: 22px;"></i>
+                    <div class="tr-card-title" style="margin-top: 8px; font-size: 14px;">Bank Transfer</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="tr-card" role="button" tabindex="0"
+                    [style.border]="paymentMethod() === 'credit_card' ? '2px solid var(--tr-secondary)' : '1px solid var(--tr-outline-variant)'"
+                    style="padding: 16px; text-align: center; cursor: pointer;"
+                    (click)="selectPaymentMethod('credit_card')">
+                    <i class="bi bi-credit-card" style="font-size: 22px;"></i>
+                    <div class="tr-card-title" style="margin-top: 8px; font-size: 14px;">Credit Card</div>
+                  </div>
+                </div>
+              </div>
+
+              @if (paymentMethod() === 'bank_transfer') {
+                <div class="tr-card" style="padding: 16px; margin-bottom: 16px; background: var(--tr-surface-container-high);">
+                  @for (account of bankAccounts; track account.accountNumber) {
+                    <div style="margin-bottom: 8px;">
+                      <div class="tr-card-meta">{{ account.bankName }}</div>
+                      <div class="tr-card-title">{{ account.accountNumber }}</div>
+                      <div class="tr-card-meta">{{ account.accountName }}</div>
+                    </div>
+                  }
+                </div>
+
+                <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Upload Payment Slip</label>
+                <input type="file" accept="image/*,application/pdf" (change)="onSlipChange($event)"
+                  style="width: 100%; margin-bottom: 16px;">
+                @if (slipFile()) {
+                  <p class="tr-card-meta" style="margin-bottom: 16px;">Selected file: {{ slipFile()?.name }}</p>
+                }
+              } @else {
+                <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Cardholder Name</label>
+                <input type="text" [value]="cardName()" (input)="onCardNameInput($event)"
+                  style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
+
+                <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Card Number</label>
+                <input type="text" [value]="cardNumber()" (input)="onCardNumberInput($event)" placeholder="1234 5678 9012 3456"
+                  style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
+
+                <div class="row g-2" style="margin-bottom: 16px;">
+                  <div class="col-6">
+                    <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Expiry</label>
+                    <input type="text" [value]="cardExpiry()" (input)="onCardExpiryInput($event)" placeholder="MM/YY"
+                      style="width: 100%; padding: 10px 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
+                  </div>
+                  <div class="col-6">
+                    <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">CVV</label>
+                    <input type="text" [value]="cardCvv()" (input)="onCardCvvInput($event)" maxlength="4"
+                      style="width: 100%; padding: 10px 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
+                  </div>
+                </div>
+
+                <p class="tr-lede" style="margin-bottom: 16px; font-size: 14px;">
+                  Card details are for your records only &mdash; after receiving your order, our team will send you a
+                  secure payment link to complete your credit card payment.
+                </p>
+              }
+
+              @if (errorMessage()) {
+                <p style="color: var(--tr-error); font-size: 13px; margin-bottom: 12px;">{{ errorMessage() }}</p>
+              }
+
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="tr-btn tr-btn-outline" style="flex: 1;" (click)="backToInfo()">
+                  Back
+                </button>
+                <button type="button" class="tr-btn tr-btn-primary" style="flex: 2;" [disabled]="status() === 'submitting'"
+                  (click)="submit()">
+                  {{ status() === 'submitting' ? 'Placing Order...' : 'Place Order' }}
+                </button>
+              </div>
+            }
           </div>
         </div>
       </div>

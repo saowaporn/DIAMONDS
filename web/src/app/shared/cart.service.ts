@@ -17,9 +17,18 @@ export class CartService {
   readonly count = computed(() => this.itemsSignal().length);
   readonly subtotal = computed(() => this.itemsSignal().reduce((sum, item) => sum + item.totalPrice, 0));
 
-  add(item: Omit<SavedRingItem, 'id' | 'addedAt'>): void {
+  add(item: Omit<SavedRingItem, 'id' | 'addedAt'>): string {
     const newItem: SavedRingItem = { ...item, id: crypto.randomUUID(), addedAt: Date.now() };
     const next = [...this.itemsSignal(), newItem];
+    this.itemsSignal.set(next);
+    this.persist(next);
+    return newItem.id;
+  }
+
+  update(id: string, item: Omit<SavedRingItem, 'id' | 'addedAt'>): void {
+    const next = this.itemsSignal().map((existing) =>
+      existing.id === id ? { ...item, id: existing.id, addedAt: existing.addedAt } : existing,
+    );
     this.itemsSignal.set(next);
     this.persist(next);
   }
@@ -28,6 +37,11 @@ export class CartService {
     const next = this.itemsSignal().filter((item) => item.id !== id);
     this.itemsSignal.set(next);
     this.persist(next);
+  }
+
+  clear(): void {
+    this.itemsSignal.set([]);
+    this.persist([]);
   }
 
   private readFromStorage(): SavedRingItem[] {

@@ -1,16 +1,16 @@
 import { RingSetting } from './ring-settings-api.service';
 
 export const RING_SETTING_SHAPES = [
-  'Asscher',
-  'Cushion',
-  'Emerald',
-  'Heart',
-  'Marquise',
-  'Oval',
-  'Princess',
-  'Radiant',
   'Round',
+  'Oval',
   'Pear',
+  'Emerald',
+  'Marquise',
+  'Radiant',
+  'Cushion',
+  'Asscher',
+  'Heart',
+  'Princess',
 ];
 
 export interface MaterialOption {

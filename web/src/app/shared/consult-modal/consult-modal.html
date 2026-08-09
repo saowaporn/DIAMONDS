@@ -17,6 +17,10 @@
       <input type="email" [value]="email()" (input)="onEmailInput($event)" placeholder="you@example.com"
         style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
 
+      <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Phone</label>
+      <input type="tel" [value]="phone()" (input)="onPhoneInput($event)" placeholder="08X-XXX-XXXX"
+        style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
+
       <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Message (optional)</label>
       <textarea [value]="message()" (input)="onMessageInput($event)" rows="3" placeholder="Any questions or requests?"
         style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit; resize: vertical;"></textarea>

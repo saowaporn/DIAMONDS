@@ -1,3 +1,6 @@
+import { SelectedSetting } from './setting-selection.service';
+import { DiamondApiData } from './product-selection.service';
+
 export interface SavedRingItem {
   id: string;
   addedAt: number;
@@ -13,4 +16,6 @@ export interface SavedRingItem {
   diamondImage: string;
   diamondPrice: number;
   totalPrice: number;
+  settingSnapshot?: SelectedSetting;
+  diamondSnapshot?: DiamondApiData;
 }

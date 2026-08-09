@@ -25,6 +25,9 @@
       <div style="margin-bottom: 20px;">
         <div class="tr-eyebrow" style="margin-bottom: 10px;">Shape</div>
         <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <button type="button" class="tr-chip" [class.active]="shapeFilter() === null" (click)="setShape(null)">
+            All
+          </button>
           @for (shape of shapes; track shape) {
             <button type="button" class="tr-chip" [class.active]="shapeFilter() === shape" (click)="setShape(shape)">
               {{ shape }}

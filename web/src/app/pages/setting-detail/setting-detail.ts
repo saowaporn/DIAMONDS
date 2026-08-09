@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { SettingSelectionService, SelectedSetting } from '../../shared/setting-selection.service';
 import { RingSetting, RingSettingsApiService } from '../../shared/ring-settings-api.service';
 import { HintButton } from '../../shared/hint-button/hint-button';
@@ -40,6 +40,11 @@ export class SettingDetail {
   private readonly settingSelection = inject(SettingSelectionService);
   private readonly ringSettingsApi = inject(RingSettingsApiService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
+  readonly fromSummary = this.route.snapshot.queryParamMap.get('from') === 'summary';
+  private readonly cartItemId = this.route.snapshot.queryParamMap.get('cartItemId');
+  private readonly favoriteItemId = this.route.snapshot.queryParamMap.get('favoriteItemId');
 
   private group: SettingTypeGroup | null = null;
 
@@ -49,12 +54,18 @@ export class SettingDetail {
   readonly materialGuide = MATERIAL_GUIDE;
   readonly colorGuide = COLOR_GUIDE;
   readonly setting = signal<SelectedSetting | null>(this.settingSelection.getSelectedSetting());
+  private readonly originalShape = this.setting()?.shape ?? null;
   readonly activeAngle = signal<RingImageAngle>('front');
   readonly ringSize = signal<string | null>(this.setting()?.ringSize ?? null);
   readonly currentRow = signal<RingSetting | null>(null);
   readonly availableShapes = signal<string[]>([]);
 
   readonly formattedPrice = computed(() => parsePrice(this.setting()?.price || '0').toLocaleString('th-TH'));
+
+  readonly continueButtonLabel = computed(() => {
+    if (!this.fromSummary) return 'Select This Setting';
+    return this.setting()?.shape === this.originalShape ? 'Save Changes' : 'Continue to Choose Diamond';
+  });
 
   readonly colorOptions = computed(() => {
     const row = this.currentRow();
@@ -169,6 +180,17 @@ export class SettingDetail {
 
   selectDiamond(): void {
     if (!this.ringSize()) return;
-    this.router.navigateByUrl('/jewelry/diamond-selection');
+
+    const queryParams: Record<string, string> = {};
+    if (this.cartItemId) queryParams['cartItemId'] = this.cartItemId;
+    if (this.favoriteItemId) queryParams['favoriteItemId'] = this.favoriteItemId;
+
+    const shapeUnchanged = this.setting()?.shape === this.originalShape;
+    if (this.fromSummary && shapeUnchanged) {
+      this.router.navigate(['/jewelry/engagement-summary'], { queryParams });
+      return;
+    }
+
+    this.router.navigate(['/jewelry/diamond-selection'], { queryParams });
   }
 }

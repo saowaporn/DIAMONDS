@@ -74,6 +74,12 @@ export class ProductSelectionService {
     this.write(KEYS.selectedDiamondApiDataForSettingSummary, data);
   }
 
+  clearSelectedDiamondApiData(): void {
+    if (!this.isBrowser) return;
+    localStorage.removeItem(KEYS.selectedDiamondApiData);
+    localStorage.removeItem(KEYS.selectedDiamondApiDataForSettingSummary);
+  }
+
   getSelectedRing(): SelectedRing {
     return this.read<SelectedRing>(KEYS.selectedRing) || {};
   }

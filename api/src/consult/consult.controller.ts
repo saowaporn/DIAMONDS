@@ -3,6 +3,7 @@ import { ConsultService } from './consult.service';
 
 interface ConsultRequestBody {
   email?: string;
+  phone?: string;
   message?: string;
   summary?: string;
 }
@@ -21,8 +22,18 @@ export class ConsultController {
       throw new HttpException({ status: 'error', message: 'A valid email is required' }, HttpStatus.BAD_REQUEST);
     }
 
+    const phone = (body?.phone || '').trim();
+    if (!phone) {
+      throw new HttpException({ status: 'error', message: 'A phone number is required' }, HttpStatus.BAD_REQUEST);
+    }
+
     try {
-      await this.consultService.sendConsultRequest(email, (body.message || '').trim(), (body.summary || '').trim());
+      await this.consultService.sendConsultRequest(
+        email,
+        phone,
+        (body.message || '').trim(),
+        (body.summary || '').trim(),
+      );
       return { status: 'success' };
     } catch (error) {
       const err = error as { message?: string };

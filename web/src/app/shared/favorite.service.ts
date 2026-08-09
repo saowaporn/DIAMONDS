@@ -16,9 +16,18 @@ export class FavoriteService {
   readonly items = this.itemsSignal.asReadonly();
   readonly count = computed(() => this.itemsSignal().length);
 
-  add(item: Omit<SavedRingItem, 'id' | 'addedAt'>): void {
+  add(item: Omit<SavedRingItem, 'id' | 'addedAt'>): string {
     const newItem: SavedRingItem = { ...item, id: crypto.randomUUID(), addedAt: Date.now() };
     const next = [...this.itemsSignal(), newItem];
+    this.itemsSignal.set(next);
+    this.persist(next);
+    return newItem.id;
+  }
+
+  update(id: string, item: Omit<SavedRingItem, 'id' | 'addedAt'>): void {
+    const next = this.itemsSignal().map((existing) =>
+      existing.id === id ? { ...item, id: existing.id, addedAt: existing.addedAt } : existing,
+    );
     this.itemsSignal.set(next);
     this.persist(next);
   }

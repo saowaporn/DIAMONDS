@@ -45,6 +45,8 @@ export class DiamondDetail implements AfterViewInit {
   private readonly route = inject(ActivatedRoute);
 
   private readonly inEngagementFlow = this.route.snapshot.queryParamMap.get('flow') === 'engagement';
+  private readonly cartItemId = this.route.snapshot.queryParamMap.get('cartItemId');
+  private readonly favoriteItemId = this.route.snapshot.queryParamMap.get('favoriteItemId');
 
   private readonly selected = this.productSelection.getSelectedProduct();
 
@@ -112,6 +114,14 @@ export class DiamondDetail implements AfterViewInit {
     }
 
     const hasSetting = this.inEngagementFlow && Boolean(this.settingSelection.getSelectedSetting());
-    this.router.navigateByUrl(hasSetting ? '/jewelry/engagement-summary' : '/jewelry/diamond-summary');
+    if (!hasSetting) {
+      this.router.navigateByUrl('/jewelry/diamond-summary');
+      return;
+    }
+
+    const queryParams: Record<string, string> = {};
+    if (this.cartItemId) queryParams['cartItemId'] = this.cartItemId;
+    if (this.favoriteItemId) queryParams['favoriteItemId'] = this.favoriteItemId;
+    this.router.navigate(['/jewelry/engagement-summary'], { queryParams });
   }
 }

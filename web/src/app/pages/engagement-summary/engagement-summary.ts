@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DiamondApiData, ProductSelectionService } from '../../shared/product-selection.service';
 import { SelectedSetting, SettingSelectionService } from '../../shared/setting-selection.service';
 import {
@@ -39,6 +39,27 @@ export class EngagementSummary {
   private readonly productSelection = inject(ProductSelectionService);
   private readonly cart = inject(CartService);
   private readonly favorites = inject(FavoriteService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
+  private readonly cartItemId = signal(this.route.snapshot.queryParamMap.get('cartItemId'));
+  private readonly favoriteItemId = signal(this.route.snapshot.queryParamMap.get('favoriteItemId'));
+
+  readonly isEditingCartItem = computed(() => !!this.cartItemId());
+  readonly isEditingFavoriteItem = computed(() => !!this.favoriteItemId());
+
+  private buildChangeSettingQueryParams(): Record<string, string> {
+    const params: Record<string, string> = { from: 'summary' };
+    const cartItemId = this.cartItemId();
+    const favoriteItemId = this.favoriteItemId();
+    if (cartItemId) params['cartItemId'] = cartItemId;
+    if (favoriteItemId) params['favoriteItemId'] = favoriteItemId;
+    return params;
+  }
+
+  goToChangeSetting(): void {
+    this.router.navigate(['/jewelry/setting-detail'], { queryParams: this.buildChangeSettingQueryParams() });
+  }
 
   readonly angles = RING_IMAGE_ANGLES;
   readonly trustBadges = TRUST_BADGES;
@@ -136,13 +157,20 @@ export class EngagementSummary {
       diamondImage: this.diamondImage(),
       diamondPrice: this.diamondPrice(),
       totalPrice: parsePrice(setting?.price) + this.diamondPrice(),
+      settingSnapshot: setting ?? undefined,
+      diamondSnapshot: diamond ?? undefined,
     };
   }
 
   addToCart(): void {
     const item = this.buildSavedItemData();
     if (!item) return;
-    this.cart.add(item);
+    const existingId = this.cartItemId();
+    if (existingId) {
+      this.cart.update(existingId, item);
+    } else {
+      this.cartItemId.set(this.cart.add(item));
+    }
     this.addedToCart.set(true);
     setTimeout(() => this.addedToCart.set(false), 2500);
   }
@@ -150,7 +178,12 @@ export class EngagementSummary {
   addToFavorites(): void {
     const item = this.buildSavedItemData();
     if (!item) return;
-    this.favorites.add(item);
+    const existingId = this.favoriteItemId();
+    if (existingId) {
+      this.favorites.update(existingId, item);
+    } else {
+      this.favoriteItemId.set(this.favorites.add(item));
+    }
     this.addedToFavorites.set(true);
     setTimeout(() => this.addedToFavorites.set(false), 2500);
   }
