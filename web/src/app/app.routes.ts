@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Home } from './pages/home/home';
 import { Knowledge } from './pages/knowledge/knowledge';
+import { Contact } from './pages/contact/contact';
 import { SettingSelection } from './pages/setting-selection/setting-selection';
 import { SettingDetail } from './pages/setting-detail/setting-detail';
 import { EngagementRing } from './pages/engagement-ring/engagement-ring';
@@ -16,6 +17,7 @@ import { Favorites } from './pages/favorites/favorites';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'knowledge', component: Knowledge },
+  { path: 'contact', component: Contact },
 
   // Setting-first engagement ring configurator
   { path: 'jewelry/engagement-ring', component: SettingSelection },

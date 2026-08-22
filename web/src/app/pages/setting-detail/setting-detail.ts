@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { SettingSelectionService, SelectedSetting } from '../../shared/setting-selection.service';
 import { RingSetting, RingSettingsApiService } from '../../shared/ring-settings-api.service';
 import { HintButton } from '../../shared/hint-button/hint-button';
+import { RingFlowHeader } from '../../shared/ring-flow-header/ring-flow-header';
 import {
   COLOR_GUIDE,
   MATERIAL_GUIDE,
@@ -16,6 +17,7 @@ import {
   groupBySettingType,
   resolveAngleImage,
   resolveGroupRow,
+  shapeIconPath,
 } from '../../shared/ring-setting-filters';
 
 const RING_SIZES: string[] = Array.from({ length: 59 - 44 + 1 }, (_, i) => String(44 + i));
@@ -33,7 +35,7 @@ function formatCircumferenceCm(size: string): string {
 @Component({
   selector: 'app-setting-detail',
   standalone: true,
-  imports: [RouterLink, HintButton],
+  imports: [RouterLink, HintButton, RingFlowHeader],
   templateUrl: './setting-detail.html',
 })
 export class SettingDetail {
@@ -50,6 +52,7 @@ export class SettingDetail {
 
   readonly angles = RING_IMAGE_ANGLES;
   readonly ringSizes = RING_SIZES;
+  readonly shapeIconPath = shapeIconPath;
   readonly materials = RING_SETTING_MATERIALS;
   readonly materialGuide = MATERIAL_GUIDE;
   readonly colorGuide = COLOR_GUIDE;

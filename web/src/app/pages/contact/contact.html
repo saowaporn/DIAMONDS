@@ -1,0 +1,113 @@
+<main class="main">
+  <div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+      <h1 class="mb-2 mb-lg-0">Contact Us</h1>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a routerLink="/">Home</a></li>
+          <li class="current">Contact Us</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section id="contact-2" class="contact-2 section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+      <div class="row gy-4">
+        <div class="col-lg-3 col-md-6">
+          <div class="info-item d-flex flex-column justify-content-center align-items-center" data-aos="fade-up" data-aos-delay="200">
+            <i class="bi bi-geo-alt"></i>
+            <h3>Address</h3>
+            <p>Room 4F12, 4th Floor, BIS Building, Mahesak Road, Suriyawong, Bang Rak, Bangkok 10500, Thailand</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="info-item d-flex flex-column justify-content-center align-items-center" data-aos="fade-up" data-aos-delay="300">
+            <i class="bi bi-telephone"></i>
+            <h3>Call Us</h3>
+            <p>(66+) 085-885-7888</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="info-item d-flex flex-column justify-content-center align-items-center" data-aos="fade-up" data-aos-delay="400">
+            <i class="bi bi-envelope"></i>
+            <h3>Email Us</h3>
+            <p>info&#64;yanigadiamond.com</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="info-item d-flex flex-column justify-content-center align-items-center" data-aos="fade-up" data-aos-delay="500">
+            <i class="bi bi-share"></i>
+            <h3>Follow Us</h3>
+            <div class="social-icons">
+              <a href="https://www.facebook.com/profile.php?id=61572200623795" aria-label="Facebook" target="_blank"><i class="bi bi-facebook"></i></a>
+              <a href="https://www.instagram.com/yanigadiamond/" aria-label="Instagram" target="_blank"><i class="bi bi-instagram"></i></a>
+              <a href="https://www.tiktok.com/@yanigadiamond" aria-label="TikTok" target="_blank"><i class="bi bi-tiktok"></i></a>
+              <a href="https://lin.ee/4yK7TDX" aria-label="Line" target="_blank"><i class="bi bi-line"></i></a>
+              <a href="https://wa.me/66858857888" aria-label="WhatsApp" target="_blank"><i class="bi bi-whatsapp"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row gy-4 mt-1">
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+          <iframe
+            src="https://www.google.com/maps?q=BIS+Building+Mahesak+Road+Suriyawong+Bang+Rak+Bangkok+10500+Thailand&output=embed"
+            frameborder="0" style="border:0; width: 100%; height: 400px;" allowfullscreen loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="php-email-form" data-aos="fade-up" data-aos-delay="400">
+            <div class="row gy-4">
+
+              <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="Your Name" [value]="name()" (input)="onNameInput($event)" required>
+              </div>
+
+              <div class="col-md-6">
+                <input type="email" class="form-control" placeholder="Your Email" [value]="email()" (input)="onEmailInput($event)" required>
+              </div>
+
+              <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="Subject" [value]="subject()" (input)="onSubjectInput($event)" required>
+              </div>
+
+              <div class="col-md-6">
+                <input type="tel" class="form-control" placeholder="Your Phone (optional)" [value]="phone()" (input)="onPhoneInput($event)">
+              </div>
+
+              <div class="col-md-12">
+                <textarea class="form-control" rows="6" placeholder="Message" [value]="message()" (input)="onMessageInput($event)" required></textarea>
+              </div>
+
+              <div class="col-md-12 text-center">
+                @if (status() === 'sending') {
+                  <div class="loading d-block">Loading</div>
+                }
+                @if (status() === 'error') {
+                  <div class="error-message d-block">{{ errorMessage() }}</div>
+                }
+                @if (status() === 'sent') {
+                  <div class="sent-message d-block">Your message has been sent. Thank you!</div>
+                }
+
+                <button type="submit" [disabled]="status() === 'sending'" (click)="submit()">
+                  {{ status() === 'sending' ? 'Sending...' : 'Send Message' }}
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</main>

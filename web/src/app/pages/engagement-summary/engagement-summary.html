@@ -1,17 +1,8 @@
-<main class="tr-theme">
-  <div class="tr-container" style="padding-top: 32px; padding-bottom: 80px;">
-    <div class="tr-steps" style="margin-bottom: 40px;">
-      <div class="tr-step"><div class="tr-step-index">1 · Setting</div></div>
-      <div class="tr-step"><div class="tr-step-index">2 · Diamond</div></div>
-      <div class="tr-step active"><div class="tr-step-index">3 · Summary</div></div>
-    </div>
+<main class="main">
+  <app-ring-flow-header [activeStep]="3"></app-ring-flow-header>
 
-    <div class="tr-section-title">
-      <div class="tr-eyebrow">Design Your Ring</div>
-      <h1>Review Your Creation</h1>
-      <p class="tr-lede">A timeless symbol of your unique commitment, handcrafted to perfection.</p>
-    </div>
-
+  <div class="tr-theme">
+  <div class="tr-container" style="padding-top: 24px; padding-bottom: 80px;">
     @if (!setting() && !diamond()) {
       <p class="tr-lede" style="text-align: center;">
         No configuration found yet. <a routerLink="/jewelry/engagement-ring">Start by choosing a setting</a>.
@@ -232,5 +223,6 @@
 
       <app-consult-modal #consultModal [summaryText]="consultSummaryText()"></app-consult-modal>
     }
+  </div>
   </div>
 </main>

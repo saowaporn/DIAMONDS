@@ -13,6 +13,31 @@ export const RING_SETTING_SHAPES = [
   'Princess',
 ];
 
+const SHAPE_ICON_FILENAMES: Record<string, string> = {
+  Round: 'Round.avif',
+  Oval: 'Oval.avif',
+  Pear: 'Pear.avif',
+  Emerald: 'Emerald.webp',
+  Marquise: 'Marquise.avif',
+  Radiant: 'Radiant.avif',
+  Cushion: 'Cushion.avif',
+  Asscher: 'Asscher.svg',
+  Heart: 'Heart.svg',
+  Princess: 'Princess.svg',
+};
+
+export function shapeIconPath(shape: string): string {
+  return `/assets/img/product/jewelry_icon/${SHAPE_ICON_FILENAMES[shape] || `${shape}.avif`}`;
+}
+
+const SETTING_STYLE_ICON_FILENAMES: Record<string, string> = {
+  Solitaire: 'Solitaire.svg',
+};
+
+export function settingStyleIconPath(settingType: string): string {
+  return `/assets/img/product/setting_style_icon/${SETTING_STYLE_ICON_FILENAMES[settingType] || `${settingType}.svg`}`;
+}
+
 export interface MaterialOption {
   value: string;
   label: string;

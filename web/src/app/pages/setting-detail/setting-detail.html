@@ -1,20 +1,8 @@
-<main class="tr-theme">
-  <div class="tr-container" style="padding-top: 32px; padding-bottom: 80px;">
-    <div class="tr-steps" style="margin-bottom: 40px;">
-      <div class="tr-step">
-        <div class="tr-step-index">1 · Choose Setting</div>
-        <div class="tr-step-label">{{ setting()?.name }}</div>
-      </div>
-      <div class="tr-step active">
-        <div class="tr-step-index">2 · Setting Detail</div>
-        <div class="tr-step-meta">&mdash;</div>
-      </div>
-      <div class="tr-step">
-        <div class="tr-step-index">3 · Choose Stone</div>
-        <div class="tr-step-meta">&mdash;</div>
-      </div>
-    </div>
+<main class="main">
+  <app-ring-flow-header [activeStep]="1"></app-ring-flow-header>
 
+  <div class="tr-theme">
+  <div class="tr-container" style="padding-top: 24px; padding-bottom: 80px;">
     @if (setting(); as setting) {
       <div class="row g-5">
         <div class="col-lg-6">
@@ -40,12 +28,13 @@
 
           <div class="tr-card" style="padding: 20px; margin: 24px 0;">
             <div style="margin-bottom: 16px;">
-              <div class="tr-eyebrow" style="margin-bottom: 10px;">Shape</div>
+              <div class="tr-eyebrow tr-filter-title" style="margin-bottom: 10px;">Shape</div>
               <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                 @for (shape of availableShapes(); track shape) {
                   <button type="button" class="tr-chip"
                     [class.active]="setting.shape.toLowerCase() === shape.toLowerCase()"
                     (click)="setShape(shape)">
+                    <img [src]="shapeIconPath(shape)" [alt]="shape + ' shape'">
                     {{ shape }}
                   </button>
                 }
@@ -53,7 +42,7 @@
             </div>
 
             <div style="margin-bottom: 16px;">
-              <div class="tr-eyebrow" style="margin-bottom: 10px; display: flex; align-items: center;">
+              <div class="tr-eyebrow tr-filter-title" style="margin-bottom: 10px; display: flex; align-items: center;">
                 Material
                 <app-hint-button label="Material guide">
                   <dl>
@@ -76,7 +65,7 @@
 
             @if (setting.material !== 'platinum') {
               <div>
-                <div class="tr-eyebrow" style="margin-bottom: 10px; display: flex; align-items: center;">
+                <div class="tr-eyebrow tr-filter-title" style="margin-bottom: 10px; display: flex; align-items: center;">
                   Color
                   <app-hint-button label="Color guide">
                     <dl>
@@ -101,7 +90,7 @@
           </div>
 
           <div class="tr-card" style="padding: 20px; margin: 24px 0;">
-            <div class="tr-eyebrow" style="margin-bottom: 10px; display: flex; align-items: center;">
+            <div class="tr-eyebrow tr-filter-title" style="margin-bottom: 10px; display: flex; align-items: center;">
               Ring Size
               <app-hint-button label="How to find your ring size">
                 <p><strong>How to find your ring size</strong></p>
@@ -181,5 +170,6 @@
         No setting selected yet. <a routerLink="/jewelry/engagement-ring">Choose a setting</a> to continue.
       </p>
     }
+  </div>
   </div>
 </main>

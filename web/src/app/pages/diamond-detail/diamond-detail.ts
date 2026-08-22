@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { DiamondApiData, ProductSelectionService } from '../../shared/product-selection.service';
 import { SettingSelectionService } from '../../shared/setting-selection.service';
 import { VendorLibsService } from '../../shared/vendor-libs.service';
+import { RingFlowHeader } from '../../shared/ring-flow-header/ring-flow-header';
 
 function parsePriceNumber(value: unknown): number {
   if (value === null || value === undefined || value === '') return 0;
@@ -33,7 +34,7 @@ function getDiamondImages(apiData: DiamondApiData): string[] {
 @Component({
   selector: 'app-diamond-detail',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, RingFlowHeader],
   templateUrl: './diamond-detail.html',
 })
 export class DiamondDetail implements AfterViewInit {
@@ -44,7 +45,7 @@ export class DiamondDetail implements AfterViewInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  private readonly inEngagementFlow = this.route.snapshot.queryParamMap.get('flow') === 'engagement';
+  readonly inEngagementFlow = this.route.snapshot.queryParamMap.get('flow') === 'engagement';
   private readonly cartItemId = this.route.snapshot.queryParamMap.get('cartItemId');
   private readonly favoriteItemId = this.route.snapshot.queryParamMap.get('favoriteItemId');
 

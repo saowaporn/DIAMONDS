@@ -13,6 +13,7 @@ import { CartService } from '../../shared/cart.service';
 import { FavoriteService } from '../../shared/favorite.service';
 import { SavedRingItem } from '../../shared/saved-ring-item';
 import { ConsultModal } from '../../shared/consult-modal/consult-modal';
+import { RingFlowHeader } from '../../shared/ring-flow-header/ring-flow-header';
 
 function parsePrice(value: unknown): number {
   if (value === null || value === undefined || value === '') return 0;
@@ -31,7 +32,7 @@ const TRUST_BADGES = [
 @Component({
   selector: 'app-engagement-summary',
   standalone: true,
-  imports: [RouterLink, ConsultModal],
+  imports: [RouterLink, ConsultModal, RingFlowHeader],
   templateUrl: './engagement-summary.html',
 })
 export class EngagementSummary {

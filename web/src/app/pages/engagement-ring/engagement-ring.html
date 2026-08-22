@@ -1,42 +1,24 @@
 <main class="main">
-  <!-- Page Title -->
-  <div class="page-title light-background">
-    <div class="container d-lg-flex justify-content-between align-items-center">
-      <h1 class="mb-2 mb-lg-0">Engagement Rings</h1>
-      <nav class="breadcrumbs">
-        <ol>
-          <li><a routerLink="/">Home</a></li>
-          <li class="current">Engagement Rings</li>
-        </ol>
-      </nav>
-    </div>
-  </div>
-
   @if (shapeLocked()) {
-    <div class="tr-theme">
-      <div class="tr-container" style="padding-top: 16px;">
-        <div class="tr-steps" style="margin-bottom: 24px;">
-          <div class="tr-step"><div class="tr-step-index">1 &middot; Setting</div></div>
-          <div class="tr-step active"><div class="tr-step-index">2 &middot; Choose Stone</div></div>
-          <div class="tr-step"><div class="tr-step-index">3 &middot; Summary</div></div>
-        </div>
+    <app-ring-flow-header [activeStep]="2"></app-ring-flow-header>
+  } @else {
+    <div class="page-title light-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Diamonds</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a routerLink="/">Home</a></li>
+            <li class="current">Diamonds</li>
+          </ol>
+        </nav>
       </div>
     </div>
   }
 
   <section id="product-list" class="product-list section">
     <div class="container" data-aos="fade-up" data-aos-delay="100">
-      <div class="row my-4 g-4">
-        @if (shapeLocked()) {
-          <div class="col-12">
-            <div class="filter-card">
-              <div class="filter-card__header"><span>Diamond Shape</span></div>
-              <p class="small text-muted mb-0">
-                Matched to your setting: <strong>{{ lockedShapeLabel() }}</strong>
-              </p>
-            </div>
-          </div>
-        } @else {
+      <div class="row my-3 g-3">
+        @if (!shapeLocked()) {
           <div class="col-12">
             <div class="filter-card">
               <div class="filter-card__header">
@@ -44,7 +26,7 @@
                 <i class="bi bi-question-circle"></i>
               </div>
               <div class="shape-selector" id="shape_filter">
-                <button id="shape_all" type="button" class="shape-option active" data-shape="*">
+                <button id="shape_all" type="button" class="shape-option" data-shape="*">
                   <span>All Shape</span>
                 </button>
                 <button type="button" class="shape-option" data-shape="Round">
@@ -76,15 +58,15 @@
                   <span>Cushion</span>
                 </button>
                 <button type="button" class="shape-option" data-shape="Asscher">
-                  <img src="/assets/img/product/jewelry_icon/Cushion.avif" alt="Asscher Shape Button">
+                  <img src="/assets/img/product/jewelry_icon/Asscher.svg" alt="Asscher Shape Button">
                   <span>Asscher</span>
                 </button>
                 <button type="button" class="shape-option" data-shape="Heart">
-                  <img src="/assets/img/product/jewelry_icon/Cushion.avif" alt="Heart Shape Button">
+                  <img src="/assets/img/product/jewelry_icon/Heart.svg" alt="Heart Shape Button">
                   <span>Heart</span>
                 </button>
                 <button type="button" class="shape-option" data-shape="Princess">
-                  <img src="/assets/img/product/jewelry_icon/Cushion.avif" alt="Princess Shape Button">
+                  <img src="/assets/img/product/jewelry_icon/Princess.svg" alt="Princess Shape Button">
                   <span>Princess</span>
                 </button>
               </div>

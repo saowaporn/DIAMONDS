@@ -50,7 +50,10 @@
   --tr-shadow-card: 0 12px 32px rgba(28, 27, 27, 0.06);
   --tr-shadow-card-hover: 0 16px 40px rgba(28, 27, 27, 0.1);
 
-  background: var(--tr-surface);
+  /* Page canvas matches the site's global background (main.css --background-color)
+     rather than the --tr-surface cream token, so flow/diamond pages read
+     consistently with the rest of the site. */
+  background: var(--background-color);
   color: var(--tr-on-surface);
   font-family: var(--tr-font-body);
 }
@@ -233,6 +236,24 @@
   object-fit: cover;
 }
 
+.tr-theme .tr-card-image-hover-swap {
+  position: relative;
+}
+
+.tr-theme .tr-card-image-hover-swap img {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.25s ease;
+}
+
+.tr-theme .tr-card-image-hover-swap .tr-card-image-hover {
+  opacity: 0;
+}
+
+.tr-theme .tr-card:hover .tr-card-image-hover-swap .tr-card-image-hover {
+  opacity: 1;
+}
+
 .tr-theme .tr-card-body {
   padding: 16px 18px 20px;
 }
@@ -283,6 +304,279 @@
   width: 28px;
   height: 28px;
   object-fit: contain;
+}
+
+/* Shared ring-configurator flow header (app-ring-flow-header): bordered
+   box stepper matching abovediamond.com/engagement-rings, used identically
+   on every page in the flow (setting-selection, setting-detail,
+   engagement-ring, diamond-detail, engagement-summary). */
+
+/* Standalone breadcrumb trail for pages rooted directly in .tr-theme (cart,
+   favorites) that already render their own <h1> — the site's .breadcrumbs
+   CSS in main.css is scoped under .page-title, which these pages don't have,
+   so the layout/colors are redefined here instead. */
+.tr-theme .tr-breadcrumb-slim {
+  margin-bottom: 16px;
+}
+
+.tr-theme .tr-breadcrumb-slim ol {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+}
+
+.tr-theme .tr-breadcrumb-slim ol li a {
+  color: var(--tr-secondary);
+  text-decoration: none;
+}
+
+.tr-theme .tr-breadcrumb-slim ol li a:hover {
+  text-decoration: underline;
+}
+
+.tr-theme .tr-breadcrumb-slim ol li.current {
+  color: var(--tr-on-surface);
+}
+
+.tr-theme .tr-breadcrumb-slim ol li + li {
+  padding-left: 10px;
+}
+
+.tr-theme .tr-breadcrumb-slim ol li + li::before {
+  content: "/";
+  display: inline-block;
+  padding-right: 10px;
+  color: var(--tr-outline-variant);
+}
+
+.tr-theme .tr-flow-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--tr-surface-container-lowest);
+  border: 1px solid var(--tr-outline-variant);
+  border-radius: var(--tr-radius-lg);
+  padding: 10px 20px;
+  margin-bottom: 18px;
+}
+
+.tr-theme .tr-flow-header-label {
+  font-family: var(--tr-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tr-on-surface-variant);
+  padding-right: 20px;
+  border-right: 1px solid var(--tr-outline-variant);
+}
+
+.tr-theme .tr-flow-step {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+}
+
+.tr-theme .tr-flow-step-title {
+  font-family: var(--tr-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tr-outline);
+}
+
+.tr-theme .tr-flow-step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  margin-right: 4px;
+  font-size: 11px;
+}
+
+.tr-theme .tr-flow-step-meta {
+  font-size: 12px;
+  color: var(--tr-outline);
+}
+
+.tr-theme .tr-flow-step.active .tr-flow-step-title {
+  color: var(--red-color);
+}
+
+.tr-theme .tr-flow-step.active .tr-flow-step-meta {
+  color: color-mix(in srgb, var(--red-color), transparent 25%);
+}
+
+.tr-theme .tr-flow-step.active .tr-flow-step-number {
+  background: var(--red-color);
+  color: #fff;
+}
+
+.tr-theme .tr-flow-chevron {
+  color: var(--tr-outline-variant);
+  font-size: 14px;
+}
+
+.tr-theme .tr-flow-icon {
+  margin-left: 4px;
+  color: var(--tr-secondary);
+  font-size: 20px;
+}
+
+/* Sidebar filters */
+.tr-theme .tr-sidebar {
+  margin-bottom: 24px;
+}
+
+@media (min-width: 992px) {
+  .tr-theme .tr-sidebar {
+    position: sticky;
+    top: 24px;
+    align-self: flex-start;
+    margin-bottom: 0;
+    /* Cap height to the viewport so tall sidebars (Material + Color + Shape +
+       Setting) get their own scroll instead of having their lower sections
+       permanently clipped by the viewport edge while pinned. */
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+  }
+}
+
+.tr-theme .tr-filter-section {
+  margin-bottom: 18px;
+}
+
+.tr-theme .tr-filter-section:last-child {
+  margin-bottom: 0;
+}
+
+.tr-theme .tr-filter-title {
+  font-family: var(--default-font);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  color: #3e1020;
+  margin-bottom: 8px;
+}
+
+.tr-theme .tr-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tr-theme .tr-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--tr-on-surface);
+  cursor: pointer;
+}
+
+.tr-theme .tr-checkbox-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--tr-primary);
+  cursor: pointer;
+}
+
+.tr-theme .tr-filter-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.tr-theme .tr-filter-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 50px;
+  padding: 8px 6px;
+  border: 1px solid var(--tr-outline-variant);
+  border-radius: var(--tr-radius-md);
+  background: var(--tr-surface-container-lowest);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--tr-on-surface-variant);
+  text-align: center;
+}
+
+.tr-theme .tr-filter-tile img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.tr-theme .tr-filter-tile .tr-swatch {
+  width: 28px;
+  height: 28px;
+}
+
+.tr-theme .tr-filter-tile.active {
+  border-color: var(--tr-primary);
+  background: var(--tr-primary-container);
+  color: var(--tr-primary);
+}
+
+/* Results bar (count + sort) */
+.tr-theme .tr-results-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.tr-theme .tr-results-count {
+  font-size: 13px;
+  color: var(--tr-on-surface-variant);
+}
+
+.tr-theme .tr-sort-select {
+  font-family: var(--tr-font-body);
+  font-size: 13px;
+  padding: 8px 12px;
+  border: 1px solid var(--tr-outline-variant);
+  border-radius: var(--tr-radius);
+  background: var(--tr-surface-container-lowest);
+  color: var(--tr-on-surface);
+}
+
+/* Small color-swatch dots on product cards */
+.tr-theme .tr-card-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.tr-theme .tr-swatch-dots {
+  display: flex;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.tr-theme .tr-swatch-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 /* Hint / info popovers */

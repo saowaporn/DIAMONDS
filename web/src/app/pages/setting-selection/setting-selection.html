@@ -1,111 +1,136 @@
-<main class="tr-theme">
-  <div class="tr-container" style="padding-top: 32px; padding-bottom: 80px;">
-    <div class="tr-steps" style="margin-bottom: 40px;">
-      <div class="tr-step active">
-        <div class="tr-step-index">1 · Choose Setting</div>
-        <div class="tr-step-label">{{ selectedSettingLabel() }}</div>
-      </div>
-      <div class="tr-step">
-        <div class="tr-step-index">2 · Choose Stone</div>
-        <div class="tr-step-meta">&mdash;</div>
-      </div>
-      <div class="tr-step">
-        <div class="tr-step-index">3 · Complete Ring</div>
-        <div class="tr-step-meta">Size, personalize, payment</div>
-      </div>
-    </div>
+<main class="main">
+  <app-ring-flow-header [activeStep]="1"></app-ring-flow-header>
 
-    <div class="tr-section-title">
-      <div class="tr-eyebrow">Design Your Ring</div>
-      <h1>Choose Your Setting</h1>
-      <p class="tr-lede">Each setting is a testament to your love story, designed to shine for generations.</p>
-    </div>
+  <div class="tr-theme">
+  <div class="tr-container" style="padding-top: 24px; padding-bottom: 80px;">
 
-    <div class="tr-card" style="padding: 24px; margin-bottom: 32px;">
-      <div style="margin-bottom: 20px;">
-        <div class="tr-eyebrow" style="margin-bottom: 10px;">Shape</div>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-          <button type="button" class="tr-chip" [class.active]="shapeFilter() === null" (click)="setShape(null)">
-            All
-          </button>
-          @for (shape of shapes; track shape) {
-            <button type="button" class="tr-chip" [class.active]="shapeFilter() === shape" (click)="setShape(shape)">
-              {{ shape }}
-            </button>
-          }
-        </div>
-      </div>
+    <div class="row g-4">
+      <div class="col-lg-3">
+        <aside class="tr-sidebar">
 
-      <div style="margin-bottom: 20px;">
-        <div class="tr-eyebrow" style="margin-bottom: 10px; display: flex; align-items: center;">
-          Material
-          <app-hint-button label="Material guide">
-            <dl>
-              @for (m of materialGuide; track m.key) {
-                <dt>{{ m.label }}</dt>
-                <dd>{{ m.description }}</dd>
+          <div class="tr-filter-section">
+            <div class="tr-filter-title" style="display: flex; align-items: center;">
+              Material
+              <app-hint-button label="Material guide">
+                <dl>
+                  @for (m of materialGuide; track m.key) {
+                    <dt>{{ m.label }}</dt>
+                    <dd>{{ m.description }}</dd>
+                  }
+                </dl>
+              </app-hint-button>
+            </div>
+            <div class="tr-checkbox-list">
+              @for (material of materials; track material.value) {
+                <label class="tr-checkbox-item">
+                  <input type="checkbox" [checked]="isMaterialSelected(material.value)" (change)="toggleMaterial(material.value)">
+                  {{ material.label }}
+                </label>
               }
-            </dl>
-          </app-hint-button>
-        </div>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-          @for (material of materials; track material.value) {
-            <button type="button" class="tr-chip" [class.active]="materialFilter() === material.value"
-              (click)="setMaterial(material.value)">
-              {{ material.label }}
-            </button>
+            </div>
+          </div>
+
+          <div class="tr-filter-section">
+            <div class="tr-filter-title" style="display: flex; align-items: center;">
+              Color
+              <app-hint-button label="Color guide">
+                <dl>
+                  @for (c of colorGuide; track c.key) {
+                    <dt>{{ c.label }}</dt>
+                    <dd>{{ c.description }}</dd>
+                  }
+                </dl>
+              </app-hint-button>
+            </div>
+            <div class="tr-filter-tile-grid">
+              @for (color of colorOptions; track color.key) {
+                <button type="button" class="tr-filter-tile" [class.active]="colorFilter() === color.key"
+                  (click)="setColor(color.key)">
+                  <span class="tr-swatch" [class]="'tr-swatch-' + color.key"></span>
+                  {{ color.label }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="tr-filter-section">
+            <div class="tr-filter-title">Shape</div>
+            <div class="tr-filter-tile-grid">
+              <button type="button" class="tr-filter-tile" [class.active]="shapeFilter() === null" (click)="setShape(null)">
+                All
+              </button>
+              @for (shape of shapes; track shape) {
+                <button type="button" class="tr-filter-tile" [class.active]="shapeFilter() === shape" (click)="setShape(shape)">
+                  <img [src]="shapeIconPath(shape)" [alt]="shape + ' shape'">
+                  {{ shape }}
+                </button>
+              }
+            </div>
+          </div>
+
+          @if (settingTypes().length) {
+            <div class="tr-filter-section">
+              <div class="tr-filter-title">Setting</div>
+              <div class="tr-filter-tile-grid">
+                <button type="button" class="tr-filter-tile" [class.active]="settingTypeFilter() === null" (click)="setSettingType(null)">
+                  All
+                </button>
+                @for (type of settingTypes(); track type) {
+                  <button type="button" class="tr-filter-tile" [class.active]="settingTypeFilter() === type" (click)="setSettingType(type)">
+                    <img [src]="settingStyleIconPath(type)" [alt]="type + ' setting'">
+                    {{ type }}
+                  </button>
+                }
+              </div>
+            </div>
           }
-        </div>
+
+        </aside>
       </div>
 
-      @if (materialFilter() !== 'platinum') {
-        <div>
-          <div class="tr-eyebrow" style="margin-bottom: 10px; display: flex; align-items: center;">
-            Color
-            <app-hint-button label="Color guide">
-              <dl>
-                @for (c of colorGuide; track c.key) {
-                  <dt>{{ c.label }}</dt>
-                  <dd>{{ c.description }}</dd>
-                }
-              </dl>
-            </app-hint-button>
-          </div>
-          <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-            @for (color of colorOptions; track color.key) {
-              <button type="button" class="tr-chip" [class.active]="colorFilter() === color.key"
-                (click)="setColor(color.key)">
-                <span class="tr-swatch" [class]="'tr-swatch-' + color.key" style="width:18px;height:18px;"></span>
-                {{ color.label }}
-              </button>
-            }
-          </div>
+      <div class="col-lg-9">
+        <div class="tr-results-bar">
+          <div class="tr-results-count">Showing {{ cards().length }} Settings</div>
+          <select class="tr-sort-select" [value]="sortBy()" (change)="setSortBy($any($event.target).value)">
+            <option value="featured">Sort By: Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+          </select>
         </div>
-      }
-    </div>
 
-    @if (loading()) {
-      <p class="tr-lede">Loading settings...</p>
-    } @else if (cards().length === 0) {
-      <p class="tr-lede">No settings found for the current filters.</p>
-    } @else {
-      <div class="row g-4">
-        @for (card of cards(); track card.row.id) {
-          <div class="col-6 col-lg-3">
-            <a class="tr-card" style="display: block; text-decoration: none; color: inherit; cursor: pointer;"
-              (click)="selectSetting(card.row, card.colorKey)">
-              <div class="tr-card-image">
-                <img [src]="previewImage(card.row, card.colorKey)" [alt]="card.row.name" loading="lazy">
+        @if (loading()) {
+          <p class="tr-lede">Loading settings...</p>
+        } @else if (cards().length === 0) {
+          <p class="tr-lede">No settings found for the current filters.</p>
+        } @else {
+          <div class="row g-4">
+            @for (card of cards(); track card.row.id) {
+              <div class="col-6 col-lg-4">
+                <a class="tr-card" style="display: block; text-decoration: none; color: inherit; cursor: pointer;"
+                  (click)="selectSetting(card.row, card.colorKey)">
+                  <div class="tr-card-image tr-card-image-hover-swap">
+                    <img [src]="previewImage(card.row, card.colorKey)" [alt]="card.row.name" loading="lazy">
+                    <img class="tr-card-image-hover" [src]="hoverImage(card.row, card.colorKey)" [alt]="card.row.name" loading="lazy">
+                  </div>
+                  <div class="tr-card-body">
+                    <div class="tr-card-title">{{ card.row.name }}</div>
+                    <div class="tr-card-meta-row">
+                      <div class="tr-card-meta">{{ materialLabelFor(card.row.material) }} &middot; {{ card.row.settingType }}</div>
+                      <div class="tr-swatch-dots">
+                        @for (key of availableColorKeys(card.row); track key) {
+                          <span class="tr-swatch-dot" [class]="'tr-swatch-' + key"></span>
+                        }
+                      </div>
+                    </div>
+                    <div class="tr-card-price">THB {{ formatPrice(card.row.price) }}</div>
+                  </div>
+                </a>
               </div>
-              <div class="tr-card-body">
-                <div class="tr-card-title">{{ card.row.name }}</div>
-                <div class="tr-card-meta">{{ materialLabelFor(card.row.material) }} &middot; {{ card.row.shape }}</div>
-                <div class="tr-card-price">THB {{ formatPrice(card.row.price) }}</div>
-              </div>
-            </a>
+            }
           </div>
         }
       </div>
-    }
+    </div>
+  </div>
   </div>
 </main>

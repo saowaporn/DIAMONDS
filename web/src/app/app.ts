@@ -25,6 +25,14 @@ export class App implements AfterViewInit {
         route = route.firstChild;
       }
       this.showChrome.set(!route.snapshot.data['hideChrome']);
+
+      // The global `scroll-behavior: smooth` on :root (main.css) turns the router's
+      // scroll-to-top into an animated scroll, which gets cancelled by layout shifts
+      // from async content loading on these pages (e.g. isotope/diamond images) and
+      // never actually reaches the top. Force it instant here instead.
+      if (this.vendorLibs.isBrowser) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }
     });
   }
 

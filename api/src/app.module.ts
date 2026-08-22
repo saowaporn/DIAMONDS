@@ -5,6 +5,7 @@ import { DiamondsModule } from './diamonds/diamonds.module';
 import { RingSettingsModule } from './ring-settings/ring-settings.module';
 import { ConsultModule } from './consult/consult.module';
 import { OrdersModule } from './orders/orders.module';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { OrdersModule } from './orders/orders.module';
     RingSettingsModule,
     ConsultModule,
     OrdersModule,
+    ContactModule,
   ],
 })
 export class AppModule {}

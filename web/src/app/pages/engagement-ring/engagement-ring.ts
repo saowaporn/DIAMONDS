@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DiamondApiService, DiamondApiResponse } from '../../shared/diamond-api.service';
 import { ProductSelectionService } from '../../shared/product-selection.service';
 import { SettingSelectionService } from '../../shared/setting-selection.service';
 import { VendorLibsService } from '../../shared/vendor-libs.service';
+import { RingFlowHeader } from '../../shared/ring-flow-header/ring-flow-header';
 import { DiamondFilters, NumberRange } from '../../shared/diamond-filters.model';
 import {
   CARAT_CONFIG,
@@ -53,7 +54,7 @@ function clampValue(value: number, min: number, max: number): number {
 @Component({
   selector: 'app-engagement-ring',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RingFlowHeader, RouterLink],
   templateUrl: './engagement-ring.html',
 })
 export class EngagementRing implements AfterViewInit, OnDestroy {
@@ -85,11 +86,6 @@ export class EngagementRing implements AfterViewInit, OnDestroy {
   private activeRequestToken = 0;
 
   readonly shapeLocked = signal(false);
-
-  lockedShapeLabel(): string {
-    const shape = this.selectedShape;
-    return shape && shape !== '*' ? shape.charAt(0).toUpperCase() + shape.slice(1).toLowerCase() : '';
-  }
 
   constructor(
     private readonly host: ElementRef<HTMLElement>,
@@ -577,6 +573,9 @@ export class EngagementRing implements AfterViewInit, OnDestroy {
 
   private addFilterEvents(): void {
     this.queryAll<HTMLElement>('#shape_filter .shape-option').forEach((btn) => {
+      const btnShape = btn.getAttribute('data-shape') || '*';
+      btn.classList.toggle('active', btnShape.toLowerCase() === this.selectedShape.toLowerCase());
+
       btn.addEventListener('click', () => {
         this.query('#shape_filter .shape-option.active')?.classList.remove('active');
         btn.classList.add('active');

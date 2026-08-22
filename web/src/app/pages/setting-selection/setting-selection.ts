@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { RingSetting, RingSettingsApiService } from '../../shared/ring-settings-api.service';
 import { SettingSelectionService } from '../../shared/setting-selection.service';
 import { HintButton } from '../../shared/hint-button/hint-button';
+import { RingFlowHeader } from '../../shared/ring-flow-header/ring-flow-header';
 import {
   COLOR_GUIDE,
   MATERIAL_GUIDE,
@@ -11,8 +12,13 @@ import {
   getDefaultColorKey,
   groupBySettingType,
   materialLabel,
+  resolveAngleImage,
   resolveGroupRow,
+  settingStyleIconPath,
+  shapeIconPath,
 } from '../../shared/ring-setting-filters';
+
+type SortOption = 'featured' | 'price-asc' | 'price-desc';
 
 const COLOR_FILTER_OPTIONS = [
   { key: 'gold', label: 'Yellow Gold' },
@@ -29,7 +35,7 @@ function parsePrice(price: string): number {
 @Component({
   selector: 'app-setting-selection',
   standalone: true,
-  imports: [HintButton],
+  imports: [HintButton, RingFlowHeader],
   templateUrl: './setting-selection.html',
 })
 export class SettingSelection {
@@ -38,6 +44,8 @@ export class SettingSelection {
   private readonly router = inject(Router);
 
   readonly shapes = RING_SETTING_SHAPES;
+  readonly shapeIconPath = shapeIconPath;
+  readonly settingStyleIconPath = settingStyleIconPath;
   readonly materials = RING_SETTING_MATERIALS;
   readonly colorOptions = COLOR_FILTER_OPTIONS;
   readonly materialGuide = MATERIAL_GUIDE;
@@ -47,31 +55,52 @@ export class SettingSelection {
   readonly allSettings = signal<RingSetting[]>([]);
 
   readonly shapeFilter = signal<string | null>(null);
-  readonly materialFilter = signal<string | null>('silver');
+  readonly materialFilter = signal<Set<string>>(new Set(['silver']));
   readonly colorFilter = signal<string | null>('gold');
+  readonly settingTypeFilter = signal<string | null>('Solitaire');
+  readonly sortBy = signal<SortOption>('featured');
 
   readonly settingGroups = computed(() => groupBySettingType(this.allSettings()));
+  readonly settingTypes = computed(() => this.settingGroups().map((g) => g.settingType));
 
   readonly cards = computed(() => {
     const shapeFilter = this.shapeFilter();
-    const material = this.materialFilter();
+    const selectedMaterials = this.materialFilter();
     const color = this.colorFilter();
+    const settingType = this.settingTypeFilter();
     const shapesToShow = shapeFilter ? [shapeFilter] : this.shapes;
+    const materialsToShow = selectedMaterials.size
+      ? Array.from(selectedMaterials)
+      : this.materials.map((m) => m.value);
 
-    return this.settingGroups().flatMap((group) =>
-      shapesToShow
-        .map((shape) => resolveGroupRow(group, { shape, material }))
-        .filter((row): row is RingSetting => row !== null)
-        .map((row) => {
-          const colorKey = material === 'platinum' ? 'platinum' : color || getDefaultColorKey(row);
-          return { row, colorKey };
-        }),
-    );
-  });
+    const groups = settingType
+      ? this.settingGroups().filter((g) => g.settingType.toLowerCase() === settingType.toLowerCase())
+      : this.settingGroups();
 
-  readonly selectedSettingLabel = computed(() => {
-    const selected = this.settingSelection.getSelectedSetting();
-    return selected ? `${selected.name} - THB ${this.formatPrice(selected.price)}` : 'Select a setting to begin';
+    const seen = new Set<string>();
+    const result: { row: RingSetting; colorKey: string }[] = [];
+
+    groups.forEach((group) => {
+      shapesToShow.forEach((shape) => {
+        materialsToShow.forEach((material) => {
+          const row = resolveGroupRow(group, { shape, material });
+          if (!row || seen.has(row.id)) return;
+          seen.add(row.id);
+
+          const colorKey = row.material === 'platinum' ? 'platinum' : color || getDefaultColorKey(row);
+          result.push({ row, colorKey });
+        });
+      });
+    });
+
+    const sortBy = this.sortBy();
+    if (sortBy === 'price-asc') {
+      result.sort((a, b) => parsePrice(a.row.price) - parsePrice(b.row.price));
+    } else if (sortBy === 'price-desc') {
+      result.sort((a, b) => parsePrice(b.row.price) - parsePrice(a.row.price));
+    }
+
+    return result;
   });
 
   constructor() {
@@ -86,19 +115,35 @@ export class SettingSelection {
     this.shapeFilter.set(shape);
   }
 
-  setMaterial(material: string | null): void {
-    this.materialFilter.set(material);
-    if (material === 'platinum') {
-      this.colorFilter.set(null);
-    }
+  toggleMaterial(material: string): void {
+    const next = new Set(this.materialFilter());
+    if (next.has(material)) next.delete(material);
+    else next.add(material);
+    this.materialFilter.set(next);
+  }
+
+  isMaterialSelected(material: string): boolean {
+    return this.materialFilter().has(material);
   }
 
   setColor(color: string | null): void {
     this.colorFilter.set(color);
   }
 
+  setSettingType(settingType: string | null): void {
+    this.settingTypeFilter.set(settingType);
+  }
+
+  setSortBy(value: string): void {
+    this.sortBy.set(value as SortOption);
+  }
+
   materialLabelFor(value: string): string {
     return materialLabel(value);
+  }
+
+  availableColorKeys(row: RingSetting): string[] {
+    return Object.keys(row.images || {});
   }
 
   formatPrice(price: string): string {
@@ -107,6 +152,10 @@ export class SettingSelection {
 
   previewImage(row: RingSetting, colorKey: string): string {
     return row.images?.[colorKey]?.front || row.images?.[getDefaultColorKey(row)]?.front || '';
+  }
+
+  hoverImage(row: RingSetting, colorKey: string): string {
+    return resolveAngleImage(row.images, colorKey, 'top1') || this.previewImage(row, colorKey);
   }
 
   selectSetting(row: RingSetting, colorKey: string): void {

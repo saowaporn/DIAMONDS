@@ -1,0 +1,40 @@
+<div class="page-title light-background">
+  <div class="container d-lg-flex justify-content-between align-items-center">
+    <h1 class="mb-2 mb-lg-0">Engagement Rings</h1>
+    <nav class="breadcrumbs">
+      <ol>
+        <li><a routerLink="/">Home</a></li>
+        <li class="current">Engagement Rings</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="tr-theme">
+  <div class="tr-container" style="padding-top: 14px; padding-bottom: 0;">
+    <div class="tr-flow-header">
+      <div class="tr-flow-header-label">Design Your Ring</div>
+
+      <div class="tr-flow-step" [class.active]="activeStep() === 1">
+        <div class="tr-flow-step-title"><span class="tr-flow-step-number">1</span> Choose Setting</div>
+        <div class="tr-flow-step-meta">{{ settingMeta() }}</div>
+      </div>
+
+      <i class="bi bi-chevron-right tr-flow-chevron"></i>
+
+      <div class="tr-flow-step" [class.active]="activeStep() === 2">
+        <div class="tr-flow-step-title"><span class="tr-flow-step-number">2</span> Choose Diamond</div>
+        <div class="tr-flow-step-meta">{{ diamondMeta() }}</div>
+      </div>
+
+      <i class="bi bi-chevron-right tr-flow-chevron"></i>
+
+      <div class="tr-flow-step" [class.active]="activeStep() === 3">
+        <div class="tr-flow-step-title"><span class="tr-flow-step-number">3</span> Complete Ring</div>
+        <div class="tr-flow-step-meta">Size, personalize, payment</div>
+      </div>
+
+      <i class="bi bi-gem tr-flow-icon"></i>
+    </div>
+  </div>
+</div>
