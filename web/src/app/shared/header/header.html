@@ -1,4 +1,4 @@
-<header id="header" class="header position-relative">
+<header id="header" class="header">
   <!-- Top Bar -->
   <div class="top-bar py-1">
     <div class="container-fluid container-xl">
@@ -44,22 +44,28 @@
 
         <!-- Actions -->
         <div class="header-actions d-flex align-items-center justify-content-end">
-          <a routerLink="/favorites" class="header-icon-link" aria-label="Favorites">
+          <a routerLink="/favorites" class="header-icon-link" aria-label="Favorites" data-fly-target="favorites">
             <i class="bi bi-heart"></i>
             @if (favorites.count() > 0) {
               <span class="header-icon-badge">{{ favorites.count() }}</span>
             }
           </a>
-          <a routerLink="/cart" class="header-icon-link" aria-label="Shopping bag">
+          <a routerLink="/cart" class="header-icon-link" aria-label="Shopping bag" data-fly-target="bag">
             <i class="bi bi-bag"></i>
             @if (cart.count() > 0) {
               <span class="header-icon-badge">{{ cart.count() }}</span>
             }
           </a>
+          <button type="button" class="header-icon-link" aria-label="Account"
+            (click)="auth.isLoggedIn() ? router.navigateByUrl('/admin') : loginModal.open()">
+            <i class="bi" [class.bi-person-check-fill]="auth.isLoggedIn()" [class.bi-person]="!auth.isLoggedIn()"></i>
+          </button>
           <!-- Mobile Navigation Toggle -->
           <i class="mobile-nav-toggle d-xl-none bi bi-list me-0"></i>
         </div>
       </div>
     </div>
   </div>
+
+  <app-login-modal #loginModal></app-login-modal>
 </header>

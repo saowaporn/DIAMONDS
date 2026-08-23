@@ -4,10 +4,58 @@
   <div class="tr-theme">
   <div class="tr-container" style="padding-top: 24px; padding-bottom: 80px;">
 
-    <div class="row g-4">
-      <div class="col-lg-3">
-        <aside class="tr-sidebar">
+    <div class="tr-filter-bar">
+      <div class="tr-filter-section">
+        <div class="tr-filter-title" style="display: flex; align-items: center;">
+          Shape
+          <app-hint-button label="Shape guide">
+            <dl>
+              @for (g of shapeGuide; track g.key) {
+                <dt>{{ g.label }}</dt>
+                <dd>{{ g.description }}</dd>
+              }
+            </dl>
+          </app-hint-button>
+        </div>
+        <div class="tr-filter-tile-grid tr-filter-tile-grid--shape">
+          <button type="button" class="tr-filter-tile" [class.active]="shapeFilter() === null" (click)="setShape(null)">
+            All
+          </button>
+          @for (shape of shapes; track shape) {
+            <button type="button" class="tr-filter-tile" [class.active]="shapeFilter() === shape" (click)="setShape(shape)">
+              <img [src]="shapeIconPath(shape)" [alt]="shape + ' shape'">
+              {{ shape }}
+            </button>
+          }
+        </div>
+      </div>
 
+      <div class="row g-3">
+        <div class="col-12 col-lg-4">
+          <div class="tr-filter-section">
+            <div class="tr-filter-title" style="display: flex; align-items: center;">
+              Setting
+              <app-hint-button label="Setting guide">
+                <dl>
+                  @for (s of settingGuide; track s.key) {
+                    <dt>{{ s.label }}</dt>
+                    <dd>{{ s.description }}</dd>
+                  }
+                </dl>
+              </app-hint-button>
+            </div>
+            <div class="tr-filter-tile-grid tr-filter-tile-grid--balanced tr-tiles-setting">
+              @for (type of settingStyles; track type) {
+                <button type="button" class="tr-filter-tile" [class.active]="settingTypeFilter() === type" (click)="setSettingType(type)">
+                  <img [src]="settingStyleIconPath(type)" [alt]="type + ' setting'">
+                  {{ type }}
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
           <div class="tr-filter-section">
             <div class="tr-filter-title" style="display: flex; align-items: center;">
               Material
@@ -20,16 +68,18 @@
                 </dl>
               </app-hint-button>
             </div>
-            <div class="tr-checkbox-list">
+            <div class="tr-filter-tile-grid tr-filter-tile-grid--balanced tr-tiles-material">
               @for (material of materials; track material.value) {
-                <label class="tr-checkbox-item">
-                  <input type="checkbox" [checked]="isMaterialSelected(material.value)" (change)="toggleMaterial(material.value)">
+                <button type="button" class="tr-filter-tile" [class.active]="isMaterialSelected(material.value)"
+                  (click)="toggleMaterial(material.value)">
                   {{ material.label }}
-                </label>
+                </button>
               }
             </div>
           </div>
+        </div>
 
+        <div class="col-12 col-md-6 col-lg-4">
           <div class="tr-filter-section">
             <div class="tr-filter-title" style="display: flex; align-items: center;">
               Color
@@ -42,7 +92,7 @@
                 </dl>
               </app-hint-button>
             </div>
-            <div class="tr-filter-tile-grid">
+            <div class="tr-filter-tile-grid tr-tiles-color">
               @for (color of colorOptions; track color.key) {
                 <button type="button" class="tr-filter-tile" [class.active]="colorFilter() === color.key"
                   (click)="setColor(color.key)">
@@ -52,43 +102,11 @@
               }
             </div>
           </div>
-
-          <div class="tr-filter-section">
-            <div class="tr-filter-title">Shape</div>
-            <div class="tr-filter-tile-grid">
-              <button type="button" class="tr-filter-tile" [class.active]="shapeFilter() === null" (click)="setShape(null)">
-                All
-              </button>
-              @for (shape of shapes; track shape) {
-                <button type="button" class="tr-filter-tile" [class.active]="shapeFilter() === shape" (click)="setShape(shape)">
-                  <img [src]="shapeIconPath(shape)" [alt]="shape + ' shape'">
-                  {{ shape }}
-                </button>
-              }
-            </div>
-          </div>
-
-          @if (settingTypes().length) {
-            <div class="tr-filter-section">
-              <div class="tr-filter-title">Setting</div>
-              <div class="tr-filter-tile-grid">
-                <button type="button" class="tr-filter-tile" [class.active]="settingTypeFilter() === null" (click)="setSettingType(null)">
-                  All
-                </button>
-                @for (type of settingTypes(); track type) {
-                  <button type="button" class="tr-filter-tile" [class.active]="settingTypeFilter() === type" (click)="setSettingType(type)">
-                    <img [src]="settingStyleIconPath(type)" [alt]="type + ' setting'">
-                    {{ type }}
-                  </button>
-                }
-              </div>
-            </div>
-          }
-
-        </aside>
+        </div>
       </div>
+    </div>
 
-      <div class="col-lg-9">
+    <div>
         <div class="tr-results-bar">
           <div class="tr-results-count">Showing {{ cards().length }} Settings</div>
           <select class="tr-sort-select" [value]="sortBy()" (change)="setSortBy($any($event.target).value)">
@@ -105,12 +123,12 @@
         } @else {
           <div class="row g-4">
             @for (card of cards(); track card.row.id) {
-              <div class="col-6 col-lg-4">
+              <div class="col-6 col-lg-3">
                 <a class="tr-card" style="display: block; text-decoration: none; color: inherit; cursor: pointer;"
                   (click)="selectSetting(card.row, card.colorKey)">
                   <div class="tr-card-image tr-card-image-hover-swap">
-                    <img [src]="previewImage(card.row, card.colorKey)" [alt]="card.row.name" loading="lazy">
-                    <img class="tr-card-image-hover" [src]="hoverImage(card.row, card.colorKey)" [alt]="card.row.name" loading="lazy">
+                    <img [src]="previewImage(card.row, card.colorKey)" [alt]="card.row.name" loading="lazy" decoding="async">
+                    <img class="tr-card-image-hover" [src]="hoverImage(card.row, card.colorKey)" [alt]="card.row.name" loading="lazy" decoding="async">
                   </div>
                   <div class="tr-card-body">
                     <div class="tr-card-title">{{ card.row.name }}</div>
@@ -131,6 +149,5 @@
         }
       </div>
     </div>
-  </div>
   </div>
 </main>

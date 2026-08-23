@@ -6,6 +6,7 @@ import { RingSettingsModule } from './ring-settings/ring-settings.module';
 import { ConsultModule } from './consult/consult.module';
 import { OrdersModule } from './orders/orders.module';
 import { ContactModule } from './contact/contact.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ContactModule } from './contact/contact.module';
     ConsultModule,
     OrdersModule,
     ContactModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

@@ -12,6 +12,11 @@
   color: #340411;
   font-size: 18px;
   text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 .header-icon-link:hover {
@@ -32,4 +37,50 @@
   font-weight: 700;
   line-height: 16px;
   text-align: center;
+}
+
+/* Fly-to-destination microinteraction (Add to Bag / Save to Favorites).
+   The ghost is a fixed-position clone appended to <body> by FlyToTargetService;
+   it never affects document layout and is removed once the animation ends. */
+.tr-fly-ghost {
+  position: fixed;
+  z-index: 99998;
+  pointer-events: none;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(52, 4, 17, 0.28);
+}
+
+.tr-fly-ghost img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.header-icon-link.tr-fly-pulse {
+  animation: tr-fly-pulse-icon 0.6s ease-out;
+}
+
+.header-icon-link.tr-fly-pulse .header-icon-badge {
+  animation: tr-fly-pulse-badge 0.6s ease-out;
+}
+
+@keyframes tr-fly-pulse-icon {
+  0% { transform: scale(1); color: #340411; }
+  35% { transform: scale(1.08); color: #c8a278; }
+  100% { transform: scale(1); color: #340411; }
+}
+
+@keyframes tr-fly-pulse-badge {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-icon-link.tr-fly-pulse,
+  .header-icon-link.tr-fly-pulse .header-icon-badge {
+    animation: none;
+  }
 }

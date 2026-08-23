@@ -1,13 +1,13 @@
 <main class="main">
   @if (inEngagementFlow) {
-    <app-ring-flow-header [activeStep]="2"></app-ring-flow-header>
+    <app-ring-flow-header [activeStep]="2" [subLabel]="'Diamond Detail'"></app-ring-flow-header>
   } @else {
-    <div class="page-title light-background">
-      <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Diamond Details</h1>
-        <nav class="breadcrumbs">
+    <div class="tr-theme">
+      <div class="container" style="padding-top: 24px;">
+        <nav class="breadcrumbs tr-breadcrumb-slim">
           <ol>
             <li><a routerLink="/">Home</a></li>
+            <li><a routerLink="/diamonds">Diamonds</a></li>
             <li class="current">Diamond Details</li>
           </ol>
         </nav>
@@ -19,11 +19,13 @@
   <div class="tr-container" style="padding-top: 24px; padding-bottom: 80px;">
 
     <div class="row g-5">
-      <div class="col-lg-6">
-        <div class="tr-card tr-card-image" style="aspect-ratio: 1 / 1;">
-          <img #mainImage id="main-product-image" class="drift-zoom" src="/assets/img/favicon.png" alt="Diamond Image">
+      <div class="col-lg-6 tr-sticky-col">
+        <div class="tr-card tr-card-image tr-zoom" style="aspect-ratio: 1 / 1;"
+          (mouseenter)="isZooming.set(true)" (mousemove)="onImageMouseMove($event)" (mouseleave)="onImageMouseLeave()">
+          <img #diamondImage [src]="primaryImage()" [alt]="title()" class="tr-zoom-img tr-zoom-img--subtle"
+            loading="eager" fetchpriority="high"
+            [class.tr-zoom-img--active]="isZooming()" [style.transform-origin]="zoomOrigin()">
         </div>
-        <div class="image-zoom-container"></div>
       </div>
 
       <div class="col-lg-6">
@@ -32,41 +34,51 @@
 
         @if (apiData(); as data) {
           <div class="tr-card" style="padding: 20px; margin-bottom: 24px;">
-            <div class="row gy-3 text-center">
-              <div class="col-4">
-                <div class="tr-eyebrow">Carat</div>
-                <div>{{ data['carat'] || '-' }} ct</div>
-              </div>
-              <div class="col-4">
-                <div class="tr-eyebrow">Color</div>
-                <div>{{ data['color'] || '-' }}</div>
-              </div>
-              <div class="col-4">
-                <div class="tr-eyebrow">Clarity</div>
-                <div>{{ data['clarity'] || '-' }}</div>
-              </div>
-              <div class="col-4">
-                <div class="tr-eyebrow">Cut</div>
-                <div>{{ data['cut'] || '-' }}</div>
-              </div>
-              <div class="col-4">
-                <div class="tr-eyebrow">Origin</div>
-                <div>{{ data['origin'] || 'Natural' }}</div>
-              </div>
-              <div class="col-4">
-                <div class="tr-eyebrow">Certificate</div>
-                <div>{{ certificateLab() || '-' }}</div>
-              </div>
-            </div>
+            <h3 style="margin-bottom: 16px;">Key Specifications</h3>
+            <div class="tr-price-row"><span>Carat</span><span>{{ data['carat'] || '-' }} ct</span></div>
+            <div class="tr-price-row"><span>Color</span><span>{{ data['color'] || '-' }}</span></div>
+            <div class="tr-price-row"><span>Clarity</span><span>{{ data['clarity'] || '-' }}</span></div>
+            <div class="tr-price-row"><span>Cut</span><span>{{ data['cut'] || '-' }}</span></div>
+            <div class="tr-price-row"><span>Origin</span><span>{{ data['origin'] || 'Natural' }}</span></div>
+            <div class="tr-price-row"><span>Certificate</span><span>{{ certificateLab() || '-' }}</span></div>
           </div>
         }
 
         <button type="button" class="tr-btn tr-btn-primary" style="width: 100%;" (click)="selectThisDiamond()">
-          {{ continueButtonLabel() }}
+          {{ primaryButtonLabel() }}
         </button>
-        <a routerLink="/jewelry/engagement-ring" class="tr-btn tr-btn-outline" style="width: 100%; margin-top: 12px;">
-          Back
-        </a>
+
+        @if (!hasSetting()) {
+          <div class="row g-2" style="margin-top: 10px;">
+            <div class="col-6">
+              <button type="button" class="tr-btn tr-btn-outline" style="width: 100%;" (click)="addToFavorites()">
+                <i class="bi bi-heart"></i> {{ addedToFavorites() ? 'Saved ✓' : 'Save to Favorites' }}
+              </button>
+            </div>
+            <div class="col-6">
+              <button type="button" class="tr-btn tr-btn-outline" style="width: 100%;" (click)="consultModal.open()">
+                <i class="bi bi-chat-dots"></i> Consult an Expert
+              </button>
+            </div>
+          </div>
+
+          <div class="row g-2" style="margin-top: 24px; text-align: center;">
+            @for (badge of trustBadges; track badge.label) {
+              <div class="col-4">
+                <i class="bi {{ badge.icon }}" style="color: var(--tr-secondary); font-size: 18px;"></i>
+                <div style="font-size: 11px; color: var(--tr-on-surface-variant); margin-top: 4px;">{{ badge.label }}</div>
+              </div>
+            }
+          </div>
+
+          <app-consult-modal #consultModal [summaryText]="consultSummaryText()"></app-consult-modal>
+        }
+
+        @if (inEngagementFlow) {
+          <a routerLink="/jewelry/engagement-ring" class="tr-btn tr-btn-outline" style="width: 100%; margin-top: 12px;">
+            Back
+          </a>
+        }
       </div>
     </div>
 
@@ -74,25 +86,26 @@
       <div class="row mt-4">
         <div class="col-12">
           <div class="tr-card" style="padding: 24px;">
-            <h3 style="margin-bottom: 16px;">Other Info</h3>
+            <h3 style="margin-bottom: 16px;">Additional Details</h3>
             <div class="row">
               <div class="col-md-6">
-                <div class="tr-price-row"><span>Stock number</span><span>{{ formatOther(data['id']) }}</span></div>
-                <div class="tr-price-row"><span>Polish</span><span>{{ formatOther(quality()?.['polish']) }}</span></div>
-                <div class="tr-price-row"><span>Symmetry</span><span>{{ formatOther(quality()?.['symmetry']) }}</span></div>
-                <div class="tr-price-row"><span>Fluorescence</span><span>{{ formatOther(quality()?.['fluorescence']) }}</span></div>
-                <div class="tr-price-row"><span>Comment</span><span>{{ formatOther(notes()?.['comment']) }}</span></div>
+                @for (row of leftRows(); track row.key) {
+                  <div class="tr-price-row"><span>{{ row.key }}</span><span>{{ row.value }}</span></div>
+                }
               </div>
               <div class="col-md-6">
-                <div class="tr-price-row"><span>Measurements</span><span>{{ formatOther(details()?.['measurement']) }}</span></div>
-                <div class="tr-price-row"><span>L / W Ratio</span><span>{{ formatOther(quality()?.['l/w ratio']) }}</span></div>
-                <div class="tr-price-row"><span>Table</span><span>{{ formatOther(quality()?.['table']) }}</span></div>
-                <div class="tr-price-row"><span>Depth</span><span>{{ formatOther(quality()?.['td']) }}</span></div>
+                @for (row of rightRows(); track row.key) {
+                  <div class="tr-price-row"><span>{{ row.key }}</span><span>{{ row.value }}</span></div>
+                }
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      @if (!hasSetting()) {
+        <app-good-to-know></app-good-to-know>
+      }
     }
   </div>
   </div>

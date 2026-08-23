@@ -236,6 +236,60 @@
   object-fit: cover;
 }
 
+/* Cursor-following hover zoom (Setting Detail hero image). The container's
+   overflow: hidden (above) clips the scaled-up image. Cursor is a bare "+"
+   mark (white outline under a thinner burgundy line, no circle/background)
+   so it stays legible over the product photo without adding visual weight. */
+.tr-theme .tr-zoom {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cg fill='none' stroke='white' stroke-width='4' stroke-linecap='round'%3E%3Cpath d='M10 3v14M3 10h14'/%3E%3C/g%3E%3Cg stroke='%23340411' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M10 3v14M3 10h14'/%3E%3C/g%3E%3C/svg%3E") 10 10, zoom-in;
+}
+
+.tr-theme .tr-zoom-img {
+  transition: transform 0.15s ease;
+}
+
+.tr-theme .tr-zoom-img--active {
+  transform: scale(2);
+}
+
+/* Smaller product photo (Diamond Detail) — less aggressive zoom so the
+   magnified crop doesn't blow past the source image's own resolution/detail. */
+.tr-theme .tr-zoom-img--active.tr-zoom-img--subtle {
+  transform: scale(1.5);
+}
+
+/* Prev/next arrows overlaid on a product image (e.g. Setting Detail hero) —
+   bare chevrons only, nothing that competes visually with the ring itself. */
+.tr-theme .tr-image-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px;
+  border: none;
+  background: none;
+  color: var(--tr-on-surface-variant);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  filter: drop-shadow(0 1px 2px rgba(28, 27, 27, 0.25));
+  transition: color 0.15s ease;
+}
+
+.tr-theme .tr-image-nav-btn:hover {
+  color: var(--tr-primary);
+}
+
+.tr-theme .tr-image-nav-btn--prev {
+  left: 12px;
+}
+
+.tr-theme .tr-image-nav-btn--next {
+  right: 12px;
+}
+
 .tr-theme .tr-card-image-hover-swap {
   position: relative;
 }
@@ -278,13 +332,13 @@
   margin-top: 8px;
 }
 
-/* Chips / filter pills */
+/* Chips / filter options */
 .tr-theme .tr-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 10px 16px;
-  border-radius: var(--tr-radius-full);
+  border-radius: var(--tr-radius-md);
   border: 1px solid var(--tr-outline-variant);
   background: var(--tr-surface-container-lowest);
   color: var(--tr-on-surface);
@@ -438,15 +492,52 @@
 @media (min-width: 992px) {
   .tr-theme .tr-sidebar {
     position: sticky;
-    top: 24px;
+    /* Offset below the sticky site header (--header-height, main.css) so
+       this doesn't stick underneath it. */
+    top: calc(var(--header-height) + 24px);
     align-self: flex-start;
     margin-bottom: 0;
     /* Cap height to the viewport so tall sidebars (Material + Color + Shape +
        Setting) get their own scroll instead of having their lower sections
        permanently clipped by the viewport edge while pinned. */
-    max-height: calc(100vh - 48px);
+    max-height: calc(100vh - var(--header-height) - 48px);
     overflow-y: auto;
   }
+}
+
+/* Two-column pages where the left/product-summary column is often shorter
+   than the right/interactive column (setting-detail, diamond-detail,
+   engagement-summary, cart): pin the left column in view on desktop as the
+   page scrolls, rather than leaving a static empty gap below it. Naturally
+   a no-op when the left column ends up taller (e.g. a long cart) — sticky
+   only has a visible effect when there's a gap to close. No height cap
+   needed here (unlike .tr-sidebar) — the pinned content is bounded and
+   rarely exceeds the viewport. */
+.tr-theme .tr-sticky-col {
+  margin-bottom: 24px;
+}
+
+@media (min-width: 992px) {
+  .tr-theme .tr-sticky-col {
+    position: sticky;
+    /* Offset below the sticky site header (--header-height, main.css) so
+       this doesn't stick underneath it. */
+    top: calc(var(--header-height) + 24px);
+    align-self: flex-start;
+    margin-bottom: 0;
+  }
+}
+
+/* Top filter bar (setting-selection): Material/Color/Shape/Setting sit in a
+   row of columns above the results grid instead of a left sidebar. */
+.tr-theme .tr-filter-bar {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--tr-outline-variant);
+}
+
+.tr-theme .tr-filter-bar > * + * {
+  margin-top: 24px;
 }
 
 .tr-theme .tr-filter-section {
@@ -490,33 +581,35 @@
 }
 
 .tr-theme .tr-filter-tile-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
 .tr-theme .tr-filter-tile {
   display: flex;
+  flex: 1 1 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  min-height: 50px;
-  padding: 8px 6px;
+  gap: 6px;
+  min-width: 64px;
+  min-height: 76px;
+  padding: 12px 10px;
   border: 1px solid var(--tr-outline-variant);
   border-radius: var(--tr-radius-md);
   background: var(--tr-surface-container-lowest);
   cursor: pointer;
   transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--tr-on-surface-variant);
   text-align: center;
 }
 
 .tr-theme .tr-filter-tile img {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
 }
 
@@ -529,6 +622,76 @@
   border-color: var(--tr-primary);
   background: var(--tr-primary-container);
   color: var(--tr-primary);
+}
+
+/* Shape: the full-width hero filter. On desktop the 11 tiles (All + 10
+   shapes) fill one row edge-to-edge; below that they wrap into a centered,
+   evenly-sized grid instead of a left-aligned, unevenly-stretched one. */
+.tr-theme .tr-filter-tile-grid--shape {
+  justify-content: center;
+}
+
+.tr-theme .tr-filter-tile-grid--shape .tr-filter-tile {
+  flex: 0 1 calc(25% - 6px);
+  min-height: 76px;
+  gap: 2px;
+  padding: 3px 10px;
+}
+
+.tr-theme .tr-filter-tile-grid--shape .tr-filter-tile img {
+  width: 46px;
+  height: 46px;
+}
+
+@media (min-width: 992px) {
+  .tr-theme .tr-filter-tile-grid--shape {
+    justify-content: flex-start;
+  }
+
+  .tr-theme .tr-filter-tile-grid--shape .tr-filter-tile {
+    flex: 1 1 0;
+    min-width: 96px;
+  }
+}
+
+/* Setting Detail's Shape grid: same tile look as engagement-ring's --shape
+   modifier, but fixed equal-width columns (CSS Grid auto-fill) instead of
+   per-row flex-fill, so a short last row leaves empty trailing slots rather
+   than stretching its tiles wider than the row(s) above it. Combined-class
+   selector (higher specificity than --shape alone) so engagement-ring's
+   Shape section, which uses --shape by itself, is unaffected. */
+.tr-theme .tr-filter-tile-grid--shape.tr-shape-grid-fixed {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  justify-content: start;
+}
+
+/* Setting / Material: fixed-width tiles left-aligned as a group, so wrapped
+   rows (Setting's 6 options as 3 + 3, Material's 5 as 3 + 2) stay flush
+   with the section title above instead of drifting to the center. Column
+   count is fixed rather than fluid so the row composition stays
+   predictable at every width. */
+.tr-theme .tr-filter-tile-grid--balanced {
+  justify-content: flex-start;
+}
+
+.tr-theme .tr-tiles-setting .tr-filter-tile {
+  flex: 0 1 calc(33.333% - 5.334px);
+  gap: 2px;
+  padding: 3px 10px;
+}
+
+.tr-theme .tr-tiles-setting .tr-filter-tile img {
+  width: 46px;
+  height: 46px;
+}
+
+.tr-theme .tr-tiles-color .tr-filter-tile {
+  gap: 4px;
+}
+
+.tr-theme .tr-tiles-material .tr-filter-tile {
+  flex: 0 1 calc(33.333% - 5.334px);
 }
 
 /* Results bar (count + sort) */
@@ -554,6 +717,52 @@
   border-radius: var(--tr-radius);
   background: var(--tr-surface-container-lowest);
   color: var(--tr-on-surface);
+}
+
+/* Collapsed summary row for a single-value selector (e.g. Shape on the
+   Setting Detail page) that expands inline into a tile/chip grid on tap. */
+.tr-theme .tr-select-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--tr-outline-variant);
+  border-radius: var(--tr-radius-md);
+  background: var(--tr-surface-container-lowest);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+  font-family: var(--tr-font-body);
+  text-align: left;
+}
+
+.tr-theme .tr-select-summary:hover,
+.tr-theme .tr-select-summary:focus-visible {
+  border-color: var(--tr-primary);
+}
+
+.tr-theme .tr-select-summary img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.tr-theme .tr-select-summary-label {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--tr-on-surface);
+}
+
+.tr-theme .tr-select-summary-chevron {
+  color: var(--tr-outline);
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+
+.tr-theme .tr-select-summary-chevron--open {
+  transform: rotate(180deg);
 }
 
 /* Small color-swatch dots on product cards */

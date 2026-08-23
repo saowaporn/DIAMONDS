@@ -1,19 +1,29 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { DiamondApiService, DiamondApiResponse } from '../../shared/diamond-api.service';
+import { DiamondApiService } from '../../shared/diamond-api.service';
 import { ProductSelectionService } from '../../shared/product-selection.service';
 import { SettingSelectionService } from '../../shared/setting-selection.service';
 import { VendorLibsService } from '../../shared/vendor-libs.service';
 import { RingFlowHeader } from '../../shared/ring-flow-header/ring-flow-header';
+import { HintButton } from '../../shared/hint-button/hint-button';
 import { DiamondFilters, NumberRange } from '../../shared/diamond-filters.model';
+import { RING_SETTING_SHAPES } from '../../shared/ring-setting-filters';
 import {
   CARAT_CONFIG,
   DEPTH_CONFIG,
+  DIAMOND_CERTIFICATE_GUIDE,
+  DIAMOND_CLARITY_GUIDE,
   DIAMOND_CLARITY_SCALE,
+  DIAMOND_COLOR_GUIDE,
   DIAMOND_COLOR_SCALE,
+  DIAMOND_CUT_GUIDE,
   DIAMOND_CUT_SCALE,
+  DIAMOND_FLUORESCENCE_GUIDE,
   DIAMOND_FLUORESCENCE_SCALE,
+  DIAMOND_POLISH_GUIDE,
   DIAMOND_POLISH_SCALE,
+  DIAMOND_SHAPE_GUIDE,
+  DIAMOND_SYMMETRY_GUIDE,
   DIAMOND_SYMMETRY_SCALE,
   LW_RATIO_CONFIG,
   PRICE_CONFIG,
@@ -54,7 +64,7 @@ function clampValue(value: number, min: number, max: number): number {
 @Component({
   selector: 'app-engagement-ring',
   standalone: true,
-  imports: [RingFlowHeader, RouterLink],
+  imports: [RingFlowHeader, RouterLink, HintButton],
   templateUrl: './engagement-ring.html',
 })
 export class EngagementRing implements AfterViewInit, OnDestroy {
@@ -81,11 +91,21 @@ export class EngagementRing implements AfterViewInit, OnDestroy {
   private backendTotalPages = 0;
   private backendTotalCount = 0;
   private backendHasNextPage = false;
+  private allShapePagination = new Map<string, { page: number; hasNextPage: boolean }>();
   private currentFilterRequestBody: DiamondFilters = {};
   private loadingNextServerPage = false;
   private activeRequestToken = 0;
 
   readonly shapeLocked = signal(false);
+
+  readonly shapeGuide = DIAMOND_SHAPE_GUIDE;
+  readonly certificateGuide = DIAMOND_CERTIFICATE_GUIDE;
+  readonly clarityGuide = DIAMOND_CLARITY_GUIDE;
+  readonly cutGuide = DIAMOND_CUT_GUIDE;
+  readonly colorGuide = DIAMOND_COLOR_GUIDE;
+  readonly polishGuide = DIAMOND_POLISH_GUIDE;
+  readonly symmetryGuide = DIAMOND_SYMMETRY_GUIDE;
+  readonly fluorescenceGuide = DIAMOND_FLUORESCENCE_GUIDE;
 
   constructor(
     private readonly host: ElementRef<HTMLElement>,
@@ -227,16 +247,22 @@ export class EngagementRing implements AfterViewInit, OnDestroy {
     this.backendTotalCount = 0;
     this.backendHasNextPage = false;
     this.loadingNextServerPage = false;
+    this.allShapePagination.clear();
   }
 
-  private async fetchDiamondPage(page: number, signal?: AbortSignal, requestToken = this.activeRequestToken): Promise<DiamondApiResponse> {
+  private async fetchDiamondPage(page: number, signal?: AbortSignal, requestToken = this.activeRequestToken): Promise<void> {
+    if (this.selectedShape === '*') {
+      await this.fetchAllShapesRound(signal, requestToken);
+      return;
+    }
+
     const response = await this.diamondApi.fetchDiamondsByShape(this.getShapeRouteParam(), this.currentFilterRequestBody, {
       page,
       limit: API_PAGE_SIZE,
       signal,
     });
 
-    if (requestToken !== this.activeRequestToken) return response;
+    if (requestToken !== this.activeRequestToken) return;
 
     this.backendPage = response.page;
     this.backendTotalPages = response.totalPages;
@@ -246,8 +272,50 @@ export class EngagementRing implements AfterViewInit, OnDestroy {
     if (Array.isArray(response.data) && response.data.length) {
       this.filteredProducts = this.filteredProducts.concat(response.data);
     }
+  }
 
-    return response;
+  /**
+   * "All" has no single backend shape endpoint — fetch one page per shape in
+   * parallel and merge. Each round advances only the shapes that still have
+   * a next page; "load more" keeps calling this until none do.
+   */
+  private async fetchAllShapesRound(signal?: AbortSignal, requestToken = this.activeRequestToken): Promise<void> {
+    const isFirstRound = this.allShapePagination.size === 0;
+    const shapesToFetch = isFirstRound
+      ? RING_SETTING_SHAPES.map((shape) => shape.toUpperCase())
+      : [...this.allShapePagination.entries()].filter(([, state]) => state.hasNextPage).map(([shape]) => shape);
+
+    if (!shapesToFetch.length) {
+      this.backendHasNextPage = false;
+      return;
+    }
+
+    const results = await Promise.all(
+      shapesToFetch.map(async (shape) => {
+        const nextPage = isFirstRound ? 1 : (this.allShapePagination.get(shape)?.page || 0) + 1;
+        const response = await this.diamondApi.fetchDiamondsByShape(shape, this.currentFilterRequestBody, {
+          page: nextPage,
+          limit: API_PAGE_SIZE,
+          signal,
+        });
+        return { shape, response };
+      }),
+    );
+
+    if (requestToken !== this.activeRequestToken) return;
+
+    let newItems: Record<string, unknown>[] = [];
+    results.forEach(({ shape, response }) => {
+      this.allShapePagination.set(shape, { page: response.page, hasNextPage: response.hasNextPage });
+      if (isFirstRound) this.backendTotalCount += response.total;
+      if (Array.isArray(response.data) && response.data.length) {
+        newItems = newItems.concat(response.data);
+      }
+    });
+
+    this.filteredProducts = this.filteredProducts.concat(newItems);
+    this.backendPage += 1;
+    this.backendHasNextPage = [...this.allShapePagination.values()].some((state) => state.hasNextPage);
   }
 
   private async loadMoreProducts(): Promise<void> {

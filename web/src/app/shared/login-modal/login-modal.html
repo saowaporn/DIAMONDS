@@ -1,0 +1,29 @@
+<div class="tr-theme">
+  <dialog #dialogRef class="tr-hint-dialog" style="width: 340px;" (click)="onBackdropClick($event)">
+    <button type="button" class="tr-hint-close" aria-label="Close" (click)="close()">&times;</button>
+    <div class="tr-hint-body">
+      <div style="text-align: center; margin-bottom: 12px;">
+        <img src="/assets/img/YANIGA Logo.png" alt="YANIGA DIAMONDS" style="max-width: 150px; width: 100%;">
+      </div>
+
+      <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Username</label>
+      <input type="text" [value]="username()" (input)="onUsernameInput($event)" placeholder="Username"
+        autocomplete="username"
+        style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
+
+      <label class="tr-eyebrow" style="display: block; margin-bottom: 6px;">Password</label>
+      <input type="password" [value]="password()" (input)="onPasswordInput($event)" placeholder="Password"
+        autocomplete="current-password" (keydown.enter)="submit()"
+        style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--tr-outline-variant); border-radius: var(--tr-radius); font-family: inherit;">
+
+      @if (errorMessage()) {
+        <p style="color: var(--tr-error); font-size: 13px; margin-bottom: 12px;">{{ errorMessage() }}</p>
+      }
+
+      <button type="button" class="tr-btn tr-btn-primary" style="width: 100%;" [disabled]="status() === 'sending'"
+        (click)="submit()">
+        {{ status() === 'sending' ? 'Signing in...' : 'Sign In' }}
+      </button>
+    </div>
+  </dialog>
+</div>

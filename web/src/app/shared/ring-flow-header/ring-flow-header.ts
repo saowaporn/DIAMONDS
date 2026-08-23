@@ -16,6 +16,7 @@ function formatPrice(price: number | string): string {
 })
 export class RingFlowHeader {
   readonly activeStep = input.required<number>();
+  readonly subLabel = input<string>();
 
   private readonly settingSelection = inject(SettingSelectionService);
   private readonly productSelection = inject(ProductSelectionService);

@@ -30,8 +30,15 @@ export function shapeIconPath(shape: string): string {
   return `/assets/img/product/jewelry_icon/${SHAPE_ICON_FILENAMES[shape] || `${shape}.avif`}`;
 }
 
+export const RING_SETTING_STYLES = ['Solitaire', 'Halo', 'Pave', 'Sidestone', 'Hidden Halo', 'Bezel'];
+
 const SETTING_STYLE_ICON_FILENAMES: Record<string, string> = {
   Solitaire: 'Solitaire.svg',
+  Halo: 'Halo.svg',
+  Pave: 'Pave.svg',
+  Sidestone: 'SideStones.svg',
+  'Hidden Halo': 'HiddenHalo.svg',
+  Bezel: 'Bezel.svg',
 };
 
 export function settingStyleIconPath(settingType: string): string {
@@ -104,6 +111,39 @@ export interface GuideEntry {
   label: string;
   description: string;
 }
+
+export const SETTING_STYLE_GUIDE: GuideEntry[] = [
+  {
+    key: 'Solitaire',
+    label: 'Solitaire',
+    description: 'A single diamond held by prongs with no accent stones. The timeless, classic choice that lets the center stone stand fully on its own.',
+  },
+  {
+    key: 'Halo',
+    label: 'Halo',
+    description: 'A ring of small diamonds encircling the center stone, making it appear larger and catching more light.',
+  },
+  {
+    key: 'Pave',
+    label: 'Pave',
+    description: 'Small diamonds set closely together along the band, adding continuous sparkle around the center stone.',
+  },
+  {
+    key: 'Sidestone',
+    label: 'Sidestone',
+    description: 'Extra diamonds set along the band beside the center stone, adding brilliance while keeping the center stone the clear focus.',
+  },
+  {
+    key: 'Hidden Halo',
+    label: 'Hidden Halo',
+    description: 'A halo of small diamonds set beneath the center stone, revealed from the side for a subtle sparkle without changing the ring’s classic look from above.',
+  },
+  {
+    key: 'Bezel',
+    label: 'Bezel',
+    description: 'A metal rim fully encircles the center stone instead of prongs, for a smooth, secure, modern look.',
+  },
+];
 
 export const MATERIAL_GUIDE: GuideEntry[] = [
   {

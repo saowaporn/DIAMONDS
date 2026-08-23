@@ -47,6 +47,12 @@
   --white-color: #ffffff;
   /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
    --whitegray-color: #bfbfbf;
+  /* Rendered height of the sticky site header (.header, both rows) at rest.
+     Reused wherever page content needs to sit or stick below the header
+     instead of underneath it (e.g. .tr-sticky-col / .tr-sidebar in
+     engagement-theme.css) — update this one value if the header's own
+     height ever changes instead of hard-coding offsets per page. */
+  --header-height: 88px;
 }
 
 
@@ -969,6 +975,16 @@ h6 {
       rgba(0, 0, 0, 1) 100%);
   transition: all 0.5s;
   z-index: 997;
+  /* Sticky site header (both rows travel together). A sticky element can
+     only stay pinned while its own parent box still overlaps the viewport,
+     so this has to live on .header itself rather than just .main-header:
+     .header is the direct parent of .main-header and is only as tall as
+     its two rows combined, giving .main-header nowhere left to "stick"
+     once .header's own (short) box has scrolled past. Reuses the z-index
+     already set above — mobile-nav overlays (9997+), the preloader, and
+     #scroll-top all stay correctly layered above it with no new value. */
+  position: sticky;
+  top: 0;
 }
 
 .header .top-bar {
@@ -12087,8 +12103,117 @@ font-family: var(--bellefair-font);
 }
 
 .filter-card__header i {
-  color: #8f203b;
+  color: var(--red-color);
   font-size: 0.95rem;
+}
+
+/* Hint tooltip (app-hint-button) — unscoped fallback for pages outside
+   .tr-theme, e.g. the diamond filter page. Values below are literal copies
+   of the .tr-theme design tokens used by the .tr-theme-prefixed rules in
+   engagement-theme.css (--tr-outline, --tr-on-surface-variant, --tr-primary,
+   --tr-on-surface, --tr-surface-container-lowest/high, --tr-radius-lg,
+   --tr-shadow-card-hover), so the hint looks identical on both pages. The
+   .tr-theme-prefixed rules always win by specificity inside .tr-theme, so
+   this cannot affect any page that already uses the tr-theme hint styling. */
+.tr-hint {
+  position: relative;
+  display: inline-flex;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.tr-hint-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  border: 1px solid #857374;
+  background: #ffffff;
+  color: #524345;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+
+.tr-hint-btn:hover {
+  border-color: #340411;
+  color: #340411;
+}
+
+.tr-hint-dialog {
+  width: 380px;
+  max-width: 88vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 16px 40px rgba(28, 27, 27, 0.1);
+  padding: 22px;
+}
+
+.tr-hint-dialog::backdrop {
+  background: rgba(28, 27, 27, 0.45);
+}
+
+.tr-hint-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  color: #524345;
+}
+
+.tr-hint-body {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #1c1b1b;
+  font-weight: 400;
+}
+
+.tr-hint-body p {
+  margin: 0 0 8px;
+}
+
+.tr-hint-body p:last-child {
+  margin-bottom: 0;
+}
+
+.tr-hint-body dt {
+  font-weight: 600;
+  margin-top: 10px;
+  color: #1c1b1b;
+}
+
+.tr-hint-body dt:first-child {
+  margin-top: 0;
+}
+
+.tr-hint-body dd {
+  margin: 2px 0 0;
+  color: #524345;
+}
+
+.tr-hint-diagram {
+  margin: 14px 0;
+  padding: 10px 0;
+  border-top: 1px solid #eae7e7;
+  border-bottom: 1px solid #eae7e7;
+}
+
+.tr-hint-diagram svg {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* ── Range Slider ────────────────────────────────────────────
@@ -12111,7 +12236,7 @@ font-family: var(--bellefair-font);
   top: 0;
   height: 100%;
   border-radius: 999px;
-  background: #8f203b;
+  background: var(--red-color);
 }
 
 .range-slider__inputs {
@@ -12281,61 +12406,79 @@ font-family: var(--bellefair-font);
 }
 
 .diamond-type-tab.active {
-  border-color: #8f203b;
-  border-bottom-color: #8f203b;
+  border-color: var(--red-color);
+  border-bottom-color: var(--red-color);
   background: #fff;
-  color: #8f203b;
+  color: var(--red-color);
 }
 
 /* ── Shape Selector ──────────────────────────────────────────
-   Grid row of diamond shape buttons that fills full width.
+   Grid row of diamond shape buttons that fills full width. Values below
+   are literal copies of the .tr-theme tile tokens used by
+   .tr-theme .tr-filter-tile-grid--shape .tr-filter-tile in
+   engagement-theme.css (--tr-outline-variant, --tr-radius-md,
+   --tr-surface-container-lowest, --tr-on-surface-variant, --tr-primary,
+   --tr-primary-container), so this looks identical to the Shape tiles on
+   the engagement-ring page — large, full-color icons instead of small
+   grayscale ones.
    ──────────────────────────────────────────────────────────── */
 .shape-selector {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
+  justify-content: center;
 }
 
 .shape-option {
-  flex: 1 1 0;
-  border: 1px solid #cfcfcf;
-  border-radius: 8px;
-  background: #f6f6f6;
-  padding: 6px 4px;
-  text-align: center;
+  display: flex;
+  flex: 0 1 calc(25% - 6px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 76px;
+  padding: 3px 10px;
+  border: 1px solid #d7c1c3;
+  border-radius: 0.375rem;
+  background: #ffffff;
   cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 64px;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  font-size: 12px;
+  font-weight: 600;
+  color: #524345;
+  text-align: center;
+}
+
+@media (min-width: 992px) {
+  .shape-selector {
+    justify-content: flex-start;
+  }
+
+  .shape-option {
+    flex: 1 1 0;
+    min-width: 96px;
+  }
 }
 
 .shape-option img {
-  width: 22px;
-  height: 22px;
+  width: 46px;
+  height: 46px;
   object-fit: contain;
-  margin-bottom: 2px;
-  filter: grayscale(1);
 }
 
 .shape-option span {
   display: block;
   font-size: 12px;
   font-weight: 600;
-  color: #5b5b5b;
+  color: inherit;
   line-height: 1.1;
   white-space: nowrap;
 }
 
 .shape-option.active {
-  background: #fff;
-  border-color: #8f203b;
-}
-
-.shape-option.active span {
-  color: #8f203b;
-}
-
-.shape-option.active img {
-  filter: none;
+  background: #f6e9ea;
+  border-color: #340411;
+  color: #340411;
 }
 
 /* ── Certificate Filter ──────────────────────────────────────
@@ -12362,13 +12505,13 @@ font-family: var(--bellefair-font);
 }
 
 .cert-btn:hover {
-  border-color: #8f203b;
-  background: rgba(143, 32, 59, 0.06);
+  border-color: var(--red-color);
+  background: color-mix(in srgb, var(--red-color), transparent 94%);
 }
 
 .cert-btn.active {
-  background: #8f203b;
-  border-color: #8f203b;
+  background: var(--red-color);
+  border-color: var(--red-color);
   color: #fff;
 }
 
@@ -12377,7 +12520,7 @@ font-family: var(--bellefair-font);
    ──────────────────────────────────────────────────────────── */
 .filter-placeholder {
   min-height: 200px;
-  border: 1px dashed rgba(143, 32, 59, 0.28);
+  border: 1px dashed color-mix(in srgb, var(--red-color), transparent 72%);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.45);
 }
@@ -12393,10 +12536,10 @@ font-family: var(--bellefair-font);
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgba(143, 32, 59, 0.35);
+  border: 1px solid color-mix(in srgb, var(--red-color), transparent 65%);
   border-radius: 999px;
   background: #fff;
-  color: #8f203b;
+  color: var(--red-color);
   font-size: 0.9rem;
   font-weight: 600;
   padding: 8px 20px;
@@ -12405,8 +12548,8 @@ font-family: var(--bellefair-font);
 }
 
 .more-detail-btn:hover {
-  border-color: #8f203b;
-  background: rgba(143, 32, 59, 0.06);
+  border-color: var(--red-color);
+  background: color-mix(in srgb, var(--red-color), transparent 94%);
 }
 
 .more-detail-btn i {

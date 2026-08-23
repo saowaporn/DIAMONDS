@@ -1,13 +1,15 @@
 import { AfterViewInit, Component, ElementRef, inject, viewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { VendorLibsService } from '../vendor-libs.service';
 import { CartService } from '../cart.service';
 import { FavoriteService } from '../favorite.service';
+import { AuthService } from '../auth.service';
+import { LoginModal } from '../login-modal/login-modal';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, LoginModal],
   templateUrl: './header.html',
 })
 export class Header implements AfterViewInit {
@@ -15,6 +17,8 @@ export class Header implements AfterViewInit {
 
   readonly cart = inject(CartService);
   readonly favorites = inject(FavoriteService);
+  readonly auth = inject(AuthService);
+  readonly router = inject(Router);
 
   constructor(private readonly vendorLibs: VendorLibsService) {}
 

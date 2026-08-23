@@ -19,25 +19,27 @@
     } @else {
       <div class="tr-card" style="padding: 8px;">
         @for (item of favorites.items(); track item.id) {
-          <div style="display: flex; align-items: center; gap: 12px; padding: 16px; border-bottom: 1px solid var(--tr-surface-container-high); flex-wrap: wrap;">
+          <div data-fly-row style="display: flex; align-items: center; gap: 12px; padding: 16px; border-bottom: 1px solid var(--tr-surface-container-high); flex-wrap: wrap;">
             <button type="button"
               style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 240px; background: none; border: none; padding: 0; text-align: left; cursor: pointer;"
-              [attr.aria-label]="'View or edit ' + item.settingName" (click)="viewOrEdit(item.id)">
+              [attr.aria-label]="'View or edit ' + (item.settingName || item.diamondTitle)" (click)="viewOrEdit(item.id)">
               <div class="tr-card-image" style="width: 84px; flex-shrink: 0;">
-                <img [src]="item.settingImage || item.diamondImage" [alt]="item.settingName">
+                <img [src]="item.settingImage || item.diamondImage" [alt]="item.settingName || item.diamondTitle" loading="lazy" decoding="async">
               </div>
               <div style="flex: 1; min-width: 0;">
-                <div class="tr-card-title" style="font-size: 16px;">{{ item.settingName }}</div>
-                <div class="tr-card-meta">
-                  {{ item.settingMaterialLabel }} &middot; {{ item.settingColorLabel }}
-                  @if (item.ringSize) { &middot; Size {{ item.ringSize }} }
-                </div>
-                <div class="tr-card-meta">{{ item.diamondTitle }}</div>
+                <div class="tr-card-title" style="font-size: 16px;">{{ item.settingName || item.diamondTitle }}</div>
+                @if (item.settingName) {
+                  <div class="tr-card-meta">
+                    {{ item.settingMaterialLabel }} &middot; {{ item.settingColorLabel }}
+                    @if (item.ringSize) { &middot; Size {{ item.ringSize }} }
+                  </div>
+                  <div class="tr-card-meta">{{ item.diamondTitle }}</div>
+                }
                 <div class="tr-card-price">THB {{ formatPrice(item.totalPrice) }}</div>
               </div>
             </button>
             <div style="display: flex; gap: 8px; flex-wrap: wrap; flex-shrink: 0;">
-              <button type="button" class="tr-btn tr-btn-primary" (click)="moveToCart(item.id)">Move to Bag</button>
+              <button type="button" class="tr-btn tr-btn-primary" (click)="moveToCart(item.id, $event)">Move to Bag</button>
               <button type="button" class="tr-btn tr-btn-outline" (click)="remove(item.id)">Remove</button>
             </div>
           </div>

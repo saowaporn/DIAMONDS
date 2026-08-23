@@ -62,8 +62,16 @@ export class SettingDetail {
   readonly ringSize = signal<string | null>(this.setting()?.ringSize ?? null);
   readonly currentRow = signal<RingSetting | null>(null);
   readonly availableShapes = signal<string[]>([]);
+  readonly shapeExpanded = signal(false);
+  readonly zoomOrigin = signal('50% 50%');
+  readonly isZooming = signal(false);
 
   readonly formattedPrice = computed(() => parsePrice(this.setting()?.price || '0').toLocaleString('th-TH'));
+
+  readonly selectedShapeLabel = computed(() => {
+    const current = this.setting()?.shape || '';
+    return RING_SETTING_SHAPES.find((s) => s.toLowerCase() === current.toLowerCase()) || current;
+  });
 
   readonly continueButtonLabel = computed(() => {
     if (!this.fromSummary) return 'Select This Setting';
@@ -76,6 +84,8 @@ export class SettingDetail {
   });
 
   readonly activeImage = computed(() => this.angleImage(this.activeAngle()) || this.angleImage('front') || '');
+
+  readonly availableAngles = computed(() => this.angles.filter((angle) => !!this.angleImage(angle.key)));
 
   constructor() {
     const current = this.setting();
@@ -95,6 +105,39 @@ export class SettingDetail {
         if (row) this.currentRow.set(row);
       })
       .catch((err) => console.error('Error loading ring settings:', err));
+  }
+
+  prevAngle(): void {
+    const list = this.availableAngles();
+    if (list.length < 2) return;
+    const idx = list.findIndex((a) => a.key === this.activeAngle());
+    const nextIdx = (idx - 1 + list.length) % list.length;
+    this.activeAngle.set(list[nextIdx].key);
+  }
+
+  nextAngle(): void {
+    const list = this.availableAngles();
+    if (list.length < 2) return;
+    const idx = list.findIndex((a) => a.key === this.activeAngle());
+    const nextIdx = (idx + 1) % list.length;
+    this.activeAngle.set(list[nextIdx].key);
+  }
+
+  private readonly zoomEdgeMargin = 56; // px reserved on each side for the nav arrows
+
+  onImageMouseMove(event: MouseEvent): void {
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const px = event.clientX - rect.left;
+    const x = (px / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+    this.zoomOrigin.set(`${x}% ${y}%`);
+    const inDeadZone = px < this.zoomEdgeMargin || px > rect.width - this.zoomEdgeMargin;
+    this.isZooming.set(!inDeadZone);
+  }
+
+  onImageMouseLeave(): void {
+    this.isZooming.set(false);
+    this.zoomOrigin.set('50% 50%');
   }
 
   angleImage(angle: string): string | undefined {

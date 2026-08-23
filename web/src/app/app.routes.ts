@@ -6,13 +6,14 @@ import { SettingSelection } from './pages/setting-selection/setting-selection';
 import { SettingDetail } from './pages/setting-detail/setting-detail';
 import { EngagementRing } from './pages/engagement-ring/engagement-ring';
 import { DiamondDetail } from './pages/diamond-detail/diamond-detail';
-import { DiamondSummary } from './pages/diamond-summary/diamond-summary';
 import { EngagementSummary } from './pages/engagement-summary/engagement-summary';
 import { SettingCustom } from './pages/setting-custom/setting-custom';
 import { SettingBespoke } from './pages/setting-bespoke/setting-bespoke';
 import { SettingSummary } from './pages/setting-summary/setting-summary';
 import { Cart } from './pages/cart/cart';
 import { Favorites } from './pages/favorites/favorites';
+import { Admin } from './pages/admin/admin';
+import { authGuard } from './shared/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -29,10 +30,10 @@ export const routes: Routes = [
   { path: 'diamonds', component: EngagementRing, data: { shapeLocked: false } },
 
   { path: 'jewelry/diamond-detail', component: DiamondDetail },
-  { path: 'jewelry/diamond-summary', component: DiamondSummary, data: { hideChrome: true } },
 
   { path: 'cart', component: Cart },
   { path: 'favorites', component: Favorites },
+  { path: 'admin', component: Admin, canActivate: [authGuard] },
 
   // Older ring-setting wizard (separate feature, untouched)
   { path: 'setting/custom', component: SettingCustom },

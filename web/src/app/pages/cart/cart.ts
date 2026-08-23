@@ -7,6 +7,8 @@ import { BANK_ACCOUNTS } from '../../shared/bank-details';
 import { SettingSelectionService } from '../../shared/setting-selection.service';
 import { ProductSelectionService } from '../../shared/product-selection.service';
 import { loadItemIntoSelection } from '../../shared/view-edit-selection';
+import { GoodToKnow } from '../../shared/good-to-know/good-to-know';
+import { TRUST_BADGES } from '../../shared/trust-badges';
 
 type PaymentMethod = 'bank_transfer' | 'credit_card';
 type CheckoutStatus = 'idle' | 'submitting' | 'success' | 'error';
@@ -17,11 +19,12 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, GoodToKnow],
   templateUrl: './cart.html',
 })
 export class Cart {
   readonly cart = inject(CartService);
+  readonly trustBadges = TRUST_BADGES;
   private readonly platformId = inject(PLATFORM_ID);
   private readonly router = inject(Router);
   private readonly settingSelection = inject(SettingSelectionService);

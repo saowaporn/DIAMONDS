@@ -1,17 +1,17 @@
-<div class="page-title light-background">
-  <div class="container d-lg-flex justify-content-between align-items-center">
-    <h1 class="mb-2 mb-lg-0">Engagement Rings</h1>
-    <nav class="breadcrumbs">
+<div class="tr-theme">
+  <div class="tr-container" style="padding-top: 32px; padding-bottom: 0;">
+    <nav class="breadcrumbs tr-breadcrumb-slim">
       <ol>
         <li><a routerLink="/">Home</a></li>
-        <li class="current">Engagement Rings</li>
+        @if (subLabel()) {
+          <li><a routerLink="/jewelry/engagement-ring">Engagement Rings</a></li>
+          <li class="current">{{ subLabel() }}</li>
+        } @else {
+          <li class="current">Engagement Rings</li>
+        }
       </ol>
     </nav>
-  </div>
-</div>
 
-<div class="tr-theme">
-  <div class="tr-container" style="padding-top: 14px; padding-bottom: 0;">
     <div class="tr-flow-header">
       <div class="tr-flow-header-label">Design Your Ring</div>
 

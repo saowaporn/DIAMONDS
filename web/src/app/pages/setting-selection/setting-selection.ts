@@ -4,11 +4,14 @@ import { RingSetting, RingSettingsApiService } from '../../shared/ring-settings-
 import { SettingSelectionService } from '../../shared/setting-selection.service';
 import { HintButton } from '../../shared/hint-button/hint-button';
 import { RingFlowHeader } from '../../shared/ring-flow-header/ring-flow-header';
+import { DIAMOND_SHAPE_GUIDE } from '../../shared/diamond-scales';
 import {
   COLOR_GUIDE,
   MATERIAL_GUIDE,
   RING_SETTING_MATERIALS,
   RING_SETTING_SHAPES,
+  RING_SETTING_STYLES,
+  SETTING_STYLE_GUIDE,
   getDefaultColorKey,
   groupBySettingType,
   materialLabel,
@@ -44,12 +47,15 @@ export class SettingSelection {
   private readonly router = inject(Router);
 
   readonly shapes = RING_SETTING_SHAPES;
+  readonly settingStyles = RING_SETTING_STYLES;
   readonly shapeIconPath = shapeIconPath;
   readonly settingStyleIconPath = settingStyleIconPath;
   readonly materials = RING_SETTING_MATERIALS;
   readonly colorOptions = COLOR_FILTER_OPTIONS;
   readonly materialGuide = MATERIAL_GUIDE;
   readonly colorGuide = COLOR_GUIDE;
+  readonly settingGuide = SETTING_STYLE_GUIDE;
+  readonly shapeGuide = DIAMOND_SHAPE_GUIDE;
 
   readonly loading = signal(true);
   readonly allSettings = signal<RingSetting[]>([]);
@@ -61,7 +67,6 @@ export class SettingSelection {
   readonly sortBy = signal<SortOption>('featured');
 
   readonly settingGroups = computed(() => groupBySettingType(this.allSettings()));
-  readonly settingTypes = computed(() => this.settingGroups().map((g) => g.settingType));
 
   readonly cards = computed(() => {
     const shapeFilter = this.shapeFilter();

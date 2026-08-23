@@ -1,20 +1,30 @@
 <main class="main">
-  <app-ring-flow-header [activeStep]="1"></app-ring-flow-header>
+  <app-ring-flow-header [activeStep]="1" [subLabel]="'Setting Detail'"></app-ring-flow-header>
 
   <div class="tr-theme">
   <div class="tr-container" style="padding-top: 24px; padding-bottom: 80px;">
     @if (setting(); as setting) {
       <div class="row g-5">
-        <div class="col-lg-6">
-          <div class="tr-card tr-card-image" style="aspect-ratio: 1 / 1; margin-bottom: 16px;">
-            <img [src]="activeImage()" [alt]="setting.name">
+        <div class="col-lg-6 tr-sticky-col">
+          <div class="tr-card tr-card-image tr-zoom" style="aspect-ratio: 1 / 1; margin-bottom: 16px; position: relative;"
+            (mousemove)="onImageMouseMove($event)" (mouseleave)="onImageMouseLeave()">
+            <img [src]="activeImage()" [alt]="setting.name" class="tr-zoom-img" loading="eager" fetchpriority="high"
+              [class.tr-zoom-img--active]="isZooming()" [style.transform-origin]="zoomOrigin()">
+            @if (availableAngles().length > 1) {
+              <button type="button" class="tr-image-nav-btn tr-image-nav-btn--prev" aria-label="Previous image" (click)="prevAngle()">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+              <button type="button" class="tr-image-nav-btn tr-image-nav-btn--next" aria-label="Next image" (click)="nextAngle()">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            }
           </div>
           <div style="display: flex; gap: 10px; justify-content: center;">
             @for (angle of angles; track angle.key) {
               @if (angleImage(angle.key); as thumbSrc) {
                 <button type="button" class="tr-thumb" [class.active]="activeAngle() === angle.key"
                   [attr.aria-label]="angle.label" (click)="activeAngle.set(angle.key)">
-                  <img [src]="thumbSrc" [alt]="angle.label">
+                  <img [src]="thumbSrc" [alt]="angle.label" loading="eager" fetchpriority="low" decoding="async">
                 </button>
               }
             }
@@ -22,23 +32,30 @@
         </div>
 
         <div class="col-lg-6">
-          <div class="tr-eyebrow">{{ setting.settingType }}</div>
           <h1>{{ setting.name }}</h1>
           <div class="tr-card-price" style="font-size: 22px; margin-bottom: 24px;">THB {{ formattedPrice() }}</div>
 
           <div class="tr-card" style="padding: 20px; margin: 24px 0;">
             <div style="margin-bottom: 16px;">
               <div class="tr-eyebrow tr-filter-title" style="margin-bottom: 10px;">Shape</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                @for (shape of availableShapes(); track shape) {
-                  <button type="button" class="tr-chip"
-                    [class.active]="setting.shape.toLowerCase() === shape.toLowerCase()"
-                    (click)="setShape(shape)">
-                    <img [src]="shapeIconPath(shape)" [alt]="shape + ' shape'">
-                    {{ shape }}
-                  </button>
-                }
-              </div>
+              <button type="button" class="tr-select-summary" (click)="shapeExpanded.set(!shapeExpanded())"
+                [attr.aria-expanded]="shapeExpanded()">
+                <img [src]="shapeIconPath(selectedShapeLabel())" [alt]="selectedShapeLabel() + ' shape'">
+                <span class="tr-select-summary-label">{{ selectedShapeLabel() }}</span>
+                <i class="bi bi-chevron-down tr-select-summary-chevron" [class.tr-select-summary-chevron--open]="shapeExpanded()"></i>
+              </button>
+              @if (shapeExpanded()) {
+                <div class="tr-filter-tile-grid tr-filter-tile-grid--shape tr-shape-grid-fixed" style="margin-top: 8px;">
+                  @for (shape of availableShapes(); track shape) {
+                    <button type="button" class="tr-filter-tile"
+                      [class.active]="setting.shape.toLowerCase() === shape.toLowerCase()"
+                      (click)="setShape(shape); shapeExpanded.set(false)">
+                      <img [src]="shapeIconPath(shape)" [alt]="shape + ' shape'">
+                      {{ shape }}
+                    </button>
+                  }
+                </div>
+              }
             </div>
 
             <div style="margin-bottom: 16px;">

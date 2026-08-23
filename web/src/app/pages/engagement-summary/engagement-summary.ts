@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DiamondApiData, ProductSelectionService } from '../../shared/product-selection.service';
 import { SelectedSetting, SettingSelectionService } from '../../shared/setting-selection.service';
@@ -14,6 +14,9 @@ import { FavoriteService } from '../../shared/favorite.service';
 import { SavedRingItem } from '../../shared/saved-ring-item';
 import { ConsultModal } from '../../shared/consult-modal/consult-modal';
 import { RingFlowHeader } from '../../shared/ring-flow-header/ring-flow-header';
+import { GoodToKnow } from '../../shared/good-to-know/good-to-know';
+import { TRUST_BADGES } from '../../shared/trust-badges';
+import { FlyTargetKey, FlyToTargetService } from '../../shared/fly-to-target.service';
 
 function parsePrice(value: unknown): number {
   if (value === null || value === undefined || value === '') return 0;
@@ -23,16 +26,10 @@ function parsePrice(value: unknown): number {
   return Number.isFinite(num) ? num : 0;
 }
 
-const TRUST_BADGES = [
-  { icon: 'bi-shield-check', label: '3-Year Warranty' },
-  { icon: 'bi-truck', label: 'Free Insured Shipping' },
-  { icon: 'bi-arrow-repeat', label: '7-Day Exchange' },
-];
-
 @Component({
   selector: 'app-engagement-summary',
   standalone: true,
-  imports: [RouterLink, ConsultModal, RingFlowHeader],
+  imports: [RouterLink, ConsultModal, RingFlowHeader, GoodToKnow],
   templateUrl: './engagement-summary.html',
 })
 export class EngagementSummary {
@@ -42,6 +39,9 @@ export class EngagementSummary {
   private readonly favorites = inject(FavoriteService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly flyToTarget = inject(FlyToTargetService);
+
+  private readonly ringImageRef = viewChild<ElementRef<HTMLImageElement>>('ringImage');
 
   private readonly cartItemId = signal(this.route.snapshot.queryParamMap.get('cartItemId'));
   private readonly favoriteItemId = signal(this.route.snapshot.queryParamMap.get('favoriteItemId'));
@@ -74,6 +74,8 @@ export class EngagementSummary {
   readonly activeAngle = signal<RingImageAngle>('front');
   readonly addedToCart = signal(false);
   readonly addedToFavorites = signal(false);
+  readonly zoomOrigin = signal('50% 50%');
+  readonly isZooming = signal(false);
 
   readonly materialLabelText = computed(() => materialLabel(this.settingValue?.material));
   readonly colorLabelText = computed(() => colorLabel(this.settingValue?.color));
@@ -87,6 +89,8 @@ export class EngagementSummary {
   readonly activeImage = computed(
     () => this.angleImage(this.activeAngle()) || this.angleImage('front') || this.settingImage(),
   );
+
+  readonly availableAngles = computed(() => this.angles.filter((angle) => !!this.angleImage(angle.key)));
 
   readonly diamondImage = computed(() => {
     const media = this.diamondValue?.['media'] as { image?: string } | undefined;
@@ -136,6 +140,39 @@ export class EngagementSummary {
     return parsePrice(value).toLocaleString('th-TH');
   }
 
+  prevAngle(): void {
+    const list = this.availableAngles();
+    if (list.length < 2) return;
+    const idx = list.findIndex((a) => a.key === this.activeAngle());
+    const nextIdx = (idx - 1 + list.length) % list.length;
+    this.activeAngle.set(list[nextIdx].key);
+  }
+
+  nextAngle(): void {
+    const list = this.availableAngles();
+    if (list.length < 2) return;
+    const idx = list.findIndex((a) => a.key === this.activeAngle());
+    const nextIdx = (idx + 1) % list.length;
+    this.activeAngle.set(list[nextIdx].key);
+  }
+
+  private readonly zoomEdgeMargin = 56; // px reserved on each side for the nav arrows
+
+  onImageMouseMove(event: MouseEvent): void {
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const px = event.clientX - rect.left;
+    const x = (px / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+    this.zoomOrigin.set(`${x}% ${y}%`);
+    const inDeadZone = px < this.zoomEdgeMargin || px > rect.width - this.zoomEdgeMargin;
+    this.isZooming.set(!inDeadZone);
+  }
+
+  onImageMouseLeave(): void {
+    this.isZooming.set(false);
+    this.zoomOrigin.set('50% 50%');
+  }
+
   angleImage(angle: string): string | undefined {
     return resolveAngleImage(this.settingValue?.images, this.settingValue?.color, angle);
   }
@@ -174,6 +211,7 @@ export class EngagementSummary {
     }
     this.addedToCart.set(true);
     setTimeout(() => this.addedToCart.set(false), 2500);
+    this.triggerFly('bag');
   }
 
   addToFavorites(): void {
@@ -187,5 +225,12 @@ export class EngagementSummary {
     }
     this.addedToFavorites.set(true);
     setTimeout(() => this.addedToFavorites.set(false), 2500);
+    this.triggerFly('favorites');
+  }
+
+  private triggerFly(target: FlyTargetKey): void {
+    const imgEl = this.ringImageRef()?.nativeElement;
+    if (!imgEl) return;
+    this.flyToTarget.fly(imgEl, this.activeImage(), target);
   }
 }
