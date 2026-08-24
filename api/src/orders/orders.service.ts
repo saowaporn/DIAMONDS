@@ -84,19 +84,26 @@ function formatDetailKeyLabel(key: string): string {
   return key.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-function toDetailRows(obj: Record<string, unknown> | undefined, excludeKeys: string[] = []): DetailRow[] {
+function toDetailRows(obj: Record<string, unknown> | undefined): DetailRow[] {
   if (!obj) return [];
-  const excluded = new Set(excludeKeys.map((key) => key.toLowerCase()));
   return Object.entries(obj)
-    .filter(
-      ([key, value]) =>
-        !excluded.has(key.toLowerCase()) &&
-        value !== null &&
-        value !== undefined &&
-        typeof value !== 'object' &&
-        String(value).trim() !== '',
-    )
+    .filter(([, value]) => value !== null && value !== undefined && typeof value !== 'object' && String(value).trim() !== '')
     .map(([key, value]) => ({ label: formatDetailKeyLabel(key), value: String(value) }));
+}
+
+function extractImageUrl(snapshot: Record<string, unknown>): string | undefined {
+  const media = snapshot['media'] as { image?: unknown; images?: unknown[] } | undefined;
+  if (typeof media?.image === 'string' && media.image.trim()) return media.image.trim();
+  if (Array.isArray(media?.images)) {
+    const first = media.images.find((value) => typeof value === 'string' && value.trim());
+    if (typeof first === 'string') return first.trim();
+  }
+  if (Array.isArray(snapshot['images'])) {
+    const first = (snapshot['images'] as unknown[]).find((value) => typeof value === 'string' && (value as string).trim());
+    if (typeof first === 'string') return first.trim();
+  }
+  if (typeof snapshot['image'] === 'string' && (snapshot['image'] as string).trim()) return (snapshot['image'] as string).trim();
+  return undefined;
 }
 
 function buildSettingRows(item: OrderItem): DetailRow[] {
@@ -157,6 +164,8 @@ function buildDiamondRows(item: OrderItem): DetailRow[] {
   const cut = snapshot['cut'];
   if (cut) rows.push({ label: 'Cut', value: String(cut) });
 
+  rows.push({ label: 'Origin', value: String(snapshot['origin'] || 'Natural') });
+
   const certificate = snapshot['certificate'] as Record<string, unknown> | undefined;
   const certLab = certificate?.['lab'];
   if (certLab) rows.push({ label: 'Certificate Lab', value: String(certLab) });
@@ -166,10 +175,9 @@ function buildDiamondRows(item: OrderItem): DetailRow[] {
     rows.push({ label: 'Price', value: `THB ${formatPrice(parsePriceValue(price))}` });
   }
 
-  const excludeKeys = ['id', 'shape', 'carat', 'color', 'clarity', 'cut', 'price', 'title'];
-  rows.push(...toDetailRows(snapshot['quality'] as Record<string, unknown> | undefined, excludeKeys));
-  rows.push(...toDetailRows(snapshot['details'] as Record<string, unknown> | undefined, excludeKeys));
-  rows.push(...toDetailRows(snapshot['notes'] as Record<string, unknown> | undefined, excludeKeys));
+  rows.push(...toDetailRows(snapshot['quality'] as Record<string, unknown> | undefined));
+  rows.push(...toDetailRows(snapshot['details'] as Record<string, unknown> | undefined));
+  rows.push(...toDetailRows(snapshot['notes'] as Record<string, unknown> | undefined));
 
   return rows;
 }
@@ -186,10 +194,14 @@ function buildDetailRowsHtml(rows: DetailRow[]): string {
     .join('');
 }
 
-function buildDetailSectionHtml(heading: string, rows: DetailRow[]): string {
-  if (rows.length === 0) return '';
+function buildDetailSectionHtml(heading: string, rows: DetailRow[], imageUrl?: string): string {
+  if (rows.length === 0 && !imageUrl) return '';
+  const imageHtml = imageUrl
+    ? `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(heading)}" style="max-width: 120px; max-height: 120px; border-radius: 6px; margin: 4px 0 8px; display: block;" />`
+    : '';
   return `
         <div style="margin: 10px 0 4px; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; color: #a67c00;">${escapeHtml(heading)}</div>
+        ${imageHtml}
         <table style="width: 100%; border-collapse: collapse;">
           ${buildDetailRowsHtml(rows)}
         </table>`;
@@ -201,6 +213,8 @@ function buildItemsHtml(items: OrderItem[]): string {
       const title = [item.settingName, item.diamondTitle].filter(Boolean).join(' — ');
       const settingRows = buildSettingRows(item);
       const diamondRows = buildDiamondRows(item);
+      const settingImage = item.settingImage || extractImageUrl(item.settingSnapshot || {});
+      const diamondImage = item.diamondImage || extractImageUrl(item.diamondSnapshot || {});
 
       return `
       <div style="border: 1px solid #e5e5e5; border-radius: 8px; padding: 12px 16px; margin-bottom: 12px;">
@@ -210,8 +224,8 @@ function buildItemsHtml(items: OrderItem[]): string {
             <td style="text-align: right; font-weight: 600; white-space: nowrap;">THB ${formatPrice(item.totalPrice)}</td>
           </tr>
         </table>
-        ${buildDetailSectionHtml('Setting', settingRows)}
-        ${buildDetailSectionHtml('Diamond', diamondRows)}
+        ${buildDetailSectionHtml('Setting', settingRows, settingImage)}
+        ${buildDetailSectionHtml('Diamond', diamondRows, diamondImage)}
       </div>`;
     })
     .join('');
