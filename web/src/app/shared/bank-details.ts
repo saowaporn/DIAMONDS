@@ -7,8 +7,8 @@ export interface BankAccount {
 // TODO: replace with the real receiving bank account(s) before launch.
 export const BANK_ACCOUNTS: BankAccount[] = [
   {
-    bankName: 'Bank Name (TODO)',
-    accountNumber: '000-0-00000-0',
+    bankName: 'Kasikorn Bank',
+    accountNumber: '237-1-02300-6',
     accountName: 'YANIGA DIAMOND',
   },
 ];
