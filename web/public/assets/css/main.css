@@ -12146,9 +12146,9 @@ font-family: var(--bellefair-font);
 }
 
 .tr-hint-dialog {
-  width: 380px;
-  max-width: 88vw;
-  max-height: 80vh;
+  width: 520px;
+  max-width: 92vw;
+  max-height: 85vh;
   overflow-y: auto;
   background: #ffffff;
   border: none;
@@ -12210,7 +12210,8 @@ font-family: var(--bellefair-font);
   border-bottom: 1px solid #eae7e7;
 }
 
-.tr-hint-diagram svg {
+.tr-hint-diagram svg,
+.tr-hint-diagram img {
   width: 100%;
   height: auto;
   display: block;

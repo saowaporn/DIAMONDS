@@ -9,6 +9,9 @@
         <div class="tr-filter-title" style="display: flex; align-items: center;">
           Shape
           <app-hint-button label="Shape guide">
+            <div class="tr-hint-diagram">
+              <img src="/assets/img/hint/Shape.png" alt="Diamond shape guide">
+            </div>
             <dl>
               @for (g of shapeGuide; track g.key) {
                 <dt>{{ g.label }}</dt>
@@ -36,6 +39,9 @@
             <div class="tr-filter-title" style="display: flex; align-items: center;">
               Setting
               <app-hint-button label="Setting guide">
+                <div class="tr-hint-diagram">
+                  <img src="/assets/img/hint/Setting.png" alt="Ring setting guide">
+                </div>
                 <dl>
                   @for (s of settingGuide; track s.key) {
                     <dt>{{ s.label }}</dt>

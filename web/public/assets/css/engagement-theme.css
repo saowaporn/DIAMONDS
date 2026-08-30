@@ -819,9 +819,9 @@
 }
 
 .tr-theme .tr-hint-dialog {
-  width: 380px;
-  max-width: 88vw;
-  max-height: 80vh;
+  width: 520px;
+  max-width: 92vw;
+  max-height: 85vh;
   overflow-y: auto;
   background: var(--tr-surface-container-lowest);
   border: none;
@@ -887,7 +887,8 @@
   border-bottom: 1px solid var(--tr-surface-container-high);
 }
 
-.tr-theme .tr-hint-diagram svg {
+.tr-theme .tr-hint-diagram svg,
+.tr-theme .tr-hint-diagram img {
   width: 100%;
   height: auto;
   display: block;
