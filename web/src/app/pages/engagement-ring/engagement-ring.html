@@ -23,6 +23,9 @@
               <div class="filter-card__header">
                 <span>Shape</span>
                 <app-hint-button label="Shape guide">
+                  <div class="tr-hint-diagram">
+                    <img src="/assets/img/hint/Shape.png" alt="Diamond shape guide">
+                  </div>
                   <dl>
                     @for (g of shapeGuide; track g.key) {
                       <dt>{{ g.label }}</dt>
@@ -85,6 +88,9 @@
             <div class="filter-card__header">
               <span>Carat</span>
               <app-hint-button label="Carat guide">
+                <div class="tr-hint-diagram">
+                  <img src="/assets/img/hint/Carat.png" alt="Carat guide">
+                </div>
                 <p>Carat measures a diamond's weight, not its size (1 carat = 0.2 grams). Two diamonds with the same carat weight can still look different in size depending on how they're cut and proportioned.</p>
               </app-hint-button>
             </div>
@@ -109,9 +115,6 @@
           <div class="filter-card">
             <div class="filter-card__header">
               <span>Price</span>
-              <app-hint-button label="Price guide">
-                <p>This range covers the diamond only — the setting is priced separately. Price reflects a combination of carat weight, cut, color, and clarity together, rather than any single factor on its own.</p>
-              </app-hint-button>
             </div>
             <div class="range-slider">
               <div class="range-slider__track">
@@ -170,6 +173,9 @@
             <div class="filter-card__header">
               <span>Clarity</span>
               <app-hint-button label="Clarity guide">
+                <div class="tr-hint-diagram">
+                  <img src="/assets/img/hint/Carity.png" alt="Clarity guide">
+                </div>
                 <dl>
                   @for (g of clarityGuide; track g.key) {
                     <dt>{{ g.label }}</dt>
@@ -196,6 +202,9 @@
             <div class="filter-card__header">
               <span>Cut</span>
               <app-hint-button label="Cut guide">
+                <div class="tr-hint-diagram">
+                  <img src="/assets/img/hint/Cut.png" alt="Cut guide">
+                </div>
                 <dl>
                   @for (g of cutGuide; track g.key) {
                     <dt>{{ g.label }}</dt>
@@ -222,6 +231,9 @@
             <div class="filter-card__header">
               <span>Color</span>
               <app-hint-button label="Color guide">
+                <div class="tr-hint-diagram">
+                  <img src="/assets/img/hint/Color.png" alt="Color guide">
+                </div>
                 <dl>
                   @for (g of colorGuide; track g.key) {
                     <dt>{{ g.label }}</dt>
@@ -261,6 +273,9 @@
               <div class="filter-card__header">
                 <span>Polish</span>
                 <app-hint-button label="Polish guide">
+                  <div class="tr-hint-diagram">
+                    <img src="/assets/img/hint/Polish.png" alt="Polish guide">
+                  </div>
                   <dl>
                     @for (g of polishGuide; track g.key) {
                       <dt>{{ g.label }}</dt>
@@ -287,6 +302,9 @@
               <div class="filter-card__header">
                 <span>Symmetry</span>
                 <app-hint-button label="Symmetry guide">
+                  <div class="tr-hint-diagram">
+                    <img src="/assets/img/hint/Symmetry.png" alt="Symmetry guide">
+                  </div>
                   <dl>
                     @for (g of symmetryGuide; track g.key) {
                       <dt>{{ g.label }}</dt>
@@ -313,6 +331,9 @@
               <div class="filter-card__header">
                 <span>Fluorescence</span>
                 <app-hint-button label="Fluorescence guide">
+                  <div class="tr-hint-diagram">
+                    <img src="/assets/img/hint/Florescence.png" alt="Fluorescence guide">
+                  </div>
                   <dl>
                     @for (g of fluorescenceGuide; track g.key) {
                       <dt>{{ g.label }}</dt>
@@ -341,22 +362,10 @@
               <div class="filter-card__header">
                 <span>Table %</span>
                 <app-hint-button label="Table % guide">
-                  <p>The table is the flat facet on the top of a diamond. Table % compares its width to the diamond's overall width. Different table proportions can affect how a diamond reflects light; commonly referenced ranges (for example, roughly 54–62% on round diamonds) are general guidance rather than a strict rule, and can vary by shape.</p>
                   <div class="tr-hint-diagram">
-                    <svg viewBox="0 0 240 130" role="img" aria-label="Diagram of a diamond's cross-section showing table, width, and depth">
-                      <line x1="70" y1="15" x2="130" y2="15" stroke="#640000" stroke-width="1.5"/>
-                      <line x1="70" y1="15" x2="20" y2="45" stroke="#640000" stroke-width="1.5"/>
-                      <line x1="130" y1="15" x2="180" y2="45" stroke="#640000" stroke-width="1.5"/>
-                      <line x1="20" y1="45" x2="100" y2="105" stroke="#640000" stroke-width="1.5"/>
-                      <line x1="180" y1="45" x2="100" y2="105" stroke="#640000" stroke-width="1.5"/>
-                      <line x1="70" y1="7" x2="130" y2="7" stroke="#857374" stroke-width="1"/>
-                      <text x="100" y="6" text-anchor="middle" font-size="9" fill="#857374">Table</text>
-                      <line x1="18" y1="55" x2="182" y2="55" stroke="#857374" stroke-width="1"/>
-                      <text x="100" y="68" text-anchor="middle" font-size="9" fill="#857374">Width</text>
-                      <line x1="205" y1="15" x2="205" y2="105" stroke="#857374" stroke-width="1"/>
-                      <text x="211" y="63" text-anchor="start" font-size="9" fill="#857374">Depth</text>
-                    </svg>
+                    <img src="/assets/img/hint/Table.png" alt="Table % diagram">
                   </div>
+                  <p>The table is the flat facet on the top of a diamond. Table % compares its width to the diamond's overall width. Different table proportions can affect how a diamond reflects light; commonly referenced ranges (for example, roughly 54–62% on round diamonds) are general guidance rather than a strict rule, and can vary by shape.</p>
                 </app-hint-button>
               </div>
               <div class="range-slider range-slider--with-bubbles">
@@ -390,22 +399,10 @@
               <div class="filter-card__header">
                 <span>Depth %</span>
                 <app-hint-button label="Depth % guide">
-                  <p>Depth % compares a diamond's total height to its width. Proportions that are unusually shallow or deep may affect how light returns through the top of the stone. Commonly referenced ranges (for example, roughly 59–63% on round diamonds) are general guidance rather than a strict rule, and can vary by shape.</p>
                   <div class="tr-hint-diagram">
-                    <svg viewBox="0 0 240 130" role="img" aria-label="Diagram of a diamond's cross-section showing table, width, and depth">
-                      <line x1="70" y1="15" x2="130" y2="15" stroke="#640000" stroke-width="1.5"/>
-                      <line x1="70" y1="15" x2="20" y2="45" stroke="#640000" stroke-width="1.5"/>
-                      <line x1="130" y1="15" x2="180" y2="45" stroke="#640000" stroke-width="1.5"/>
-                      <line x1="20" y1="45" x2="100" y2="105" stroke="#640000" stroke-width="1.5"/>
-                      <line x1="180" y1="45" x2="100" y2="105" stroke="#640000" stroke-width="1.5"/>
-                      <line x1="70" y1="7" x2="130" y2="7" stroke="#857374" stroke-width="1"/>
-                      <text x="100" y="6" text-anchor="middle" font-size="9" fill="#857374">Table</text>
-                      <line x1="18" y1="55" x2="182" y2="55" stroke="#857374" stroke-width="1"/>
-                      <text x="100" y="68" text-anchor="middle" font-size="9" fill="#857374">Width</text>
-                      <line x1="205" y1="15" x2="205" y2="105" stroke="#857374" stroke-width="1"/>
-                      <text x="211" y="63" text-anchor="start" font-size="9" fill="#857374">Depth</text>
-                    </svg>
+                    <img src="/assets/img/hint/Depth.png" alt="Depth % diagram">
                   </div>
+                  <p>Depth % compares a diamond's total height to its width. Proportions that are unusually shallow or deep may affect how light returns through the top of the stone. Commonly referenced ranges (for example, roughly 59–63% on round diamonds) are general guidance rather than a strict rule, and can vary by shape.</p>
                 </app-hint-button>
               </div>
               <div class="range-slider range-slider--with-bubbles">
@@ -439,16 +436,10 @@
               <div class="filter-card__header">
                 <span>Length / Width Ratio</span>
                 <app-hint-button label="Length / Width Ratio guide">
-                  <p>Length/Width Ratio compares a diamond's length to its width. A ratio near 1.00 generally corresponds to more square or round proportions, while a higher ratio describes a more elongated shape. This is most relevant for fancy shapes such as Oval, Pear, Marquise, and Emerald, and preferred proportions are largely a matter of personal taste.</p>
                   <div class="tr-hint-diagram">
-                    <svg viewBox="0 0 240 120" role="img" aria-label="Diagram of a diamond's length and width measurement">
-                      <ellipse cx="95" cy="60" rx="80" ry="38" fill="none" stroke="#640000" stroke-width="1.5"/>
-                      <line x1="15" y1="105" x2="175" y2="105" stroke="#857374" stroke-width="1"/>
-                      <text x="95" y="117" text-anchor="middle" font-size="9" fill="#857374">Length</text>
-                      <line x1="200" y1="22" x2="200" y2="98" stroke="#857374" stroke-width="1"/>
-                      <text x="206" y="63" text-anchor="start" font-size="9" fill="#857374">Width</text>
-                    </svg>
+                    <img src="/assets/img/hint/Lenght_Width_Ratio.png" alt="Length / Width Ratio diagram">
                   </div>
+                  <p>Length/Width Ratio compares a diamond's length to its width. A ratio near 1.00 generally corresponds to more square or round proportions, while a higher ratio describes a more elongated shape. This is most relevant for fancy shapes such as Oval, Pear, Marquise, and Emerald, and preferred proportions are largely a matter of personal taste.</p>
                 </app-hint-button>
               </div>
               <div class="range-slider range-slider--with-bubbles">
