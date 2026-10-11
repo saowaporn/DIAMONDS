@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GoogleSheetsService } from '../common/google-sheets.service';
+import { ShopifyCatalogService } from '../shopify/shopify-catalog.service';
 import { RING_SETTING_COLUMNS, RING_SETTING_SHEET_RANGE } from './ring-settings.config';
 
 export type RingSettingRow = Record<string, string>;
@@ -11,7 +12,10 @@ export class RingSettingDataService {
   private cache: RingSettingRow[] | null = null;
   private cacheExpiresAt = 0;
 
-  constructor(private readonly googleSheetsService: GoogleSheetsService) {}
+  constructor(
+    private readonly googleSheetsService: GoogleSheetsService,
+    private readonly shopifyCatalogService: ShopifyCatalogService,
+  ) {}
 
   async loadRingSettingRows(): Promise<RingSettingRow[]> {
     const now = Date.now();
@@ -19,15 +23,18 @@ export class RingSettingDataService {
       return this.cache;
     }
 
-    const rows = await this.fetchFromSheet();
+    const rows = this.shopifyCatalogService.isConfigured
+      ? await this.shopifyCatalogService.loadRingSettingRows()
+      : await this.fetchFromSheet();
     this.cache = rows;
-    this.cacheExpiresAt = now + CACHE_TTL_MS;
+    this.cacheExpiresAt = now + (this.shopifyCatalogService.isConfigured ? 60_000 : CACHE_TTL_MS);
     return rows;
   }
 
   clearCache(): void {
     this.cache = null;
     this.cacheExpiresAt = 0;
+    this.shopifyCatalogService.clearCache();
   }
 
   private async fetchFromSheet(): Promise<RingSettingRow[]> {

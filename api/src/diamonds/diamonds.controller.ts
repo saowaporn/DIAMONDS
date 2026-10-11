@@ -119,7 +119,7 @@ export class DiamondsController {
       console.error('Error reading diamond products:', googleErrorMessage || err.message);
 
       throw new HttpException(
-        { status: 'error', message: 'Unable to load diamond data from Google Sheet' },
+        { status: 'error', message: 'Unable to load diamond data' },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

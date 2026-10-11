@@ -2,7 +2,7 @@
   "name": "yaniga-api",
   "version": "1.0.0",
   "private": true,
-  "description": "Secure API for serving product data from Google Sheets",
+  "description": "YANIGA product catalog and Shopify checkout API",
   "scripts": {
     "build": "nest build",
     "start": "nest start",

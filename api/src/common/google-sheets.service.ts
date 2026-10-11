@@ -45,7 +45,7 @@ export class GoogleSheetsService {
     }
 
     throw new Error(
-      'Missing Google credentials. Set GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_PRIVATE_KEY or add credentials.json locally',
+      'Missing Google credentials. Set GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY or add credentials.json locally',
     );
   }
 

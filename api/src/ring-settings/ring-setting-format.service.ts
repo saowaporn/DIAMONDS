@@ -48,7 +48,9 @@ export class RingSettingFormatService {
       const resolvedAngles: Record<string, string> = {};
       Object.entries(angles || {}).forEach(([angleKey, relativePath]) => {
         if (typeof relativePath === 'string' && relativePath.trim()) {
-          resolvedAngles[angleKey] = `${RING_SETTING_IMAGE_BASE_URL}${relativePath.trim()}`;
+          resolvedAngles[angleKey] = /^https:\/\//i.test(relativePath.trim())
+            ? relativePath.trim()
+            : `${RING_SETTING_IMAGE_BASE_URL}${relativePath.trim()}`;
         }
       });
       if (Object.keys(resolvedAngles).length) {

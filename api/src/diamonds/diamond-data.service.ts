@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { sheets_v4 } from 'googleapis';
 import { GoogleSheetsService } from '../common/google-sheets.service';
+import { ShopifyCatalogService } from '../shopify/shopify-catalog.service';
 import { DIAMOND_COLUMN_MAP, DiamondColumnEntry } from './diamonds.config';
 
 export type DiamondRow = Record<string, string>;
@@ -12,7 +13,10 @@ export class DiamondDataService {
   private cache: DiamondRow[] | null = null;
   private cacheExpiresAt = 0;
 
-  constructor(private readonly googleSheetsService: GoogleSheetsService) {}
+  constructor(
+    private readonly googleSheetsService: GoogleSheetsService,
+    private readonly shopifyCatalogService: ShopifyCatalogService,
+  ) {}
 
   async loadDiamondRows(): Promise<DiamondRow[]> {
     const now = Date.now();
@@ -20,15 +24,18 @@ export class DiamondDataService {
       return this.cache;
     }
 
-    const rows = await this.fetchFromSheets();
+    const rows = this.shopifyCatalogService.isConfigured
+      ? await this.shopifyCatalogService.loadDiamondRows()
+      : await this.fetchFromSheets();
     this.cache = rows;
-    this.cacheExpiresAt = now + CACHE_TTL_MS;
+    this.cacheExpiresAt = now + (this.shopifyCatalogService.isConfigured ? 60_000 : CACHE_TTL_MS);
     return rows;
   }
 
   clearCache(): void {
     this.cache = null;
     this.cacheExpiresAt = 0;
+    this.shopifyCatalogService.clearCache();
   }
 
   private async fetchFromSheets(): Promise<DiamondRow[]> {

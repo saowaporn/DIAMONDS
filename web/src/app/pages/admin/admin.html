@@ -1,10 +1,18 @@
 <main class="tr-theme">
   <div class="tr-container" style="padding-top: 80px; padding-bottom: 80px; text-align: center;">
-    <div class="tr-eyebrow">Admin</div>
-    <h1 style="margin-bottom: 12px;">Welcome, Admin</h1>
+    <div class="tr-eyebrow">Store Management</div>
+    <h1 style="margin-bottom: 12px;">Manage YANIGA in Shopify</h1>
     <p class="tr-lede" style="margin-bottom: 24px;">
-      Data management tools are coming soon. For now, this page just confirms you're signed in.
+      Products, inventory, orders, and payment settings are managed in Shopify Admin.
     </p>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 24px;">
+      <a class="tr-btn tr-btn-primary" href="https://admin.shopify.com/store/pyesre-rc/products"
+        target="_blank" rel="noopener noreferrer">Products &amp; Inventory</a>
+      <a class="tr-btn tr-btn-outline" href="https://admin.shopify.com/store/pyesre-rc/orders"
+        target="_blank" rel="noopener noreferrer">Orders</a>
+      <a class="tr-btn tr-btn-outline" href="https://admin.shopify.com/store/pyesre-rc/settings/payments"
+        target="_blank" rel="noopener noreferrer">Payments</a>
+    </div>
     <button type="button" class="tr-btn tr-btn-outline" (click)="logout()">Log Out</button>
   </div>
 </main>
