@@ -62,7 +62,7 @@ describe('ShopifyCheckoutService', () => {
     const diamondAttributes = Object.fromEntries(lines[1].attributes.map(({ key, value }) => [key, value]));
     expect(settingAttributes['Ring Size']).toBe('6.5');
     expect(settingAttributes.Material).toBe('18k');
-    expect(diamondAttributes['Certificate No']).toBe('1548671019');
+    expect(Object.keys(diamondAttributes).some((key) => key.startsWith('Certificate'))).toBe(false);
     expect(diamondAttributes.Origin).toBe('Natural');
     expect(diamondAttributes.Depth).toBe('62.1');
     expect(diamondAttributes.Comment).toBe('Eye clean');
