@@ -33,7 +33,7 @@ describe('ShopifyCheckoutService', () => {
             }
           : {
               handle, title: '1 ct ROUND F VVS1 Diamond',
-              descriptionHtml: '<ul>\n<li>\n<strong>carat:</strong> 1</li>\n<li>\n<strong>certificateNo:</strong> 1548671019</li>\n<li><strong>depth:</strong> 62.1</li>\n<li><strong>comment:</strong> Eye clean</li></ul>',
+              descriptionHtml: '<ul>\n<li>\n<strong>carat:</strong> 1</li>\n<li>\n<strong>certificateNo:</strong> 1548671019</li>\n<li><strong>cut:</strong> VG</li>\n<li><strong>depth:</strong> 62.1</li>\n<li><strong>comment:</strong> Eye clean</li></ul>',
               variants: { nodes: [{ id: 'gid://shopify/ProductVariant/diamond', availableForSale: true,
                 selectedOptions: [] }] },
             };
@@ -62,11 +62,17 @@ describe('ShopifyCheckoutService', () => {
     const diamondAttributes = Object.fromEntries(lines[1].attributes.map(({ key, value }) => [key, value]));
     expect(settingAttributes['Ring Size']).toBe('6.5');
     expect(settingAttributes.Material).toBe('18k');
+    expect(settingAttributes['_Setting ID']).toBe('ST0000001');
+    expect(settingAttributes['_Diamond ID']).toBe('S0000001');
     expect(Object.keys(diamondAttributes).some((key) => key.startsWith('Certificate'))).toBe(false);
     expect(diamondAttributes.Origin).toBe('Natural');
-    expect(diamondAttributes.Depth).toBe('62.1');
-    expect(diamondAttributes.Comment).toBe('Eye clean');
-    expect(settingAttributes['Configuration ID']).toBe(diamondAttributes['Configuration ID']);
+    expect(diamondAttributes['_Depth']).toBe('62.1');
+    expect(diamondAttributes['_Comment']).toBe('Eye clean');
+    expect(settingAttributes['_Configuration ID']).toBe(diamondAttributes['_Configuration ID']);
+    expect(Object.keys(settingAttributes).filter((key) => !key.startsWith('_')))
+      .toEqual(['Material', 'Color', 'Ring Size']);
+    expect(Object.keys(diamondAttributes).filter((key) => !key.startsWith('_')))
+      .toEqual(['Cut', 'Origin']);
     expect(cartRequest!.variables).not.toHaveProperty('totalPrice');
   });
 
