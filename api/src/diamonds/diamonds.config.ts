@@ -33,7 +33,7 @@ export const DIAMOND_COLUMN_MAP: readonly DiamondColumnEntry[] = Object.freeze([
 
 export const DIAMOND_RESPONSE_GROUPS: Readonly<Record<string, readonly string[]>> = Object.freeze({
   media: ['image', 'video'],
-  certificate: ['certificate', 'lab', 'certificateNo'],
+  certificate: ['lab'],
   quality: ['polish', 'symmetry', 'fluorescence', 'table', 'td', 'l/w ratio'],
   details: ['measurement', 'bit', 'bc', 'wt', 'wc', 'milky'],
   notes: ['comment'],

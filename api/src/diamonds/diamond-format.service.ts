@@ -6,6 +6,8 @@ import { DiamondRow } from './diamond-data.service';
 export class DiamondFormatService {
   formatRow(row: DiamondRow): Record<string, unknown> {
     const formatted: Record<string, unknown> = { ...row };
+    delete formatted.certificate;
+    delete formatted.certificateNo;
 
     Object.entries(DIAMOND_RESPONSE_GROUPS).forEach(([groupName, keys]) => {
       const group: Record<string, unknown> = {};
